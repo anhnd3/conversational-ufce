@@ -1,0 +1,67 @@
+model_alias,case_id,group,repeat_id,valid_json,schema_valid,exact_match,field_accuracy,status_correct,missing_fields_correct,conflicts_correct,hallucination_count,stability_case,request_latency_ms,ttft_ms,total_time_ms,tokens_per_second,prompt_tokens,completion_tokens,reasoning_output_tokens,total_tokens,http_status_code,api_error,parse_error,validation_error_count,validation_errors
+openai/gpt-oss-20b,A01,A,1,True,False,False,1.0,False,True,True,1,0.0,5589.618961996166,1876.0,,75.79577832983229,873,98,16,971,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,A01,A,2,True,True,True,1.0,True,True,True,0,0.0,3150.9920630051056,62.0,,73.63212766773866,873,213,90,1086,200,,,0,
+openai/gpt-oss-20b,A01,A,3,True,True,True,1.0,True,True,True,0,0.0,2291.8901510129217,72.0,,75.94061828159839,873,158,80,1031,200,,,0,
+openai/gpt-oss-20b,A02,A,1,True,True,True,1.0,True,True,True,0,0.0,2198.9380000013625,152.0,,74.59046963307226,880,143,65,1023,200,,,0,
+openai/gpt-oss-20b,A02,A,2,True,False,False,1.0,False,True,True,1,0.0,1808.9943079976365,62.0,,76.80971174501674,880,123,41,1003,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,A02,A,3,True,False,False,1.0,False,True,True,1,0.0,1575.7232720061438,62.0,,75.70165975889022,880,108,26,988,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,A03,A,1,True,True,True,1.0,True,True,True,0,1.0,2056.291347995284,128.0,,75.64206850574739,891,134,56,1025,200,,,0,
+openai/gpt-oss-20b,A03,A,2,True,True,True,1.0,True,True,True,0,1.0,2030.444396994426,63.0,,74.40921509601215,891,138,60,1029,200,,,0,
+openai/gpt-oss-20b,A03,A,3,True,True,True,1.0,True,True,True,0,1.0,1999.9125739996089,49.0,,73.50546488987325,891,137,14,1028,200,,,0,
+openai/gpt-oss-20b,A04,A,1,True,False,False,1.0,False,True,True,1,0.0,1574.3975949881133,123.0,,73.49468691627209,872,101,19,973,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,A04,A,2,True,True,True,1.0,True,True,True,0,0.0,2189.4591259915615,56.0,,72.52658099193354,872,145,22,1017,200,,,0,
+openai/gpt-oss-20b,A04,A,3,True,True,True,1.0,True,True,True,0,0.0,1479.8348709882703,61.0,,72.90295038991805,872,97,19,969,200,,,0,
+openai/gpt-oss-20b,A05,A,1,True,True,True,1.0,True,True,True,0,1.0,2513.8944790087407,150.0,,74.54183394209164,874,168,86,1042,200,,,0,
+openai/gpt-oss-20b,A05,A,2,True,True,True,1.0,True,True,True,0,1.0,1498.899498998071,74.0,,76.52937712896137,874,98,16,972,200,,,0,
+openai/gpt-oss-20b,A05,A,3,True,True,True,1.0,True,True,True,0,1.0,2045.7489010004792,53.0,,74.62133640991986,874,141,59,1015,200,,,0,
+openai/gpt-oss-20b,A06,A,1,True,True,True,1.0,True,True,True,0,1.0,1459.5507420017384,143.0,,74.99312563015059,872,90,12,962,200,,,0,
+openai/gpt-oss-20b,A06,A,2,True,True,True,1.0,True,True,True,0,1.0,1376.0643459972925,70.0,,75.75498394483081,872,93,15,965,200,,,0,
+openai/gpt-oss-20b,A06,A,3,True,True,True,1.0,True,True,True,0,1.0,1301.7377289943397,68.0,,74.64005477035742,872,87,9,959,200,,,0,
+openai/gpt-oss-20b,A07,A,1,True,True,True,1.0,True,True,True,0,1.0,2166.305195001769,166.0,,75.22186477121693,888,142,64,1030,200,,,0,
+openai/gpt-oss-20b,A07,A,2,True,True,True,1.0,True,True,True,0,1.0,2643.975806000526,59.0,,75.53228228763784,888,180,57,1068,200,,,0,
+openai/gpt-oss-20b,A07,A,3,True,True,True,1.0,True,True,True,0,1.0,2162.778072000947,61.0,,74.90554878457945,888,144,66,1032,200,,,0,
+openai/gpt-oss-20b,A08,A,1,True,True,True,1.0,True,True,True,0,0.0,2335.5022039904725,134.0,,74.83308752398624,873,151,73,1024,200,,,0,
+openai/gpt-oss-20b,A08,A,2,True,False,False,1.0,False,True,True,1,0.0,1797.5665160047356,59.0,,74.634842707069,873,118,36,991,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,A08,A,3,True,True,True,1.0,True,True,True,0,0.0,2181.678741995711,66.0,,74.56815529393866,873,149,71,1022,200,,,0,
+openai/gpt-oss-20b,B01,B,1,True,False,False,0.4444444444444444,False,False,False,1,0.0,1687.4823289981578,139.0,,76.17575156548224,856,108,35,964,200,,,8,"Missing top-level keys: task, status, cf_request, missing_fields, conflicts, notes | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict' | cf_request must be an object. | missing_fields must be an array of strings. | conflicts must be an array of strings. | notes must be an array of strings."
+openai/gpt-oss-20b,B01,B,2,True,True,True,1.0,True,True,True,0,0.0,2136.3975850108545,65.0,,74.37964808680155,856,145,32,1001,200,,,0,
+openai/gpt-oss-20b,B01,B,3,True,True,True,1.0,True,True,True,0,0.0,1739.5728089904878,69.0,,74.60982306442655,856,115,45,971,200,,,0,
+openai/gpt-oss-20b,B02,B,1,True,True,True,1.0,True,True,True,0,1.0,2134.020589001011,124.0,,75.76489890611161,847,145,37,992,200,,,0,
+openai/gpt-oss-20b,B02,B,2,True,True,True,1.0,True,True,True,0,1.0,1809.4933700049296,54.0,,74.9771970177665,847,121,55,968,200,,,0,
+openai/gpt-oss-20b,B02,B,3,True,True,True,1.0,True,True,True,0,1.0,1711.8731590016978,73.0,,75.12578712072002,847,116,50,963,200,,,0,
+openai/gpt-oss-20b,B03,B,1,True,True,True,1.0,True,True,True,0,0.0,2225.290356000187,146.0,,74.90283153224516,851,146,38,997,200,,,0,
+openai/gpt-oss-20b,B03,B,2,True,False,False,1.0,False,True,True,1,0.0,1658.15671699238,69.0,,74.74467426893825,851,108,38,959,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,B03,B,3,True,False,False,0.5555555555555556,False,False,False,1,0.0,1695.353104005335,57.0,,74.84631884137897,851,114,45,965,200,,,8,"Missing top-level keys: task, status, cf_request, missing_fields, conflicts, notes | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict' | cf_request must be an object. | missing_fields must be an array of strings. | conflicts must be an array of strings. | notes must be an array of strings."
+openai/gpt-oss-20b,B04,B,1,True,True,True,1.0,True,True,True,0,1.0,1846.5798150136834,122.0,,74.17614193541898,855,118,50,973,200,,,0,
+openai/gpt-oss-20b,B04,B,2,True,True,True,1.0,True,True,True,0,1.0,1947.3350629996276,78.0,,74.23186886602947,855,132,64,987,200,,,0,
+openai/gpt-oss-20b,B04,B,3,True,True,True,1.0,True,True,True,0,1.0,1672.7021719998447,63.0,,73.11894857610818,855,110,42,965,200,,,0,
+openai/gpt-oss-20b,B05,B,1,True,True,True,1.0,True,True,True,0,0.0,2051.1424069991335,119.0,,72.57567241633335,844,133,34,977,200,,,0,
+openai/gpt-oss-20b,B05,B,2,True,False,False,1.0,False,True,True,1,0.0,1282.006415000069,62.0,,72.76444711147603,844,81,17,925,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,B05,B,3,True,True,True,1.0,True,True,True,0,0.0,1424.4722909934353,61.0,,74.50717425659487,844,95,35,939,200,,,0,
+openai/gpt-oss-20b,B06,B,1,True,True,True,1.0,True,True,True,0,1.0,2542.3622759990394,144.0,,73.16118987256372,869,167,62,1036,200,,,0,
+openai/gpt-oss-20b,B06,B,2,True,True,True,1.0,True,True,True,0,1.0,1403.7490199989406,78.0,,70.63030312313585,869,83,19,952,200,,,0,
+openai/gpt-oss-20b,B06,B,3,True,True,True,1.0,True,True,True,0,1.0,2220.602494009654,62.0,,72.98524238398996,869,150,45,1019,200,,,0,
+openai/gpt-oss-20b,B07,B,1,True,True,False,1.0,False,True,True,0,0.0,2668.153787992196,137.0,,72.72030258371451,852,173,99,1025,200,,,0,
+openai/gpt-oss-20b,B07,B,2,True,True,False,1.0,False,True,True,0,0.0,3046.252947009634,73.0,,72.44645955586734,852,202,97,1054,200,,,0,
+openai/gpt-oss-20b,B07,B,3,True,True,False,1.0,False,True,True,0,0.0,1828.34700300009,57.0,,74.13329902370734,852,121,57,973,200,,,0,
+openai/gpt-oss-20b,B08,B,1,True,True,False,1.0,False,False,True,0,1.0,2369.719233000069,151.0,,71.79259497168444,861,152,61,1013,200,,,0,
+openai/gpt-oss-20b,B08,B,2,True,True,False,1.0,False,False,True,0,1.0,1937.4970750068314,55.0,,75.20332375551516,861,130,39,991,200,,,0,
+openai/gpt-oss-20b,B08,B,3,True,True,False,1.0,False,False,True,0,1.0,1630.7915210054489,66.0,,71.84149215450621,861,107,50,968,200,,,0,
+openai/gpt-oss-20b,C01,C,1,True,True,False,0.7777777777777778,True,False,False,0,0.0,1247.2900520078838,130.0,,70.17776417542102,851,72,25,923,200,,,0,
+openai/gpt-oss-20b,C01,C,2,True,True,False,0.7777777777777778,True,False,False,0,0.0,1493.9680519892136,62.0,,73.56689842691901,851,100,39,951,200,,,0,
+openai/gpt-oss-20b,C01,C,3,True,False,False,0.7777777777777778,False,False,False,1,0.0,1201.1270280054305,58.0,,73.74986881032953,851,78,27,929,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,C02,C,1,True,False,False,0.7777777777777778,False,False,False,1,0.0,1671.131093011354,135.0,,71.27984329400604,850,104,53,954,200,,,8,"Missing top-level keys: task, status, cf_request, missing_fields, conflicts, notes | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict' | cf_request must be an object. | missing_fields must be an array of strings. | conflicts must be an array of strings. | notes must be an array of strings."
+openai/gpt-oss-20b,C02,C,2,True,True,False,1.0,True,False,False,0,0.0,2711.6125610045856,69.0,,72.39722911671761,850,180,75,1030,200,,,0,
+openai/gpt-oss-20b,C02,C,3,True,True,False,0.7777777777777778,False,False,False,0,0.0,1743.6073690041667,68.0,,74.22010297062705,850,114,49,964,200,,,0,
+openai/gpt-oss-20b,C03,C,1,True,True,False,1.0,False,True,True,0,0.0,3656.8001199921127,94.0,,71.8593925798871,842,245,146,1087,200,,,0,
+openai/gpt-oss-20b,C03,C,2,True,False,False,0.8888888888888888,False,False,True,1,0.0,1412.3828419978963,45.0,,73.67754561676165,842,96,44,938,200,,,4,"Missing top-level keys: task, status | Unexpected top-level keys: schema_reference | task must equal 'extract_cf_request' | status must be one of 'complete', 'partial', 'needs_clarification', 'conflict'"
+openai/gpt-oss-20b,C03,C,3,True,True,False,0.8888888888888888,False,False,True,0,0.0,1218.0710460088449,39.0,,73.03164140395315,842,82,41,924,200,,,0,
+openai/gpt-oss-20b,C04,C,1,True,True,False,1.0,True,False,False,0,0.0,2683.970136989956,117.0,,72.73495625744113,851,179,94,1030,200,,,0,
+openai/gpt-oss-20b,C04,C,2,True,True,False,0.7777777777777778,True,True,False,0,0.0,2891.238276002696,57.0,,72.69814006581751,851,198,102,1049,200,,,0,
+openai/gpt-oss-20b,C04,C,3,True,True,False,0.7777777777777778,True,False,False,0,0.0,1715.566486993339,57.0,,74.04800842501784,851,117,48,968,200,,,0,
+openai/gpt-oss-20b,C05,C,1,True,True,False,1.0,False,False,False,0,0.0,3065.3562489897013,114.0,,73.4112033260922,851,208,129,1059,200,,,0,
+openai/gpt-oss-20b,C05,C,2,True,True,False,1.0,False,True,False,0,0.0,3934.1863080044277,49.0,,72.53256482968733,851,269,159,1120,200,,,0,
+openai/gpt-oss-20b,C05,C,3,True,True,False,0.7777777777777778,False,False,False,0,0.0,1968.7958520080429,53.0,,73.87845340419784,851,134,65,985,200,,,0,
+openai/gpt-oss-20b,C06,C,1,True,True,False,0.8888888888888888,True,False,False,0,0.0,2140.4480909986887,95.0,,74.45336694953846,845,146,70,991,200,,,0,
+openai/gpt-oss-20b,C06,C,2,True,True,False,0.8888888888888888,True,False,False,0,0.0,2584.16474898695,49.0,,73.63014831924708,845,178,102,1023,200,,,0,
+openai/gpt-oss-20b,C06,C,3,True,True,False,0.8888888888888888,True,False,False,0,0.0,2537.7867599891033,56.0,,72.0801835136181,845,171,97,1016,200,,,0,

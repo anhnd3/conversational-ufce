@@ -1,0 +1,67 @@
+model_alias,case_id,group,repeat_id,valid_json,schema_valid,exact_match,field_accuracy,status_correct,missing_fields_correct,conflicts_correct,hallucination_count,stability_case,request_latency_ms,ttft_ms,total_time_ms,tokens_per_second,prompt_tokens,completion_tokens,reasoning_output_tokens,total_tokens,http_status_code,api_error,parse_error,validation_error_count,validation_errors
+qwen/qwen3.5-9b,A01,A,1,True,True,False,1.0,True,True,True,0,0.0,5919.773447999432,584.0,,103.86478325193038,927,492,409,1419,200,,,0,
+qwen/qwen3.5-9b,A01,A,2,True,True,True,1.0,True,True,True,0,0.0,7021.03152699965,56.0,,105.5425901081107,927,704,567,1631,200,,,0,
+qwen/qwen3.5-9b,A01,A,3,True,True,True,1.0,True,True,True,0,0.0,3762.805180000214,62.0,,105.53562735256502,927,372,235,1299,200,,,0,
+qwen/qwen3.5-9b,A02,A,1,True,True,True,1.0,True,True,True,0,1.0,5671.062307999819,217.0,,105.60986523103938,933,549,412,1482,200,,,0,
+qwen/qwen3.5-9b,A02,A,2,True,True,True,1.0,True,True,True,0,1.0,4193.045381999582,65.0,,105.29638274020168,933,416,339,1349,200,,,0,
+qwen/qwen3.5-9b,A02,A,3,True,True,True,1.0,True,True,True,0,1.0,3190.591526999924,67.0,,105.83070235751286,933,316,240,1249,200,,,0,
+qwen/qwen3.5-9b,A03,A,1,True,True,True,1.0,True,True,True,0,1.0,4334.561924999434,218.0,,106.3209861093412,945,418,280,1363,200,,,0,
+qwen/qwen3.5-9b,A03,A,2,True,True,True,1.0,True,True,True,0,1.0,5540.603008999824,67.0,,106.8475748748691,945,560,422,1505,200,,,0,
+qwen/qwen3.5-9b,A03,A,3,True,True,True,1.0,True,True,True,0,1.0,3862.337724999634,64.0,,105.311359098226,945,382,305,1327,200,,,0,
+qwen/qwen3.5-9b,A04,A,1,True,True,True,1.0,True,True,True,0,1.0,10461.519567999858,185.0,,104.65348682376059,924,1031,895,1955,200,,,0,
+qwen/qwen3.5-9b,A04,A,2,True,True,True,1.0,True,True,True,0,1.0,15505.864028999895,100.0,,104.64864724362505,924,1546,1410,2470,200,,,0,
+qwen/qwen3.5-9b,A04,A,3,True,True,True,1.0,True,True,True,0,1.0,24614.77241100056,104.0,,104.73783529693071,924,2467,2331,3391,200,,,0,
+qwen/qwen3.5-9b,A05,A,1,True,True,True,1.0,True,True,True,0,0.0,7311.667694999414,238.0,,105.19007224679041,928,711,570,1639,200,,,0,
+qwen/qwen3.5-9b,A05,A,2,True,True,False,1.0,True,True,True,0,0.0,5598.553507000361,63.0,,105.52676578618008,928,558,371,1486,200,,,0,
+qwen/qwen3.5-9b,A05,A,3,True,True,True,1.0,True,True,True,0,0.0,31092.988596000396,62.0,,104.42073027558486,928,3113,2972,4041,200,,,0,
+qwen/qwen3.5-9b,A06,A,1,True,True,True,1.0,True,True,True,0,1.0,5377.233512000203,231.0,,103.4874662566436,927,506,368,1433,200,,,0,
+qwen/qwen3.5-9b,A06,A,2,True,True,True,1.0,True,True,True,0,1.0,6093.884558000354,59.0,,99.93561266150842,927,569,431,1496,200,,,0,
+qwen/qwen3.5-9b,A06,A,3,True,True,True,1.0,True,True,True,0,1.0,22569.129349999457,68.0,,99.48686986173455,927,2150,2012,3077,200,,,0,
+qwen/qwen3.5-9b,A07,A,1,True,True,True,1.0,True,True,True,0,1.0,16901.29012200032,257.0,,102.98644420593635,942,1646,1508,2588,200,,,0,
+qwen/qwen3.5-9b,A07,A,2,True,True,True,1.0,True,True,True,0,1.0,5680.156081999485,111.0,,104.69449751613243,942,558,420,1500,200,,,0,
+qwen/qwen3.5-9b,A07,A,3,True,True,True,1.0,True,True,True,0,1.0,4504.95052199949,61.0,,105.34334016332942,942,446,308,1388,200,,,0,
+qwen/qwen3.5-9b,A08,A,1,True,True,True,1.0,True,True,True,0,1.0,27356.53536999962,187.0,,98.39567500775162,925,2566,2430,3491,200,,,0,
+qwen/qwen3.5-9b,A08,A,2,True,True,True,1.0,True,True,True,0,1.0,5817.146729999877,177.0,,96.24209463479515,925,511,375,1436,200,,,0,
+qwen/qwen3.5-9b,A08,A,3,True,True,True,1.0,True,True,True,0,1.0,4402.952328000538,66.0,,105.15069589984637,925,436,300,1361,200,,,0,
+qwen/qwen3.5-9b,B01,B,1,True,True,True,1.0,True,True,True,0,1.0,33303.079694999724,186.0,,101.90736193304875,909,3242,3114,4151,200,,,0,
+qwen/qwen3.5-9b,B01,B,2,True,True,True,1.0,True,True,True,0,1.0,7251.124102000176,120.0,,105.34749793062153,909,715,595,1624,200,,,0,
+qwen/qwen3.5-9b,B01,B,3,True,True,True,1.0,True,True,True,0,1.0,33642.13851099976,62.0,,95.06649298869092,909,3062,2934,3971,200,,,0,
+qwen/qwen3.5-9b,B02,B,1,True,False,False,0.4444444444444444,True,True,True,5,0.0,9747.82075300027,273.0,,95.45416448448765,898,861,702,1759,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen/qwen3.5-9b,B02,B,2,True,True,True,1.0,True,True,True,0,0.0,10704.946670000027,77.0,,95.5636894591479,898,971,864,1869,200,,,0,
+qwen/qwen3.5-9b,B02,B,3,True,True,False,1.0,True,True,True,0,0.0,25977.76590400008,121.0,,94.33871472417471,898,2333,2188,3231,200,,,0,
+qwen/qwen3.5-9b,B03,B,1,True,True,True,1.0,True,True,True,0,0.0,25863.884891999987,272.0,,93.1251481606008,905,2282,2158,3187,200,,,0,
+qwen/qwen3.5-9b,B03,B,2,True,True,False,1.0,True,True,True,0,0.0,28508.36043399977,149.0,,91.56760950389346,905,2488,2335,3393,200,,,0,
+qwen/qwen3.5-9b,B03,B,3,True,True,True,1.0,True,True,True,0,0.0,31390.891082999588,154.0,,99.81621110235821,905,2985,2861,3890,200,,,0,
+qwen/qwen3.5-9b,B04,B,1,True,False,False,0.4444444444444444,True,True,True,5,0.0,5558.329475999926,243.0,,103.22002643867395,907,518,353,1425,200,,,5,Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+qwen/qwen3.5-9b,B04,B,2,True,True,True,1.0,True,True,True,0,0.0,21495.68429699957,77.0,,94.22149743647336,907,1933,1809,2840,200,,,0,
+qwen/qwen3.5-9b,B04,B,3,True,False,False,0.4444444444444444,True,True,True,5,0.0,6012.645317000533,147.0,,93.72597260035425,907,521,356,1428,200,,,5,Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+qwen/qwen3.5-9b,B05,B,1,True,True,True,1.0,True,True,True,0,0.0,6856.486200999825,185.0,,95.51876255759394,896,604,491,1500,200,,,0,
+qwen/qwen3.5-9b,B05,B,2,True,False,False,0.1111111111111111,True,True,True,8,0.0,7126.768621999872,75.0,,95.22150959726683,896,637,460,1533,200,,,8,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,B05,B,3,True,False,False,0.1111111111111111,True,True,True,8,0.0,4392.264201000216,70.0,,95.74617615239461,896,391,214,1287,200,,,8,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,B06,B,1,True,True,False,1.0,True,True,True,0,0.0,43627.0448410005,203.0,,93.86604928358797,920,3911,3738,4831,200,,,0,
+qwen/qwen3.5-9b,B06,B,2,True,True,False,1.0,True,True,True,0,0.0,7433.557225999721,188.0,,93.40030242373786,920,638,495,1558,200,,,0,
+qwen/qwen3.5-9b,B06,B,3,True,False,False,0.3333333333333333,True,True,True,6,0.0,5155.702131999533,73.0,,93.02916058352386,920,447,281,1367,200,,,6,Income must be numeric. | CCAvg must be numeric. | Mortgage must be numeric. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,B07,B,1,True,True,False,1.0,False,True,True,0,0.0,60864.376014999834,206.0,,92.4717202407319,903,5377,5237,6280,200,,,0,
+qwen/qwen3.5-9b,B07,B,2,True,True,False,1.0,False,False,True,0,0.0,7084.903635999581,193.0,,94.87549510270503,903,618,500,1521,200,,,0,
+qwen/qwen3.5-9b,B07,B,3,True,False,False,0.3333333333333333,False,True,True,6,0.0,10577.438964000066,77.0,,94.18883804398918,903,944,778,1847,200,,,6,Income must be numeric. | CCAvg must be numeric. | Education must be an integer. | Mortgage must be numeric. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,B08,B,1,True,True,False,0.8888888888888888,False,False,True,1,0.0,13250.782828999945,285.0,,92.56637686041597,913,1142,955,2055,200,,,0,
+qwen/qwen3.5-9b,B08,B,2,True,True,False,1.0,False,True,True,0,0.0,8553.408504999425,152.0,,93.42260994970833,913,746,667,1659,200,,,0,
+qwen/qwen3.5-9b,B08,B,3,True,True,False,1.0,False,False,True,0,0.0,8631.320175999463,79.0,,94.31587220690544,913,768,629,1681,200,,,0,
+qwen/qwen3.5-9b,C01,C,1,True,True,False,1.0,True,False,False,0,0.0,7695.98822900025,217.0,,93.75057003316056,904,663,526,1567,200,,,0,
+qwen/qwen3.5-9b,C01,C,2,True,False,False,0.2222222222222222,True,True,False,7,0.0,7956.620590000057,66.0,,104.10074396089222,904,782,595,1686,200,,,7,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,C01,C,3,True,True,False,1.0,True,False,False,0,0.0,7407.5993989999915,60.0,,105.07140370697037,904,738,601,1642,200,,,0,
+qwen/qwen3.5-9b,C02,C,1,True,False,False,0.2222222222222222,False,False,False,7,0.0,11590.285584000412,175.0,,101.0819155746979,902,1103,902,2005,200,,,6,CCAvg must be numeric. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+qwen/qwen3.5-9b,C02,C,2,True,False,False,0.2222222222222222,False,False,False,7,0.0,11983.04407500018,133.0,,93.83950296372744,902,1061,865,1963,200,,,6,CCAvg must be numeric. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+qwen/qwen3.5-9b,C02,C,3,True,True,False,0.8888888888888888,False,False,False,1,0.0,12090.656174000287,138.0,,94.46628134275112,902,1074,927,1976,200,,,0,
+qwen/qwen3.5-9b,C03,C,1,True,True,False,1.0,False,True,True,0,0.0,8172.203905999595,252.0,,93.20982964610893,893,703,572,1596,200,,,0,
+qwen/qwen3.5-9b,C03,C,2,True,True,False,1.0,False,False,True,0,0.0,49176.155210000616,77.0,,94.52329720891488,893,4448,4271,5341,200,,,0,
+qwen/qwen3.5-9b,C03,C,3,True,False,False,0.1111111111111111,False,True,True,8,0.0,8292.691816000115,160.0,,96.15071871366405,893,742,520,1635,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen/qwen3.5-9b,C04,C,1,True,True,False,1.0,True,False,False,0,0.0,7646.114291000231,193.0,,95.70883703584217,903,677,534,1580,200,,,0,
+qwen/qwen3.5-9b,C04,C,2,True,True,False,1.0,True,False,False,0,0.0,18926.94420600037,82.0,,95.65066559230539,903,1726,1617,2629,200,,,0,
+qwen/qwen3.5-9b,C04,C,3,True,True,False,1.0,True,False,False,0,0.0,7445.689445000426,129.0,,94.16128174349318,903,655,515,1558,200,,,0,
+qwen/qwen3.5-9b,C05,C,1,True,True,False,1.0,False,True,False,0,0.0,59217.88035999998,233.0,,94.54433071055314,904,5348,5201,6252,200,,,0,
+qwen/qwen3.5-9b,C05,C,2,True,False,False,0.8888888888888888,False,False,False,1,0.0,13046.45534700012,190.0,,95.19022970750616,904,1165,1008,2069,200,,,1,Education must be an integer.
+qwen/qwen3.5-9b,C05,C,3,True,False,False,0.4444444444444444,False,False,False,5,0.0,8933.088689000215,149.0,,95.60209950367276,904,797,598,1701,200,,,5,Education must be an integer. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1. | Family must be an integer.
+qwen/qwen3.5-9b,C06,C,1,True,True,False,1.0,True,False,False,0,0.0,14296.28861600031,200.0,,101.3468247816237,899,1360,1215,2259,200,,,0,
+qwen/qwen3.5-9b,C06,C,2,True,True,False,1.0,True,False,False,0,0.0,84373.26023999958,106.0,,103.07254507670724,899,8334,8189,9233,200,,,0,
+qwen/qwen3.5-9b,C06,C,3,True,True,False,1.0,True,False,False,0,0.0,10521.886604999963,166.0,,104.77937279753858,899,1038,895,1937,200,,,0,

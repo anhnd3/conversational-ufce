@@ -1,0 +1,67 @@
+model_alias,case_id,group,repeat_id,valid_json,schema_valid,exact_match,field_accuracy,status_correct,missing_fields_correct,conflicts_correct,hallucination_count,stability_case,request_latency_ms,ttft_ms,total_time_ms,tokens_per_second,prompt_tokens,completion_tokens,reasoning_output_tokens,total_tokens,http_status_code,api_error,parse_error,validation_error_count,validation_errors
+qwen3-30b-a3b-instruct-2507,A01,A,1,True,True,True,1.0,True,True,True,0,1.0,1111.8432949879207,548.0,,155.829497260349,824,74,0,898,200,,,0,
+qwen3-30b-a3b-instruct-2507,A01,A,2,True,True,True,1.0,True,True,True,0,1.0,488.15331200603396,29.0,,162.29600598302034,824,74,0,898,200,,,0,
+qwen3-30b-a3b-instruct-2507,A01,A,3,True,True,True,1.0,True,True,True,0,1.0,474.6627379936399,17.0,,164.65593584648724,824,74,0,898,200,,,0,
+qwen3-30b-a3b-instruct-2507,A02,A,1,True,True,True,1.0,True,True,True,0,1.0,537.754650998977,80.0,,164.60941966281763,830,74,0,904,200,,,0,
+qwen3-30b-a3b-instruct-2507,A02,A,2,True,True,True,1.0,True,True,True,0,1.0,477.13355300948024,17.0,,164.39001308455644,830,74,0,904,200,,,0,
+qwen3-30b-a3b-instruct-2507,A02,A,3,True,True,True,1.0,True,True,True,0,1.0,488.81693999283016,17.0,,161.6966788813212,830,74,0,904,200,,,0,
+qwen3-30b-a3b-instruct-2507,A03,A,1,True,True,True,1.0,True,True,True,0,1.0,551.7879690014524,82.0,,163.08992343471726,842,75,0,917,200,,,0,
+qwen3-30b-a3b-instruct-2507,A03,A,2,True,True,True,1.0,True,True,True,0,1.0,505.4266969964374,32.0,,158.24654389548132,842,75,0,917,200,,,0,
+qwen3-30b-a3b-instruct-2507,A03,A,3,True,True,True,1.0,True,True,True,0,1.0,813.1104619969847,31.0,,162.28804505116128,842,120,0,962,200,,,0,
+qwen3-30b-a3b-instruct-2507,A04,A,1,True,True,True,1.0,True,True,True,0,0.0,517.1849629987264,73.0,,165.33417887799246,821,73,0,894,200,,,0,
+qwen3-30b-a3b-instruct-2507,A04,A,2,True,True,True,1.0,True,True,True,0,0.0,474.6116449969122,32.0,,164.12866788226802,821,73,0,894,200,,,0,
+qwen3-30b-a3b-instruct-2507,A04,A,3,True,True,True,1.0,True,True,True,0,0.0,466.54466800100636,31.0,,164.5342868597357,821,71,0,892,200,,,0,
+qwen3-30b-a3b-instruct-2507,A05,A,1,True,True,True,1.0,True,True,True,0,1.0,543.9617949887179,71.0,,160.5509065702204,825,74,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A05,A,2,True,True,True,1.0,True,True,True,0,1.0,491.5992570022354,32.0,,163.23577422286536,825,74,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A05,A,3,True,True,True,1.0,True,True,True,0,1.0,490.27861599461176,17.0,,161.26501508045817,825,74,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A06,A,1,True,True,True,1.0,True,True,True,0,1.0,532.5758010003483,76.0,,163.43073805321302,824,75,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A06,A,2,True,True,True,1.0,True,True,True,0,1.0,515.6471599912038,25.0,,160.42986647956977,824,75,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A06,A,3,True,True,True,1.0,True,True,True,0,1.0,493.10669899568893,17.0,,164.47296283788228,824,75,0,899,200,,,0,
+qwen3-30b-a3b-instruct-2507,A07,A,1,True,True,True,1.0,True,True,True,0,1.0,554.6104900131468,92.0,,163.78192109642168,839,75,0,914,200,,,0,
+qwen3-30b-a3b-instruct-2507,A07,A,2,True,True,True,1.0,True,True,True,0,1.0,780.287267989479,30.0,,163.6306365640839,839,120,0,959,200,,,0,
+qwen3-30b-a3b-instruct-2507,A07,A,3,True,True,True,1.0,True,True,True,0,1.0,589.0940599929309,30.0,,163.70541755795173,839,75,0,914,200,,,0,
+qwen3-30b-a3b-instruct-2507,A08,A,1,True,True,True,1.0,True,True,True,0,1.0,816.7825569980778,75.0,,161.72248148072006,822,118,0,940,200,,,0,
+qwen3-30b-a3b-instruct-2507,A08,A,2,True,True,True,1.0,True,True,True,0,1.0,605.2631390048191,18.0,,129.1347441451545,822,73,0,895,200,,,0,
+qwen3-30b-a3b-instruct-2507,A08,A,3,True,True,True,1.0,True,True,True,0,1.0,1041.948046986363,38.0,,120.1743138606813,822,118,0,940,200,,,0,
+qwen3-30b-a3b-instruct-2507,B01,B,1,True,True,False,0.5555555555555556,True,True,True,4,0.0,1031.4944280107738,71.0,,121.49054775284868,806,86,0,892,200,,,0,
+qwen3-30b-a3b-instruct-2507,B01,B,2,True,True,False,0.5555555555555556,True,True,True,4,0.0,681.5997240046272,32.0,,140.19346698443854,806,86,0,892,200,,,0,
+qwen3-30b-a3b-instruct-2507,B01,B,3,True,True,True,1.0,True,True,True,0,0.0,552.6143309980398,47.0,,131.4576018897536,806,65,0,871,200,,,0,
+qwen3-30b-a3b-instruct-2507,B02,B,1,True,True,True,1.0,True,True,True,0,1.0,691.8104740034323,73.0,,95.26223756464513,795,59,0,854,200,,,0,
+qwen3-30b-a3b-instruct-2507,B02,B,2,True,True,True,1.0,True,True,True,0,1.0,462.7160000090953,26.0,,140.56253603403997,795,59,0,854,200,,,0,
+qwen3-30b-a3b-instruct-2507,B02,B,3,True,True,True,1.0,True,True,True,0,1.0,558.7506830052007,30.0,,120.33375280183887,795,59,0,854,200,,,0,
+qwen3-30b-a3b-instruct-2507,B03,B,1,True,True,False,0.4444444444444444,False,False,True,5,0.0,661.0571970086312,96.0,,144.2687747035573,802,73,0,875,200,,,0,
+qwen3-30b-a3b-instruct-2507,B03,B,2,True,True,True,1.0,True,True,True,0,0.0,476.5690700005507,24.0,,143.8725382132423,802,62,0,864,200,,,0,
+qwen3-30b-a3b-instruct-2507,B03,B,3,True,True,True,1.0,True,True,True,0,0.0,505.5505620111944,27.0,,133.73136388735506,802,62,0,864,200,,,0,
+qwen3-30b-a3b-instruct-2507,B04,B,1,True,True,False,0.4444444444444444,False,False,True,5,1.0,584.5832149934722,73.0,,144.02058113290929,804,73,0,877,200,,,0,
+qwen3-30b-a3b-instruct-2507,B04,B,2,True,True,False,0.4444444444444444,False,False,True,5,1.0,674.3893809907604,28.0,,116.57170597102632,804,73,0,877,200,,,0,
+qwen3-30b-a3b-instruct-2507,B04,B,3,True,True,False,0.4444444444444444,False,False,True,5,1.0,617.7749759954168,35.0,,137.52748194716307,804,73,0,877,200,,,0,
+qwen3-30b-a3b-instruct-2507,B05,B,1,True,False,False,0.1111111111111111,True,True,True,8,1.0,780.5849249998573,70.0,,135.44102623953756,793,94,0,887,200,,,4,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,B05,B,2,True,False,False,0.1111111111111111,True,True,True,8,1.0,732.6315410027746,27.0,,135.22086314066277,793,94,0,887,200,,,4,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,B05,B,3,True,False,False,0.1111111111111111,True,True,True,8,1.0,863.025086990092,28.0,,113.65133945357887,793,94,0,887,200,,,4,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,B06,B,1,True,True,True,1.0,True,True,True,0,1.0,490.3589239984285,73.0,,143.51681664593647,817,57,0,874,200,,,0,
+qwen3-30b-a3b-instruct-2507,B06,B,2,True,True,True,1.0,True,True,True,0,1.0,465.19410800829064,36.0,,140.07357548859878,817,57,0,874,200,,,0,
+qwen3-30b-a3b-instruct-2507,B06,B,3,True,True,True,1.0,True,True,True,0,1.0,521.9009790016571,39.0,,125.57721456519442,817,57,0,874,200,,,0,
+qwen3-30b-a3b-instruct-2507,B07,B,1,True,True,False,1.0,False,True,True,0,1.0,523.862045010901,72.0,,129.50483711926714,800,57,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,B07,B,2,True,True,False,1.0,False,True,True,0,1.0,502.983040001709,27.0,,140.87222148078948,800,57,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,B07,B,3,True,True,False,1.0,False,True,True,0,1.0,471.9707720068982,30.0,,134.74922460095317,800,57,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,B08,B,1,True,True,False,0.4444444444444444,False,False,True,5,1.0,661.9410989951575,103.0,,140.13775733515575,810,73,0,883,200,,,0,
+qwen3-30b-a3b-instruct-2507,B08,B,2,True,True,False,0.4444444444444444,False,False,True,5,1.0,666.03441699408,27.0,,117.81946829526527,810,73,0,883,200,,,0,
+qwen3-30b-a3b-instruct-2507,B08,B,3,True,True,False,0.4444444444444444,False,False,True,5,1.0,539.8822129936889,26.0,,145.43455046778126,810,73,0,883,200,,,0,
+qwen3-30b-a3b-instruct-2507,C01,C,1,True,False,False,0.2222222222222222,True,False,False,7,0.0,1090.3856429940788,72.0,,117.35904849232011,801,107,0,908,200,,,7,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen3-30b-a3b-instruct-2507,C01,C,2,True,False,False,0.2222222222222222,True,True,False,7,0.0,835.7950130011886,48.0,,134.45076861022721,801,102,0,903,200,,,6,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen3-30b-a3b-instruct-2507,C01,C,3,True,False,False,0.2222222222222222,True,False,False,7,0.0,988.6564220068976,27.0,,112.77735515823407,801,106,0,907,200,,,7,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+qwen3-30b-a3b-instruct-2507,C02,C,1,True,True,False,0.8888888888888888,False,False,False,1,1.0,495.1831350044813,84.0,,147.76693587424523,799,58,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,C02,C,2,True,True,False,0.8888888888888888,False,False,False,1,1.0,543.1772409938276,23.0,,118.2536786068901,799,58,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,C02,C,3,True,True,False,0.8888888888888888,False,False,False,1,1.0,555.7708300038939,60.0,,135.056467574805,799,58,0,857,200,,,0,
+qwen3-30b-a3b-instruct-2507,C03,C,1,True,False,False,0.1111111111111111,False,False,True,8,1.0,750.4280020075385,62.0,,123.59522118332745,790,83,0,873,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,C03,C,2,True,False,False,0.1111111111111111,False,False,True,8,1.0,665.7539930019993,25.0,,132.27918651526616,790,82,0,872,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,C03,C,3,True,False,False,0.1111111111111111,False,False,True,8,1.0,888.8066060026176,26.0,,119.94248611519454,790,82,0,872,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+qwen3-30b-a3b-instruct-2507,C04,C,1,True,True,False,0.8888888888888888,True,False,False,1,0.0,629.5099999988452,75.0,,142.10469978998032,800,77,0,877,200,,,0,
+qwen3-30b-a3b-instruct-2507,C04,C,2,True,True,False,0.8888888888888888,True,False,False,1,0.0,518.7890310044168,21.0,,133.20647002854426,800,63,0,863,200,,,0,
+qwen3-30b-a3b-instruct-2507,C04,C,3,True,True,False,0.2222222222222222,True,False,False,7,0.0,701.5616790013155,26.0,,134.3645688180598,800,89,0,889,200,,,0,
+qwen3-30b-a3b-instruct-2507,C05,C,1,True,False,False,0.4444444444444444,False,False,False,5,0.0,795.6597119919024,79.0,,121.85669935543474,801,86,0,887,200,,,1,Family must be an integer.
+qwen3-30b-a3b-instruct-2507,C05,C,2,True,False,False,0.4444444444444444,False,False,False,5,0.0,687.0474840106908,26.0,,144.9932645570709,801,86,0,887,200,,,1,Family must be an integer.
+qwen3-30b-a3b-instruct-2507,C05,C,3,True,True,False,0.4444444444444444,False,False,False,5,0.0,806.2295039999299,44.0,,112.76706782021257,801,86,0,887,200,,,0,
+qwen3-30b-a3b-instruct-2507,C06,C,1,True,True,False,0.1111111111111111,False,True,False,8,0.0,643.5399190086173,59.0,,143.59587445713245,796,86,0,882,200,,,0,
+qwen3-30b-a3b-instruct-2507,C06,C,2,True,True,False,0.1111111111111111,False,True,False,8,0.0,760.8773429965368,43.0,,125.22861502976365,796,86,0,882,200,,,0,
+qwen3-30b-a3b-instruct-2507,C06,C,3,True,False,False,0.1111111111111111,False,False,False,8,0.0,722.3701919865562,23.0,,138.57246520415598,796,93,0,889,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.

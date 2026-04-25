@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ufce-agent://llm/config/refinement_parser_schema_v1.json",
+  "title": "UFCE Bank Refinement Feedback Output Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task",
+    "status",
+    "constraint_feedback_delta",
+    "ambiguities",
+    "unsupported_feedback",
+    "notes"
+  ],
+  "properties": {
+    "task": {
+      "const": "extract_constraint_feedback"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "apply",
+        "clarification_required",
+        "unsupported_feedback"
+      ]
+    },
+    "constraint_feedback_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "add_blocked_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Income",
+              "CCAvg",
+              "Family",
+              "Education",
+              "Mortgage",
+              "CDAccount",
+              "Online",
+              "SecuritiesAccount",
+              "CreditCard"
+            ]
+          }
+        },
+        "remove_blocked_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Income",
+              "CCAvg",
+              "Family",
+              "Education",
+              "Mortgage",
+              "CDAccount",
+              "Online",
+              "SecuritiesAccount",
+              "CreditCard"
+            ]
+          }
+        },
+        "set_numeric_bounds": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "Income": {
+              "$ref": "#/$defs/numericBounds"
+            },
+            "CCAvg": {
+              "$ref": "#/$defs/numericBounds"
+            },
+            "Mortgage": {
+              "$ref": "#/$defs/numericBounds"
+            }
+          }
+        },
+        "clear_numeric_bounds": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "Income": {
+              "$ref": "#/$defs/clearNumericBounds"
+            },
+            "CCAvg": {
+              "$ref": "#/$defs/clearNumericBounds"
+            },
+            "Mortgage": {
+              "$ref": "#/$defs/clearNumericBounds"
+            }
+          }
+        },
+        "set_max_changed_features": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "clear_max_changed_features": {
+          "type": "boolean"
+        },
+        "set_prefer_fewer_changes": {
+          "type": "boolean"
+        },
+        "clear_prefer_fewer_changes": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unsupported_feedback": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "numericBounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      }
+    },
+    "clearNumericBounds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "min",
+          "max"
+        ]
+      }
+    }
+  }
+}

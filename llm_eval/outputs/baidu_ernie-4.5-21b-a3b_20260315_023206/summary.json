@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 66,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 66
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 1.0,
+      "avg_request_latency_ms": 925.6876322500981,
+      "avg_tokens_per_second": 191.50266062987316,
+      "case_count": 8,
+      "conflict_accuracy": 0.0,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.0,
+      "missing_fields_accuracy": 0.0,
+      "run_count": 24,
+      "schema_valid_rate": 0.0,
+      "stability": 0.625,
+      "status_accuracy": 0.0,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 1.0833333333333333,
+      "avg_request_latency_ms": 831.3342385418613,
+      "avg_tokens_per_second": 191.29571506519238,
+      "case_count": 8,
+      "conflict_accuracy": 0.0,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.6111111111111112,
+      "missing_fields_accuracy": 0.0,
+      "run_count": 24,
+      "schema_valid_rate": 0.0,
+      "stability": 0.125,
+      "status_accuracy": 0.0,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 1.7777777777777777,
+      "avg_request_latency_ms": 1024.5002726666523,
+      "avg_tokens_per_second": 191.5692920180996,
+      "case_count": 6,
+      "conflict_accuracy": 0.0,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.7777777777777778,
+      "missing_fields_accuracy": 0.0,
+      "run_count": 18,
+      "schema_valid_rate": 0.0,
+      "stability": 0.16666666666666666,
+      "status_accuracy": 0.0,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "baidu/ernie-4.5-21b-a3b",
+  "overall": {
+    "avg_hallucination_count": 1.2424242424242424,
+    "avg_request_latency_ms": 918.3262091970722,
+    "avg_tokens_per_second": 191.445579894051,
+    "case_count": 22,
+    "conflict_accuracy": 0.0,
+    "exact_match_rate": 0.0,
+    "field_accuracy_mean": 0.43434343434343436,
+    "missing_fields_accuracy": 0.0,
+    "run_count": 66,
+    "schema_valid_rate": 0.0,
+    "stability": 0.3181818181818182,
+    "status_accuracy": 0.0,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/baidu_ernie-4.5-21b-a3b_20260315_023206",
+  "run_id": "run_20260315_023206"
+}

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% import "partials/session_macros.html" as session_ui %}
+
+{% block page_title %}UFCE Session {{ session.session_id }}{% endblock %}
+{% block body_class %}ufce-app session-body{% endblock %}
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/pages/session.css') }}">
+{% endblock %}
+
+{% block content %}
+<main id="session-page" class="session-shell" data-page-state="{{ page_state }}" data-active-tab="chat">
+  <header id="session-topbar" class="session-topbar">
+    <div class="session-topbar-copy">
+      <div class="pill-row">
+        <span class="pill pill-info" id="dataset-badge">Dataset {{ session.dataset_key }}</span>
+        <span class="pill pill-{{ session_ui.badge_tone(page_state) }}" id="current-state-badge" data-page-state="{{ page_state }}">
+          {{ session_ui.page_state_label(page_state) }}
+        </span>
+        <span class="pill pill-{{ session_ui.badge_tone(session.lifecycle_status) }}" id="lifecycle-badge" {% if not show_lifecycle_badge %}hidden{% endif %}>
+          {{ session.lifecycle_status }}
+        </span>
+      </div>
+      <div class="session-title-block">
+        <h1 class="session-title">UFCE Demo Session</h1>
+        <p id="session-meta-line" class="session-meta-line">
+          Session {{ session.session_id }} · {{ session.turn_count }} turns{% if session.clarification_turns_used > 0 %} · {{ session.clarification_turns_used }} clarification turns{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="session-topbar-actions">
+      <button id="new-case" class="button{% if page_state != 'restart_required' %} button-secondary{% endif %}" type="button">Start New Case</button>
+      <a class="button button-ghost" href="/">Back To Home</a>
+      {% if not session.is_read_only %}
+      <button id="close-session" class="button button-ghost" type="button">Close Session</button>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="session-mobile-tabs" role="tablist" aria-label="Session views">
+    <button class="session-tab is-active" type="button" data-session-tab="chat" aria-selected="true">Chat</button>
+    <button class="session-tab" type="button" data-session-tab="context" aria-selected="false">Context</button>
+  </div>
+
+  <div class="session-body-grid">
+    <section id="chat-pane" class="chat-pane" data-pane="chat">
+      <div class="chat-pane-inner">
+        {{ session_ui.chat_header(chat_header_summary) }}
+
+        <div id="chat-transcript" class="chat-transcript" aria-live="polite">
+          <div id="error-box" class="error-box" hidden></div>
+          <div id="transcript-items" class="chat-transcript-items">
+            {% for item in transcript_items %}
+            {{ session_ui.transcript_item(item) }}
+            {% endfor %}
+          </div>
+          <div id="transcript-pending-list" class="chat-transcript-pending-list"></div>
+        </div>
+
+        <section
+          id="chat-composer-bar"
+          class="chat-composer-bar"
+          data-composer-mode="{{ composer_mode }}"
+          data-submit-target="{{ composer_context.submit_target if composer_context.submit_target else '' }}"
+          {% if composer_context.hidden %}hidden{% endif %}
+        >
+          <div class="composer-copy">
+            {% if composer_context.mode_chip_text %}
+            <span class="pill pill-info composer-mode-chip" id="composer-mode-chip">{{ composer_context.mode_chip_text }}</span>
+            {% endif %}
+            {% if composer_context.title %}
+            <h2 id="composer-title" class="composer-title">{{ composer_context.title }}</h2>
+            {% endif %}
+            <p id="composer-help" class="composer-help">{{ composer_context.help_text }}</p>
+          </div>
+          <label class="sr-only" for="composer-input">Message</label>
+          <textarea
+            id="composer-input"
+            placeholder="{{ composer_context.placeholder if composer_context.placeholder else '' }}"
+            {% if composer_context.disabled %}disabled{% endif %}
+          ></textarea>
+          <div class="composer-actions">
+            <button id="composer-submit" class="button" type="button" {% if composer_context.disabled %}disabled{% endif %}>
+              {{ composer_context.button_label if composer_context.button_label else "Send Message" }}
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside id="context-pane" class="context-pane" data-pane="context">
+      <div id="state-rail" class="context-sections" data-page-state="{{ page_state }}">
+        {% for section in context_sections %}
+          {% if section.id == "review" %}
+          <details id="review-card" class="context-section" data-main-section="true">
+            <summary class="context-section-summary">
+              <div>
+                <span class="context-section-title">{{ section.title }}</span>
+                <p id="review-card-summary-line" class="context-summary-line">{{ section.summary_line }}</p>
+              </div>
+              <span class="context-summary-meta">Open</span>
+            </summary>
+            <div class="context-section-body">
+              <div class="context-summary-block">
+                <strong id="review-headline">{{ review_summary.headline }}</strong>
+                <p id="review-summary-line">{{ review_summary.summary_line }}</p>
+                <p id="review-constraints-line">{{ review_summary.constraints_line }}</p>
+                <p id="review-preferences-line">{{ review_summary.preferences_line }}</p>
+              </div>
+
+              {% if session.ui_review %}
+              <details class="context-subdetail review-full-detail">
+                <summary>View full review</summary>
+                {% if session.ui_review.profile_fields %}
+                <div class="review-grid" id="profile-review-grid">
+                  {% for field in session.ui_review.profile_fields %}
+                  <div class="field-card {{ 'missing' if field.missing else '' }}">
+                    <span class="field-label">{{ field.label }}</span>
+                    {% if session.ui_review.profile_editable %}
+                      {% if field.feature_kind == "binary" %}
+                      <select class="profile-field-input" data-profile-field="{{ field.field_name }}" data-feature-kind="{{ field.feature_kind }}">
+                        <option value="" {% if field.value is none %}selected{% endif %}>Not set</option>
+                        <option value="1" {% if field.value == 1 %}selected{% endif %}>Yes</option>
+                        <option value="0" {% if field.value == 0 %}selected{% endif %}>No</option>
+                      </select>
+                      <div class="chip-row">
+                        <button class="mini-chip quick-binary" type="button" data-target-field="{{ field.field_name }}" data-target-value="1">Yes</button>
+                        <button class="mini-chip quick-binary" type="button" data-target-field="{{ field.field_name }}" data-target-value="0">No</button>
+                      </div>
+                      {% else %}
+                      <input
+                        class="profile-field-input"
+                        data-profile-field="{{ field.field_name }}"
+                        data-feature-kind="{{ field.feature_kind }}"
+                        type="number"
+                        step="{{ field.step if field.step is not none else 'any' }}"
+                        value="{{ '' if field.value is none else field.value }}"
+                      >
+                      {% endif %}
+                    {% else %}
+                    <span class="field-value">{{ field.display_value }}</span>
+                    {% endif %}
+                    {% if field.missing %}
+                    <span class="field-note">Missing</span>
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <p class="supporting-copy">No structured review is available yet.</p>
+                {% endif %}
+
+                <div class="section-block" id="review-constraints-section">
+                  <span class="section-label">Constraints</span>
+                  {% if session.ui_review.constraints %}
+                  <div class="constraint-grid">
+                    {% for item in session.ui_review.constraints %}
+                    <div class="constraint-item">
+                      <strong>{{ item.label }}</strong>
+                      <span>{{ item.display_value }}</span>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <p class="supporting-copy">No active hard constraints.</p>
+                  {% endif %}
+                </div>
+
+                <div class="section-block" id="review-preferences-section">
+                  <span class="section-label">Preferences</span>
+                  {% if session.ui_review.preferences %}
+                  <div class="constraint-grid">
+                    {% for item in session.ui_review.preferences %}
+                    <div class="constraint-item">
+                      <strong>{{ item.label }}</strong>
+                      <span>{{ item.display_value }}</span>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <p class="supporting-copy">No active soft preferences.</p>
+                  {% endif %}
+                </div>
+
+                {% if session.ui_review.profile_editable %}
+                <button id="apply-profile-edits" class="button button-ghost" type="button">Use Review Edits</button>
+                {% else %}
+                <p class="supporting-copy" id="review-readonly-copy">This review is read-only in the current state.</p>
+                {% endif %}
+              </details>
+              {% endif %}
+            </div>
+          </details>
+          {% elif section.id == "next-action" and next_action_summary %}
+          <details id="result-card" class="context-section" data-main-section="true">
+            <summary class="context-section-summary">
+              <div>
+                <span class="context-section-title">{{ section.title }}</span>
+                <p id="result-card-summary-line" class="context-summary-line">{{ section.summary_line }}</p>
+              </div>
+              <span class="context-summary-meta">Open</span>
+            </summary>
+            <div class="context-section-body">
+              <div class="context-summary-block">
+                <strong id="result-headline">{{ next_action_summary.headline }}</strong>
+                <p id="result-summary-copy">{{ next_action_summary.body }}</p>
+              </div>
+              {% if next_action_summary.facts %}
+              <div id="result-facts-row" class="fact-row">
+                {% for fact in next_action_summary.facts %}
+                <span class="fact-chip">{{ fact }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if page_state == "restart_required" %}
+              <button class="button" type="button" data-start-new-case="true">Start New Case</button>
+              {% endif %}
+            </div>
+          </details>
+          {% endif %}
+        {% endfor %}
+
+        {% if composer_context.advanced_controls_relevant %}
+        <details id="advanced-refinement-controls" class="context-section context-section-advanced" {% if show_advanced_controls_by_default %}open{% endif %}>
+          <summary class="context-section-summary">
+            <div>
+              <span class="context-section-title">Advanced Structured Controls</span>
+              <p class="context-summary-line">Blocked fields, numeric bounds, change limits, and soft preferences.</p>
+            </div>
+            <span class="context-summary-meta">Open</span>
+          </summary>
+          <div class="context-section-body">
+            <div class="control-grid">
+              <div class="control-card">
+                <span class="section-label">Blocked Fields</span>
+                <div class="chip-row" id="blocked-field-controls">
+                  {% for field_name in ["Income", "Family", "CCAvg", "Education", "Mortgage", "SecuritiesAccount", "CDAccount", "Online", "CreditCard"] %}
+                  {% set is_selected = session.active_constraint_spec and session.active_constraint_spec.disallowed_changes and field_name in session.active_constraint_spec.disallowed_changes %}
+                  <button class="constraint-chip {{ 'is-selected' if is_selected else '' }}" type="button" data-blocked-field="{{ field_name }}" aria-pressed="{{ 'true' if is_selected else 'false' }}">
+                    {{ field_name }}
+                  </button>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="control-card">
+                <span class="section-label">Numeric Bounds</span>
+                <div class="bound-grid" id="numeric-bound-controls">
+                  {% for field_name in ["Income", "CCAvg", "Mortgage"] %}
+                  {% set bound = session.active_constraint_spec.numeric_bounds[field_name] if session.active_constraint_spec and session.active_constraint_spec.numeric_bounds and field_name in session.active_constraint_spec.numeric_bounds else {} %}
+                  <div class="bound-card">
+                    <strong>{{ field_name }}</strong>
+                    <div class="bound-inputs">
+                      <input type="number" step="any" placeholder="Min" data-bound-field="{{ field_name }}" data-bound-key="min" value="{{ bound.min if bound and bound.min is defined else '' }}" {% if session.is_read_only or not session.refinement_allowed %}disabled{% endif %}>
+                      <input type="number" step="any" placeholder="Max" data-bound-field="{{ field_name }}" data-bound-key="max" value="{{ bound.max if bound and bound.max is defined else '' }}" {% if session.is_read_only or not session.refinement_allowed %}disabled{% endif %}>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="control-card">
+                <span class="section-label">Change Limit And Preference</span>
+                <div class="bound-grid">
+                  <div class="bound-card">
+                    <strong>Max changed features</strong>
+                    <select id="max-changed-features" {% if session.is_read_only or not session.refinement_allowed %}disabled{% endif %}>
+                      <option value="" {% if not session.active_constraint_spec or session.active_constraint_spec.max_changed_features is not defined %}selected{% endif %}>No limit</option>
+                      <option value="1" {% if session.active_constraint_spec and session.active_constraint_spec.max_changed_features == 1 %}selected{% endif %}>1</option>
+                      <option value="2" {% if session.active_constraint_spec and session.active_constraint_spec.max_changed_features == 2 %}selected{% endif %}>2</option>
+                      <option value="3" {% if session.active_constraint_spec and session.active_constraint_spec.max_changed_features == 3 %}selected{% endif %}>3</option>
+                    </select>
+                  </div>
+                  <div class="bound-card">
+                    <strong>Soft preference</strong>
+                    <label class="constraint-item">
+                      <input id="prefer-fewer-changes" type="checkbox" {% if session.active_constraint_spec and session.active_constraint_spec.prefer_fewer_changes %}checked{% endif %} {% if session.is_read_only or not session.refinement_allowed %}disabled{% endif %}>
+                      <span>Prefer fewer changes</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="apply-structured-refinement" class="button button-ghost button-block" type="button" {% if session.is_read_only or not session.refinement_allowed %}disabled{% endif %}>
+              Apply Structured Refinement
+            </button>
+          </div>
+        </details>
+        {% endif %}
+
+        <details id="technical-drawer" class="context-section technical-drawer" data-main-section="true">
+          <summary class="context-section-summary">
+            <div>
+              <span class="context-section-title">Technical Details</span>
+              <p class="context-summary-line">Artifacts, payloads, and raw traces</p>
+            </div>
+            <span class="context-summary-meta">Open</span>
+          </summary>
+          <div class="context-section-body">
+            <div class="supporting-copy">Artifacts, previews, debug summaries, and raw payloads stay available here without dominating the session flow.</div>
+            <div id="technical-turns" class="technical-turns">
+              {% for turn in turns %}
+              {{ session_ui.technical_turn(turn, session_ui.badge_tone(turn.public_state)) }}
+              {% endfor %}
+            </div>
+          </div>
+        </details>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div id="preview-modal" class="modal-shell" hidden>
+  <div class="modal-card">
+    <div class="modal-header">
+      <strong id="preview-title">Artifact Preview</strong>
+      <button id="preview-close" class="button button-ghost" type="button">Close</button>
+    </div>
+    <div class="modal-content">
+      <pre id="preview-content"></pre>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_data %}
+<script id="session-page-data" type="application/json">
+{{ {
+  "apiPrefix": api_prefix,
+  "sessionId": session.session_id,
+  "session": session,
+  "turns": turns,
+  "latestTurn": latest_turn,
+  "pageState": page_state,
+  "chatHeaderSummary": chat_header_summary,
+  "composerMode": composer_mode,
+  "composerContext": composer_context,
+  "transcriptItems": transcript_items,
+  "reviewSummary": review_summary,
+  "nextActionSummary": next_action_summary,
+  "contextSections": context_sections,
+  "latestRuntimeSummary": latest_runtime_summary,
+  "showAdvancedControlsByDefault": show_advanced_controls_by_default
+} | tojson }}
+</script>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', path='js/pages/session.js') }}"></script>
+{% endblock %}

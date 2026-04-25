@@ -1,0 +1,518 @@
+benchmark_name: ufce_bank_cf_parser_v1
+description: Bank-only benchmark for evaluating LLM ability to extract a canonical
+  counterfactual-request JSON structure from natural-language input.
+target_cf_fields:
+- name: Income
+  type: float
+  description: Target income value
+- name: CCAvg
+  type: float
+  description: Average credit card spending
+- name: Family
+  type: int
+  description: Family size
+- name: Education
+  type: int
+  description: Education category code
+- name: Mortgage
+  type: float
+  description: Mortgage value
+- name: CDAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: Online
+  type: binary
+  description: 1=yes, 0=no
+- name: SecuritiesAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: CreditCard
+  type: binary
+  description: 1=yes, 0=no
+output_contract:
+  task: extract_cf_request
+  status_enum:
+  - complete
+  - partial
+  - needs_clarification
+  - conflict
+  rules:
+  - Return only fields explicitly inferable from the input.
+  - Do not invent missing values.
+  - Use canonical field names exactly as defined.
+  - Binary fields must be 0 or 1.
+  - Education must be a numeric category code when provided.
+  - missing_fields must list canonical field names that are not specified but would
+    be needed for a complete CF request.
+  - conflicts must describe contradictory or invalid instructions briefly.
+  - notes may contain short normalization notes if needed; otherwise return an empty
+    list.
+cases:
+- case_id: A01
+  group: A
+  description: Direct full specification, canonical order
+  input: My target profile is Income 40, CCAvg 1.5, Family 3, Education 2, Mortgage
+    80, CDAccount yes, Online yes, SecuritiesAccount yes, and CreditCard yes.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 40
+      CCAvg: 1.5
+      Family: 3
+      Education: 2
+      Mortgage: 80
+      CDAccount: 1
+      Online: 1
+      SecuritiesAccount: 1
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A02
+  group: A
+  description: Full extraction with natural phrasing and reordered fields
+  input: 'I want a mortgage of 80, family size 3, income 40, education level 2, average
+    card spending 1.5, and I want all four services enabled: CD account, online banking,
+    securities account, and credit card.'
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 40
+      CCAvg: 1.5
+      Family: 3
+      Education: 2
+      Mortgage: 80
+      CDAccount: 1
+      Online: 1
+      SecuritiesAccount: 1
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A03
+  group: A
+  description: Full extraction with negative binary values
+  input: Please set Income to 55 and CCAvg to 2.2. Family should be 4, Education 3,
+    Mortgage 120. I do not want a CD account, I do not use online banking, I do not
+    have a securities account, and I do not want a credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 55
+      CCAvg: 2.2
+      Family: 4
+      Education: 3
+      Mortgage: 120
+      CDAccount: 0
+      Online: 0
+      SecuritiesAccount: 0
+      CreditCard: 0
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A04
+  group: A
+  description: Full extraction with mixed yes/no binary values
+  input: 'Target outcome: Income 65, CCAvg 3.0, Family 2, Education 1, Mortgage 0.
+    Keep CD account yes, Online yes, SecuritiesAccount no, CreditCard yes.'
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 65
+      CCAvg: 3.0
+      Family: 2
+      Education: 1
+      Mortgage: 0
+      CDAccount: 1
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A05
+  group: A
+  description: Full extraction with decimal normalization
+  input: I need income 40.0, card average spending 1.50, family 3, education code
+    2, mortgage 80.0, CD account on, online on, securities on, credit card on.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 40.0
+      CCAvg: 1.5
+      Family: 3
+      Education: 2
+      Mortgage: 80.0
+      CDAccount: 1
+      Online: 1
+      SecuritiesAccount: 1
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A06
+  group: A
+  description: Full extraction with concise semicolon-separated style
+  input: Income=72; CCAvg=4.8; Family=1; Education=2; Mortgage=200; CDAccount=1; Online=0;
+    SecuritiesAccount=1; CreditCard=0.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 72
+      CCAvg: 4.8
+      Family: 1
+      Education: 2
+      Mortgage: 200
+      CDAccount: 1
+      Online: 0
+      SecuritiesAccount: 1
+      CreditCard: 0
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A07
+  group: A
+  description: Full extraction with prose and synonyms
+  input: I earn 90, spend about 5.5 on my credit card each month, live in a family
+    of 5, and my education category is 3. My mortgage target is 250. I want online
+    banking and a credit card, but no CD account and no securities account.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 90
+      CCAvg: 5.5
+      Family: 5
+      Education: 3
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: A08
+  group: A
+  description: Full extraction with zero values and binary mix
+  input: Set my requested profile to income 30, CCAvg 0.8, family 2, education 1,
+    mortgage 0, no CD account, yes online, no securities account, no credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 30
+      CCAvg: 0.8
+      Family: 2
+      Education: 1
+      Mortgage: 0
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 0
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: B01
+  group: B
+  description: Only numeric values specified
+  input: I want Income 40, CCAvg 1.5, Family 3, Education 2, and Mortgage 80.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Income: 40
+      CCAvg: 1.5
+      Family: 3
+      Education: 2
+      Mortgage: 80
+    missing_fields:
+    - CDAccount
+    - Online
+    - SecuritiesAccount
+    - CreditCard
+    conflicts: []
+    notes: []
+- case_id: B02
+  group: B
+  description: Only binary values specified
+  input: I want CD account yes, online yes, securities account no, and credit card
+    yes.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      CDAccount: 1
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    missing_fields:
+    - Income
+    - CCAvg
+    - Family
+    - Education
+    - Mortgage
+    conflicts: []
+    notes: []
+- case_id: B03
+  group: B
+  description: Mixed partial extraction
+  input: Please set income to 50, mortgage to 100, and make online banking available.
+    No securities account.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Income: 50
+      Mortgage: 100
+      Online: 1
+      SecuritiesAccount: 0
+    missing_fields:
+    - CCAvg
+    - Family
+    - Education
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes: []
+- case_id: B04
+  group: B
+  description: Natural language partial extraction with omitted education and family
+  input: I can aim for income 62 and card spending around 2.7. I also want a credit
+    card and online banking.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Income: 62
+      CCAvg: 2.7
+      Online: 1
+      CreditCard: 1
+    missing_fields:
+    - Family
+    - Education
+    - Mortgage
+    - CDAccount
+    - SecuritiesAccount
+    conflicts: []
+    notes: []
+- case_id: B05
+  group: B
+  description: Single field extraction
+  input: The only thing I know is that my target income should be 45.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Income: 45
+    missing_fields:
+    - CCAvg
+    - Family
+    - Education
+    - Mortgage
+    - CDAccount
+    - Online
+    - SecuritiesAccount
+    - CreditCard
+    conflicts: []
+    notes: []
+- case_id: B06
+  group: B
+  description: Partial extraction with explicit refusal to specify some fields
+  input: Use family size 4 and education 2. I want CD account yes. I am not ready
+    to decide on income, mortgage, spending, online banking, securities account, or
+    credit card yet.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Family: 4
+      Education: 2
+      CDAccount: 1
+    missing_fields:
+    - Income
+    - CCAvg
+    - Mortgage
+    - Online
+    - SecuritiesAccount
+    - CreditCard
+    conflicts: []
+    notes: []
+- case_id: B07
+  group: B
+  description: Underspecified qualitative wording that still includes some exact fields
+  input: I want online banking and a CD account, and my family size is 3. My mortgage
+    should stay low.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Online: 1
+      CDAccount: 1
+      Family: 3
+    missing_fields:
+    - Income
+    - CCAvg
+    - Education
+    - Mortgage
+    - SecuritiesAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - '''low'' for Mortgage is qualitative and should not be converted to a numeric
+      value'
+- case_id: B08
+  group: B
+  description: Education mentioned semantically but not in numeric code
+  input: I want income 48, card average 1.2, family 2, and I studied at the undergraduate
+    level. Also set credit card to yes.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 48
+      CCAvg: 1.2
+      Family: 2
+      CreditCard: 1
+    missing_fields:
+    - Education
+    - Mortgage
+    - CDAccount
+    - Online
+    - SecuritiesAccount
+    conflicts: []
+    notes:
+    - Education is mentioned semantically, but the benchmark requires numeric category
+      code only
+- case_id: C01
+  group: C
+  description: Direct contradiction in binary field
+  input: I want CDAccount yes and no at the same time. Set income to 40 and online
+    to yes.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Income: 40
+      Online: 1
+    missing_fields:
+    - CCAvg
+    - Family
+    - Education
+    - Mortgage
+    - SecuritiesAccount
+    - CreditCard
+    conflicts:
+    - CDAccount is specified as both 1 and 0
+    notes: []
+- case_id: C02
+  group: C
+  description: Ambiguous alternative numeric value
+  input: Set family size to 2 or maybe 3, income to 55, and credit card yes.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 55
+      CreditCard: 1
+    missing_fields:
+    - CCAvg
+    - Family
+    - Education
+    - Mortgage
+    - CDAccount
+    - Online
+    - SecuritiesAccount
+    conflicts:
+    - 'Family has multiple possible values: 2 or 3'
+    notes: []
+- case_id: C03
+  group: C
+  description: Qualitative numeric ambiguity
+  input: I need high income, low mortgage, and online banking yes.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Online: 1
+    missing_fields:
+    - Income
+    - CCAvg
+    - Family
+    - Education
+    - Mortgage
+    - CDAccount
+    - SecuritiesAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - '''high'' and ''low'' are qualitative and should not be mapped to numeric values
+      without clarification'
+- case_id: C04
+  group: C
+  description: Contradiction between enabled and disabled service
+  input: Please make SecuritiesAccount enabled, but also set SecuritiesAccount to
+    no. Income 60, Education 2.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Income: 60
+      Education: 2
+    missing_fields:
+    - CCAvg
+    - Family
+    - Mortgage
+    - CDAccount
+    - Online
+    - CreditCard
+    conflicts:
+    - SecuritiesAccount is specified as both 1 and 0
+    notes: []
+- case_id: C05
+  group: C
+  description: Invalid Education representation plus valid fields
+  input: Income 52, CCAvg 2.0, Education master, Mortgage 90, Online yes.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 52
+      CCAvg: 2.0
+      Mortgage: 90
+      Online: 1
+    missing_fields:
+    - Family
+    - Education
+    - CDAccount
+    - SecuritiesAccount
+    - CreditCard
+    conflicts:
+    - Education must be a numeric category code, not free-text label
+    notes: []
+- case_id: C06
+  group: C
+  description: Multiple conflicts and one valid field
+  input: CreditCard yes and no. CDAccount yes and no. Mortgage 110.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Mortgage: 110
+    missing_fields:
+    - Income
+    - CCAvg
+    - Family
+    - Education
+    - Online
+    - SecuritiesAccount
+    conflicts:
+    - CreditCard is specified as both 1 and 0
+    - CDAccount is specified as both 1 and 0
+    notes: []

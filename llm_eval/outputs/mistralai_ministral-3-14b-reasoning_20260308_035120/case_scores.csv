@@ -1,0 +1,67 @@
+model_alias,case_id,group,repeat_id,valid_json,schema_valid,exact_match,field_accuracy,status_correct,missing_fields_correct,conflicts_correct,hallucination_count,stability_case,request_latency_ms,ttft_ms,total_time_ms,tokens_per_second,prompt_tokens,completion_tokens,reasoning_output_tokens,total_tokens,http_status_code,api_error,parse_error,validation_error_count,validation_errors
+mistralai/ministral-3-14b-reasoning,A01,A,1,True,True,True,1.0,True,True,True,0,0.0,6019.63249099208,1101.0,,26.75251635463308,831,124,0,955,200,,,0,
+mistralai/ministral-3-14b-reasoning,A01,A,2,True,True,True,1.0,True,True,True,0,0.0,4860.712585999863,93.0,,27.06599190857806,831,124,0,955,200,,,0,
+mistralai/ministral-3-14b-reasoning,A01,A,3,True,True,True,1.0,True,True,True,0,0.0,4983.220611000434,99.0,,27.31810676129545,831,128,0,959,200,,,0,
+mistralai/ministral-3-14b-reasoning,A02,A,1,True,True,True,1.0,True,True,True,0,1.0,4937.371628999244,154.0,,27.55160649195837,838,124,0,962,200,,,0,
+mistralai/ministral-3-14b-reasoning,A02,A,2,True,True,True,1.0,True,True,True,0,1.0,4914.420594010153,113.0,,27.353130234870743,838,124,0,962,200,,,0,
+mistralai/ministral-3-14b-reasoning,A02,A,3,True,True,True,1.0,True,True,True,0,1.0,4899.3019059998915,108.0,,27.493005912326574,838,124,0,962,200,,,0,
+mistralai/ministral-3-14b-reasoning,A03,A,1,True,True,True,1.0,True,True,True,0,1.0,5048.770116001833,146.0,,28.035719680184158,850,129,0,979,200,,,0,
+mistralai/ministral-3-14b-reasoning,A03,A,2,True,True,True,1.0,True,True,True,0,1.0,4998.711345004267,102.0,,27.96397546280379,850,129,0,979,200,,,0,
+mistralai/ministral-3-14b-reasoning,A03,A,3,True,True,True,1.0,True,True,True,0,1.0,5071.269847001531,106.0,,27.7358872710338,850,129,0,979,200,,,0,
+mistralai/ministral-3-14b-reasoning,A04,A,1,True,True,True,1.0,True,True,True,0,1.0,4841.681963996962,164.0,,28.095521117096197,829,123,0,952,200,,,0,
+mistralai/ministral-3-14b-reasoning,A04,A,2,True,True,True,1.0,True,True,True,0,1.0,4818.099836003967,128.0,,28.095996023617083,829,123,0,952,200,,,0,
+mistralai/ministral-3-14b-reasoning,A04,A,3,True,True,True,1.0,True,True,True,0,1.0,4833.661191994906,130.0,,27.996795163610543,829,123,0,952,200,,,0,
+mistralai/ministral-3-14b-reasoning,A05,A,1,True,True,True,1.0,True,True,True,0,1.0,5026.106106990483,154.0,,27.867215331496855,833,128,0,961,200,,,0,
+mistralai/ministral-3-14b-reasoning,A05,A,2,True,True,True,1.0,True,True,True,0,1.0,4950.770935000037,107.0,,28.097558234384564,833,128,0,961,200,,,0,
+mistralai/ministral-3-14b-reasoning,A05,A,3,True,True,True,1.0,True,True,True,0,1.0,4894.598831990152,92.0,,28.085641018552103,833,128,0,961,200,,,0,
+mistralai/ministral-3-14b-reasoning,A06,A,1,True,True,True,1.0,True,True,True,0,1.0,4861.092659004498,139.0,,28.026572778395238,831,125,0,956,200,,,0,
+mistralai/ministral-3-14b-reasoning,A06,A,2,True,True,True,1.0,True,True,True,0,1.0,4832.674164004857,98.0,,28.07049691965595,831,125,0,956,200,,,0,
+mistralai/ministral-3-14b-reasoning,A06,A,3,True,True,True,1.0,True,True,True,0,1.0,4852.854061988182,116.0,,28.067975697174834,831,125,0,956,200,,,0,
+mistralai/ministral-3-14b-reasoning,A07,A,1,True,True,True,1.0,True,True,True,0,1.0,4909.433053995599,161.0,,28.007106187038623,847,125,0,972,200,,,0,
+mistralai/ministral-3-14b-reasoning,A07,A,2,True,True,True,1.0,True,True,True,0,1.0,4933.500956001808,117.0,,28.12942686855344,847,125,0,972,200,,,0,
+mistralai/ministral-3-14b-reasoning,A07,A,3,True,True,True,1.0,True,True,True,0,1.0,4908.69206401112,130.0,,27.95912063421127,847,125,0,972,200,,,0,
+mistralai/ministral-3-14b-reasoning,A08,A,1,True,True,True,1.0,True,True,True,0,0.0,4897.416407999117,156.0,,28.08139092657092,829,127,0,956,200,,,0,
+mistralai/ministral-3-14b-reasoning,A08,A,2,True,True,True,1.0,True,True,True,0,0.0,4753.293001995189,115.0,,28.00412548580327,829,123,0,952,200,,,0,
+mistralai/ministral-3-14b-reasoning,A08,A,3,True,True,True,1.0,True,True,True,0,0.0,4893.043040996417,101.0,,27.952991432298077,829,127,0,956,200,,,0,
+mistralai/ministral-3-14b-reasoning,B01,B,1,True,True,False,1.0,False,True,True,0,1.0,4515.400231000967,133.0,,28.062892388161988,814,114,0,928,200,,,0,
+mistralai/ministral-3-14b-reasoning,B01,B,2,True,True,False,1.0,False,True,True,0,1.0,4441.262093998375,128.0,,28.04933139251644,814,114,0,928,200,,,0,
+mistralai/ministral-3-14b-reasoning,B01,B,3,True,True,False,1.0,False,True,True,0,1.0,4455.815391993383,105.0,,27.96200405154722,814,114,0,928,200,,,0,
+mistralai/ministral-3-14b-reasoning,B02,B,1,True,True,False,1.0,False,True,True,0,0.0,4289.823872008128,182.0,,27.936636575166784,803,107,0,910,200,,,0,
+mistralai/ministral-3-14b-reasoning,B02,B,2,True,True,True,1.0,True,True,True,0,0.0,4155.362781995791,114.0,,27.910497555483854,803,107,0,910,200,,,0,
+mistralai/ministral-3-14b-reasoning,B02,B,3,True,True,True,1.0,True,True,True,0,0.0,4189.976819994627,88.0,,27.84491786009464,803,107,0,910,200,,,0,
+mistralai/ministral-3-14b-reasoning,B03,B,1,True,True,True,1.0,True,True,True,0,1.0,4427.177071003825,130.0,,27.61040711545292,810,110,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,B03,B,2,True,True,True,1.0,True,True,True,0,1.0,4385.696810990339,125.0,,27.681939547677107,810,110,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,B03,B,3,True,True,True,1.0,True,True,True,0,1.0,4423.002487004851,120.0,,27.609131996499165,810,110,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,B04,B,1,True,True,True,1.0,True,True,True,0,1.0,4323.904379009036,147.0,,28.002005961881633,812,110,0,922,200,,,0,
+mistralai/ministral-3-14b-reasoning,B04,B,2,True,True,True,1.0,True,True,True,0,1.0,4359.813326009316,111.0,,27.846712455100338,812,110,0,922,200,,,0,
+mistralai/ministral-3-14b-reasoning,B04,B,3,True,True,True,1.0,True,True,True,0,1.0,4420.493400000851,124.0,,27.24255108164073,812,110,0,922,200,,,0,
+mistralai/ministral-3-14b-reasoning,B05,B,1,True,False,False,0.1111111111111111,True,True,True,8,1.0,6175.2317330101505,173.0,,27.521950078358167,801,156,0,957,200,,,8,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,B05,B,2,True,False,False,0.1111111111111111,True,True,True,8,1.0,6171.646136994241,90.0,,27.239844209044858,801,156,0,957,200,,,8,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,B05,B,3,True,False,False,0.1111111111111111,True,True,True,8,1.0,6409.844684996642,107.0,,27.075915660605478,801,156,0,957,200,,,8,CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,B06,B,1,True,True,True,1.0,True,True,True,0,1.0,4216.062958003022,129.0,,27.052680673538916,825,104,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,B06,B,2,True,True,True,1.0,True,True,True,0,1.0,4059.079719008878,112.0,,27.679310699996456,825,104,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,B06,B,3,True,True,True,1.0,True,True,True,0,1.0,4078.3958610118134,99.0,,27.982880934456027,825,104,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,B07,B,1,True,True,False,0.8888888888888888,False,False,True,1,1.0,4297.587855005986,134.0,,27.832414140194167,808,109,0,917,200,,,0,
+mistralai/ministral-3-14b-reasoning,B07,B,2,True,True,False,0.8888888888888888,False,False,True,1,1.0,4314.122258991119,96.0,,28.001130320856987,808,109,0,917,200,,,0,
+mistralai/ministral-3-14b-reasoning,B07,B,3,True,True,False,0.8888888888888888,False,False,True,1,1.0,4457.357209990732,116.0,,27.417838297135916,808,109,0,917,200,,,0,
+mistralai/ministral-3-14b-reasoning,B08,B,1,True,True,False,0.8888888888888888,False,False,True,1,0.0,4429.319214003044,145.0,,27.873505591597887,818,113,0,931,200,,,0,
+mistralai/ministral-3-14b-reasoning,B08,B,2,True,False,False,0.4444444444444444,False,True,True,5,0.0,6266.74444899254,137.0,,27.822467616386596,818,160,0,978,200,,,5,Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,B08,B,3,True,False,False,0.4444444444444444,False,True,True,5,0.0,6066.918810000061,106.0,,28.165373525440195,818,158,0,976,200,,,5,Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,C01,C,1,True,True,False,1.0,True,True,False,0,0.0,4484.848911000881,167.0,,28.13885116105422,808,112,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,C01,C,2,True,True,False,1.0,True,False,False,0,0.0,2928.8257570005953,110.0,,28.334262274607465,808,76,0,884,200,,,0,
+mistralai/ministral-3-14b-reasoning,C01,C,3,True,True,False,1.0,True,True,False,0,0.0,4424.6963699988555,123.0,,28.09635645446057,808,112,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,C02,C,1,True,False,False,0.8888888888888888,True,False,False,1,0.0,3397.1648209990235,195.0,,27.965846198759408,807,82,0,889,200,,,1,Family must be an integer.
+mistralai/ministral-3-14b-reasoning,C02,C,2,True,False,False,0.8888888888888888,True,False,False,1,0.0,4237.295507991803,102.0,,28.162799757799924,807,108,0,915,200,,,1,Family must be an integer.
+mistralai/ministral-3-14b-reasoning,C02,C,3,True,False,False,0.8888888888888888,True,False,False,1,0.0,4156.464947009226,90.0,,28.244073778751094,807,108,0,915,200,,,1,Family must be an integer.
+mistralai/ministral-3-14b-reasoning,C03,C,1,True,False,False,0.1111111111111111,False,False,True,8,0.0,5454.455136001343,199.0,,28.259432897774733,798,140,0,938,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+mistralai/ministral-3-14b-reasoning,C03,C,2,True,False,False,0.1111111111111111,False,True,True,8,0.0,5891.810194007121,106.0,,27.937209569425516,798,153,0,951,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric. | CDAccount must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,C03,C,3,True,False,False,0.1111111111111111,False,False,True,8,0.0,5503.488223999739,139.0,,27.990169852347854,798,140,0,938,200,,,5,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | Mortgage must be numeric.
+mistralai/ministral-3-14b-reasoning,C04,C,1,True,True,False,0.8888888888888888,True,True,False,1,1.0,4731.060935999267,142.0,,28.102191645799046,808,121,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,C04,C,2,True,True,False,0.8888888888888888,True,True,False,1,1.0,4748.287416005041,95.0,,28.17696437686527,808,121,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,C04,C,3,True,True,False,0.8888888888888888,True,True,False,1,1.0,4776.54328099743,114.0,,28.112128826966828,808,121,0,929,200,,,0,
+mistralai/ministral-3-14b-reasoning,C05,C,1,True,True,False,1.0,False,True,False,0,0.0,4868.6966779932845,152.0,,28.2323862354367,809,124,0,933,200,,,0,
+mistralai/ministral-3-14b-reasoning,C05,C,2,True,True,False,1.0,False,True,False,0,0.0,4340.980107008363,137.0,,28.375843414426893,809,111,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,C05,C,3,True,True,False,1.0,False,True,False,0,0.0,4317.827459002729,111.0,,28.30518497438381,809,111,0,920,200,,,0,
+mistralai/ministral-3-14b-reasoning,C06,C,1,True,False,False,0.1111111111111111,True,False,False,8,1.0,7134.135250002146,188.0,,27.977286747359102,804,182,0,986,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,C06,C,2,True,False,False,0.1111111111111111,True,False,False,8,1.0,7063.990634007496,113.0,,27.84211379775611,804,182,0,986,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.
+mistralai/ministral-3-14b-reasoning,C06,C,3,True,False,False,0.1111111111111111,True,False,False,8,1.0,7009.641985001508,109.0,,27.95136033281163,804,182,0,986,200,,,8,Income must be numeric. | CCAvg must be numeric. | Family must be an integer. | Education must be an integer. | CDAccount must be binary 0 or 1. | Online must be binary 0 or 1. | SecuritiesAccount must be binary 0 or 1. | CreditCard must be binary 0 or 1.

@@ -1,0 +1,8 @@
+Return exactly one JSON object that matches the schema reference.
+Do not include markdown fences, explanation, or commentary.
+
+Schema and field contract:
+{{schema_and_field_contract_json}}
+
+Case payload:
+{{case_payload_json}}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block page_title %}UFCE Agent Demo{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/core/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/core/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/components/ui.css') }}">
+  {% block page_styles %}{% endblock %}
+</head>
+<body class="{% block body_class %}ufce-app{% endblock %}">
+  {% block content %}{% endblock %}
+  {% block page_data %}{% endblock %}
+  <script src="{{ url_for('static', path='js/core/utils.js') }}"></script>
+  <script src="{{ url_for('static', path='js/core/http.js') }}"></script>
+  {% block page_scripts %}{% endblock %}
+</body>
+</html>

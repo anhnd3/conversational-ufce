@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 29,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 12
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.0,
+      "avg_request_latency_ms": 11213.601565625746,
+      "avg_tokens_per_second": 14.297664727547014,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 0.9166666666666666,
+      "field_accuracy_mean": 1.0,
+      "missing_fields_accuracy": 1.0,
+      "run_count": 24,
+      "schema_valid_rate": 1.0,
+      "stability": 0.875,
+      "status_accuracy": 1.0,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 0.0,
+      "avg_request_latency_ms": 8950.750659000429,
+      "avg_tokens_per_second": 14.881385829846048,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 0.625,
+      "field_accuracy_mean": 1.0,
+      "missing_fields_accuracy": 0.875,
+      "run_count": 24,
+      "schema_valid_rate": 1.0,
+      "stability": 1.0,
+      "status_accuracy": 0.625,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 0.5,
+      "avg_request_latency_ms": 9792.889199944815,
+      "avg_tokens_per_second": 14.912679462529013,
+      "case_count": 6,
+      "conflict_accuracy": 0.16666666666666666,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.9444444444444444,
+      "missing_fields_accuracy": 0.16666666666666666,
+      "run_count": 18,
+      "schema_valid_rate": 0.3333333333333333,
+      "stability": 0.6666666666666666,
+      "status_accuracy": 0.5,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "google/gemma-3-12b",
+  "overall": {
+    "avg_hallucination_count": 0.13636363636363635,
+    "avg_request_latency_ms": 10003.279681667194,
+    "avg_tokens_per_second": 14.677658237923572,
+    "case_count": 22,
+    "conflict_accuracy": 0.7727272727272727,
+    "exact_match_rate": 0.5606060606060606,
+    "field_accuracy_mean": 0.9848484848484849,
+    "missing_fields_accuracy": 0.7272727272727273,
+    "run_count": 66,
+    "schema_valid_rate": 0.8181818181818182,
+    "stability": 0.8636363636363636,
+    "status_accuracy": 0.7272727272727273,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/google_gemma-3-12b_20260308_032911",
+  "run_id": "run_20260308_032911"
+}

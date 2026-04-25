@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 37,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 19
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.375,
+      "avg_request_latency_ms": 909.9722742917038,
+      "avg_tokens_per_second": 184.349356138254,
+      "case_count": 8,
+      "conflict_accuracy": 0.875,
+      "exact_match_rate": 0.625,
+      "field_accuracy_mean": 0.875,
+      "missing_fields_accuracy": 0.875,
+      "run_count": 24,
+      "schema_valid_rate": 0.625,
+      "stability": 0.125,
+      "status_accuracy": 0.625,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 0.5833333333333334,
+      "avg_request_latency_ms": 1032.6176069586381,
+      "avg_tokens_per_second": 160.94706706249931,
+      "case_count": 8,
+      "conflict_accuracy": 0.9166666666666666,
+      "exact_match_rate": 0.5833333333333334,
+      "field_accuracy_mean": 0.9259259259259259,
+      "missing_fields_accuracy": 0.9166666666666666,
+      "run_count": 24,
+      "schema_valid_rate": 0.75,
+      "stability": 0.625,
+      "status_accuracy": 0.5833333333333334,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 1.0,
+      "avg_request_latency_ms": 1094.5866038336035,
+      "avg_tokens_per_second": 163.00781027657084,
+      "case_count": 6,
+      "conflict_accuracy": 0.16666666666666666,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.8024691358024691,
+      "missing_fields_accuracy": 0.16666666666666666,
+      "run_count": 18,
+      "schema_valid_rate": 0.7777777777777778,
+      "stability": 0.0,
+      "status_accuracy": 0.5555555555555556,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "openai/gpt-oss-20b",
+  "overall": {
+    "avg_hallucination_count": 0.6212121212121212,
+    "avg_request_latency_ms": 1004.9199396820162,
+    "avg_tokens_per_second": 170.0190112393387,
+    "case_count": 22,
+    "conflict_accuracy": 0.696969696969697,
+    "exact_match_rate": 0.4393939393939394,
+    "field_accuracy_mean": 0.8737373737373737,
+    "missing_fields_accuracy": 0.696969696969697,
+    "run_count": 66,
+    "schema_valid_rate": 0.7121212121212122,
+    "stability": 0.2727272727272727,
+    "status_accuracy": 0.5909090909090909,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/openai_gpt-oss-20b_20260315_031233",
+  "run_id": "run_20260315_031233"
+}

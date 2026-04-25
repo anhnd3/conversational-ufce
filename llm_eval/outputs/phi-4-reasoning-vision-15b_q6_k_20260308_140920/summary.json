@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 64,
+    "invalid_json_count": 5,
+    "schema_invalid_count": 61
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.875,
+      "avg_request_latency_ms": 3808.316281251488,
+      "avg_tokens_per_second": 59.60768660014491,
+      "case_count": 8,
+      "conflict_accuracy": 0.041666666666666664,
+      "exact_match_rate": 0.041666666666666664,
+      "field_accuracy_mean": 0.041666666666666664,
+      "missing_fields_accuracy": 0.041666666666666664,
+      "run_count": 24,
+      "schema_valid_rate": 0.041666666666666664,
+      "stability": 0.25,
+      "status_accuracy": 0.041666666666666664,
+      "valid_json_rate": 0.8333333333333334
+    },
+    "B": {
+      "avg_hallucination_count": 1.2083333333333333,
+      "avg_request_latency_ms": 7041.9208755405025,
+      "avg_tokens_per_second": 54.24097565466285,
+      "case_count": 8,
+      "conflict_accuracy": 0.08333333333333333,
+      "exact_match_rate": 0.041666666666666664,
+      "field_accuracy_mean": 0.6527777777777778,
+      "missing_fields_accuracy": 0.08333333333333333,
+      "run_count": 24,
+      "schema_valid_rate": 0.08333333333333333,
+      "stability": 0.0,
+      "status_accuracy": 0.08333333333333333,
+      "valid_json_rate": 0.9583333333333334
+    },
+    "C": {
+      "avg_hallucination_count": 1.4444444444444444,
+      "avg_request_latency_ms": 5704.062716944867,
+      "avg_tokens_per_second": 50.49183943917983,
+      "case_count": 6,
+      "conflict_accuracy": 0.0,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.8148148148148148,
+      "missing_fields_accuracy": 0.1111111111111111,
+      "run_count": 18,
+      "schema_valid_rate": 0.1111111111111111,
+      "stability": 0.0,
+      "status_accuracy": 0.05555555555555555,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "phi-4-reasoning-vision-15b@q6_k",
+  "overall": {
+    "avg_hallucination_count": 1.1515151515151516,
+    "avg_request_latency_ms": 5501.194252545688,
+    "avg_tokens_per_second": 55.17001521243368,
+    "case_count": 22,
+    "conflict_accuracy": 0.045454545454545456,
+    "exact_match_rate": 0.030303030303030304,
+    "field_accuracy_mean": 0.47474747474747475,
+    "missing_fields_accuracy": 0.07575757575757576,
+    "run_count": 66,
+    "schema_valid_rate": 0.07575757575757576,
+    "stability": 0.09090909090909091,
+    "status_accuracy": 0.06060606060606061,
+    "valid_json_rate": 0.9242424242424242
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/phi-4-reasoning-vision-15b_q6_k_20260308_140920",
+  "run_id": "run_20260308_140920"
+}

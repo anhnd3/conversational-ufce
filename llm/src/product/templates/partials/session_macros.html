@@ -1,0 +1,160 @@
+{% macro badge_tone(state) -%}
+  {%- if state in ["RUNTIME_SUCCESS", "runtime_success_view", "runtime_success", "success"] -%}success
+  {%- elif state in ["RUNTIME_REJECT", "runtime_reject_view", "runtime_reject", "restart_required", "warning"] -%}warning
+  {%- elif state in ["NEEDS_CLARIFICATION", "needs_clarification_input", "refinement_clarification_view", "clarification", "refinement_clarification", "info"] -%}info
+  {%- elif state in ["CONFLICT", "UNSUPPORTED_REQUEST", "PARSER_FAILURE", "danger"] -%}danger
+  {%- elif state == "archived" -%}warning
+  {%- else -%}neutral
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro page_state_label(page_state) -%}
+  {%- if page_state == "fresh" -%}fresh
+  {%- elif page_state == "clarification" -%}needs clarification
+  {%- elif page_state == "runtime_success" -%}runtime success
+  {%- elif page_state == "runtime_reject" -%}runtime reject
+  {%- elif page_state == "refinement_clarification" -%}refinement clarification
+  {%- elif page_state == "restart_required" -%}restart required
+  {%- else -%}{{ page_state }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro chat_header(summary) -%}
+<div id="chat-header-strip" class="chat-header-strip">
+  <div class="pill-row">
+    <span class="pill pill-info" id="chat-dataset-badge">{{ summary.dataset_label }}</span>
+    <span class="pill pill-{{ badge_tone(summary.state_tone) }}" id="chat-state-badge">{{ summary.state_label }}</span>
+  </div>
+  <p id="chat-meta-line" class="chat-meta-line">{{ summary.meta_line }}</p>
+</div>
+{%- endmacro %}
+
+{% macro transcript_item(item) -%}
+  {% if item.kind == "user_message" %}
+  <article
+    class="chat-message chat-message--user{{ ' is-pending' if item.pending else '' }}{{ ' is-failed' if item.failed else '' }}"
+    data-transcript-item-id="{{ item.id }}"
+    {% if item.turn_id %}data-turn-id="{{ item.turn_id }}"{% endif %}
+  >
+    <div class="chat-bubble chat-bubble-user">
+      <span class="chat-role">User</span>
+      <p>{{ item.text }}</p>
+      {% if item.pending %}
+      <span class="chat-message-status">Sending...</span>
+      {% elif item.failed %}
+      <span class="chat-message-status chat-message-status-error">{{ item.error_message if item.error_message else "Send failed." }}</span>
+      {% endif %}
+    </div>
+  </article>
+  {% elif item.kind == "assistant_message" %}
+  <article
+    class="chat-message chat-message--assistant{{ ' is-pending' if item.pending else '' }}"
+    data-transcript-item-id="{{ item.id }}"
+    {% if item.turn_id %}data-turn-id="{{ item.turn_id }}"{% endif %}
+  >
+    <div class="chat-bubble chat-bubble-assistant">
+      <span class="chat-role">Assistant</span>
+      <p>{{ item.text }}</p>
+      {% if item.pending %}
+      <span class="chat-message-status">Working...</span>
+      {% endif %}
+    </div>
+  </article>
+  {% elif item.kind == "system_marker" %}
+  <div
+    class="chat-marker chat-marker-{{ item.tone }}"
+    data-transcript-item-id="{{ item.id }}"
+    {% if item.turn_id %}data-turn-id="{{ item.turn_id }}"{% endif %}
+  >
+    <span class="pill pill-{{ badge_tone(item.tone) }}">{{ item.label }}</span>
+  </div>
+  {% elif item.kind == "inline_detail_toggle" %}
+  <details
+    class="chat-inline-detail"
+    data-inline-detail-id="{{ item.id }}"
+    {% if item.turn_id %}data-turn-id="{{ item.turn_id }}"{% endif %}
+  >
+    <summary class="chat-inline-detail-summary">
+      <span
+        class="chat-inline-detail-label"
+        data-inline-label
+        data-closed-label="{{ item.closed_label }}"
+        data-open-label="{{ item.open_label }}"
+      >
+        {{ item.closed_label }}
+      </span>
+    </summary>
+    <div class="chat-inline-detail-panel">
+      <strong class="chat-inline-detail-title">{{ item.detail_title }}</strong>
+      {% if item.detail_body %}
+      <p class="chat-inline-detail-copy">{{ item.detail_body }}</p>
+      {% endif %}
+      {% if item.facts %}
+      <div class="fact-row">
+        {% for fact in item.facts %}
+        <span class="fact-chip">{{ fact }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </details>
+  {% endif %}
+{%- endmacro %}
+
+{% macro technical_turn(turn, tone) -%}
+<article class="technical-turn" data-turn-id="{{ turn.turn_id }}">
+  <div class="technical-head">
+    <div class="pill-row">
+      <span class="pill pill-{{ tone }}">{{ turn.public_state }}</span>
+      <span class="pill pill-neutral">Turn {{ turn.turn_index }}</span>
+      {% if turn.turn_kind == "refinement" %}
+      <span class="pill pill-info">Refinement</span>
+      {% endif %}
+    </div>
+  </div>
+  <details class="nested-detail">
+    <summary>Debug summary</summary>
+    <pre>{{ turn.debug_summary | tojson(indent=2) }}</pre>
+  </details>
+  {% if turn.clarification_payload %}
+  <details class="nested-detail">
+    <summary>Clarification payload</summary>
+    <pre>{{ turn.clarification_payload | tojson(indent=2) }}</pre>
+  </details>
+  {% endif %}
+  {% if turn.explanation_payload %}
+  <details class="nested-detail">
+    <summary>Explanation payload</summary>
+    <pre>{{ turn.explanation_payload | tojson(indent=2) }}</pre>
+  </details>
+  {% endif %}
+  {% if turn.constraint_feedback_delta %}
+  <details class="nested-detail">
+    <summary>Refinement delta</summary>
+    <pre>{{ turn.constraint_feedback_delta | tojson(indent=2) }}</pre>
+  </details>
+  {% endif %}
+  <div class="section-block">
+    <span class="section-label">Artifacts</span>
+    {% if turn.artifact_refs.download_urls %}
+      {% for file_name, download_url in turn.artifact_refs.download_urls.items() %}
+      <div class="artifact-row">
+        <a href="{{ download_url }}">{{ file_name }}</a>
+        {% if file_name in turn.artifact_refs.preview_urls %}
+        <button
+          class="button button-ghost preview-button"
+          type="button"
+          data-preview-url="{{ turn.artifact_refs.preview_urls[file_name] }}"
+          data-preview-name="{{ file_name }}"
+        >
+          Preview
+        </button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+    <p class="supporting-copy">No artifacts were saved for this turn.</p>
+    {% endif %}
+  </div>
+</article>
+{%- endmacro %}

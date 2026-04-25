@@ -1,0 +1,15 @@
+defaults:
+  api_base: http://localhost:1234
+  repeats: 3
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 512
+  timeout_s: 300.0
+  system_prompt_path: llm/prompts/parser_system_prompt_v1.txt
+request_contract:
+  endpoint: /api/v1/chat
+  payload_keys:
+    - model
+    - system_prompt
+    - input
+  generation_params_sent: []

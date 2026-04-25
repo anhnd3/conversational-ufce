@@ -1,0 +1,53 @@
+{
+  "api_base": "http://localhost:1234",
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "benchmark_path": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/benchmarks/ufce_bank_cf_parser_benchmark_v1.yaml",
+  "benchmark_sha256": "a561fd84c10eb088ec34407b17137860d0586f9c439bec9922897d1ecb98fd5d",
+  "lm_studio_model": "qwen/qwen3-14b",
+  "max_tokens": 512,
+  "model_alias": "qwen/qwen3-14b",
+  "repeats": 3,
+  "request_contract": {
+    "endpoint": "/api/v1/chat",
+    "generation_params_sent": [],
+    "payload_keys": [
+      "model",
+      "system_prompt",
+      "input"
+    ]
+  },
+  "run_id": "run_20260308_122102",
+  "selected_case_ids": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08",
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06"
+  ],
+  "selected_group": null,
+  "selected_limit": null,
+  "system_prompt_path": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/prompts/bank_cf_parser_system_prompt_v1.txt",
+  "system_prompt_sha256": "32a8b36cd08e8694ddb34f9575b613b68718f98766711a157305f23f7ecbf896",
+  "system_prompt_version": "bank_cf_parser_system_prompt_v1",
+  "temperature": 0.0,
+  "timeout_s": 300.0,
+  "timestamp_utc": "2026-03-08T12:35:55+00:00",
+  "top_p": 1.0
+}

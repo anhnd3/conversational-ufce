@@ -1,0 +1,67 @@
+model_alias,case_id,group,repeat_id,valid_json,schema_valid,exact_match,field_accuracy,status_correct,missing_fields_correct,conflicts_correct,hallucination_count,stability_case,request_latency_ms,ttft_ms,total_time_ms,tokens_per_second,prompt_tokens,completion_tokens,reasoning_output_tokens,total_tokens,http_status_code,api_error,parse_error,validation_error_count,validation_errors
+google/gemma-3-12b,A01,A,1,True,True,True,1.0,True,True,True,0,1.0,12882.796010002494,2169.0,,14.252490085733607,935,146,0,1081,200,,,0,
+google/gemma-3-12b,A01,A,2,True,True,True,1.0,True,True,True,0,1.0,10595.64387499995,149.0,,14.428672499869302,935,146,0,1081,200,,,0,
+google/gemma-3-12b,A01,A,3,True,True,True,1.0,True,True,True,0,1.0,10690.10367100418,158.0,,14.406062702683931,935,146,0,1081,200,,,0,
+google/gemma-3-12b,A02,A,1,True,True,True,1.0,True,True,True,0,1.0,10922.170078003546,277.0,,14.337086507623207,943,146,0,1089,200,,,0,
+google/gemma-3-12b,A02,A,2,True,True,True,1.0,True,True,True,0,1.0,10806.77387600008,167.0,,14.345672740814473,943,146,0,1089,200,,,0,
+google/gemma-3-12b,A02,A,3,True,True,True,1.0,True,True,True,0,1.0,11070.960897995974,196.0,,13.959950241382838,943,146,0,1089,200,,,0,
+google/gemma-3-12b,A03,A,1,True,True,True,1.0,True,True,True,0,1.0,11301.504486997146,282.0,,13.854007785386907,954,147,0,1101,200,,,0,
+google/gemma-3-12b,A03,A,2,True,True,True,1.0,True,True,True,0,1.0,11024.65280299657,170.0,,14.05504625400987,954,147,0,1101,200,,,0,
+google/gemma-3-12b,A03,A,3,True,True,True,1.0,True,True,True,0,1.0,10985.083702995325,175.0,,14.130671025193642,954,147,0,1101,200,,,0,
+google/gemma-3-12b,A04,A,1,True,True,True,1.0,True,True,True,0,1.0,10756.108535002568,293.0,,14.440932254798197,933,145,0,1078,200,,,0,
+google/gemma-3-12b,A04,A,2,True,True,True,1.0,True,True,True,0,1.0,10570.045369007858,177.0,,14.523155719479137,933,145,0,1078,200,,,0,
+google/gemma-3-12b,A04,A,3,True,True,True,1.0,True,True,True,0,1.0,10518.740960003925,176.0,,14.605992768321153,933,145,0,1078,200,,,0,
+google/gemma-3-12b,A05,A,1,True,True,True,1.0,True,True,True,0,1.0,11049.79612599709,305.0,,14.176960876217194,938,147,0,1085,200,,,0,
+google/gemma-3-12b,A05,A,2,True,True,True,1.0,True,True,True,0,1.0,10738.888116000453,154.0,,14.358236636632883,938,147,0,1085,200,,,0,
+google/gemma-3-12b,A05,A,3,True,True,True,1.0,True,True,True,0,1.0,10842.323425007635,176.0,,14.219254127573796,938,147,0,1085,200,,,0,
+google/gemma-3-12b,A06,A,1,True,True,True,1.0,True,True,True,0,1.0,10857.116860002861,279.0,,14.337932786111988,935,147,0,1082,200,,,0,
+google/gemma-3-12b,A06,A,2,True,True,True,1.0,True,True,True,0,1.0,10763.820762993419,179.0,,14.308330903999373,935,147,0,1082,200,,,0,
+google/gemma-3-12b,A06,A,3,True,True,True,1.0,True,True,True,0,1.0,10646.947635992547,166.0,,14.503998762325438,935,147,0,1082,200,,,0,
+google/gemma-3-12b,A07,A,1,True,True,True,1.0,True,True,True,0,1.0,11033.349021003232,279.0,,14.306413399678759,952,147,0,1099,200,,,0,
+google/gemma-3-12b,A07,A,2,True,True,True,1.0,True,True,True,0,1.0,10938.634100006311,175.0,,14.246340943625292,952,147,0,1099,200,,,0,
+google/gemma-3-12b,A07,A,3,True,True,True,1.0,True,True,True,0,1.0,10888.727975005168,171.0,,14.333855982775969,952,147,0,1099,200,,,0,
+google/gemma-3-12b,A08,A,1,True,True,True,1.0,True,True,True,0,0.0,10724.036585001159,261.0,,14.487193321104145,934,145,0,1079,200,,,0,
+google/gemma-3-12b,A08,A,2,True,True,False,1.0,True,True,True,0,0.0,13818.383926001843,208.0,,14.26089879657842,934,187,0,1121,200,,,0,
+google/gemma-3-12b,A08,A,3,True,True,False,1.0,True,True,True,0,0.0,14699.828776996583,200.0,,14.264796339208829,934,199,0,1133,200,,,0,
+google/gemma-3-12b,B01,B,1,True,True,False,1.0,False,False,True,0,1.0,7848.10756900697,295.0,,15.087584111566924,918,110,0,1028,200,,,0,
+google/gemma-3-12b,B01,B,2,True,True,False,1.0,False,False,True,0,1.0,7817.813949994161,166.0,,15.036646357625308,918,110,0,1028,200,,,0,
+google/gemma-3-12b,B01,B,3,True,True,False,1.0,False,False,True,0,1.0,7844.466673996067,181.0,,15.048204872280412,918,110,0,1028,200,,,0,
+google/gemma-3-12b,B02,B,1,True,True,True,1.0,True,True,True,0,1.0,9078.811291998136,286.0,,14.935675247212096,908,126,0,1034,200,,,0,
+google/gemma-3-12b,B02,B,2,True,True,True,1.0,True,True,True,0,1.0,8909.90309100016,161.0,,15.049944315206034,908,126,0,1034,200,,,0,
+google/gemma-3-12b,B02,B,3,True,True,True,1.0,True,True,True,0,1.0,9046.51559299964,225.0,,14.948912092922436,908,126,0,1034,200,,,0,
+google/gemma-3-12b,B03,B,1,True,True,True,1.0,True,True,True,0,1.0,9608.799555004225,273.0,,14.833631344332973,915,133,0,1048,200,,,0,
+google/gemma-3-12b,B03,B,2,True,True,True,1.0,True,True,True,0,1.0,9513.140981987817,188.0,,14.84852605492079,915,133,0,1048,200,,,0,
+google/gemma-3-12b,B03,B,3,True,True,True,1.0,True,True,True,0,1.0,9472.315951992641,172.0,,14.948151829614448,915,133,0,1048,200,,,0,
+google/gemma-3-12b,B04,B,1,True,True,True,1.0,True,True,True,0,1.0,9301.09377700137,287.0,,14.912365576295302,917,129,0,1046,200,,,0,
+google/gemma-3-12b,B04,B,2,True,True,True,1.0,True,True,True,0,1.0,9226.649217991508,169.0,,14.893841546613451,917,129,0,1046,200,,,0,
+google/gemma-3-12b,B04,B,3,True,True,True,1.0,True,True,True,0,1.0,9276.081600997713,185.0,,14.885999210003481,917,129,0,1046,200,,,0,
+google/gemma-3-12b,B05,B,1,True,True,True,1.0,True,True,True,0,1.0,8775.289552999311,425.0,,15.104217210726864,906,120,0,1026,200,,,0,
+google/gemma-3-12b,B05,B,2,True,True,True,1.0,True,True,True,0,1.0,8602.74463701353,163.0,,14.883174521592757,906,120,0,1026,200,,,0,
+google/gemma-3-12b,B05,B,3,True,True,True,1.0,True,True,True,0,1.0,8474.123901003622,169.0,,15.085273278525182,906,120,0,1026,200,,,0,
+google/gemma-3-12b,B06,B,1,True,True,True,1.0,True,True,True,0,1.0,8988.045842997963,275.0,,14.686381282816003,930,123,0,1053,200,,,0,
+google/gemma-3-12b,B06,B,2,True,True,True,1.0,True,True,True,0,1.0,8859.314793997328,164.0,,14.77293636491603,930,123,0,1053,200,,,0,
+google/gemma-3-12b,B06,B,3,True,True,True,1.0,True,True,True,0,1.0,9013.05376100936,174.0,,14.648132214279547,930,123,0,1053,200,,,0,
+google/gemma-3-12b,B07,B,1,True,True,False,1.0,False,True,True,0,1.0,8938.600834007957,276.0,,14.783604093640069,913,123,0,1036,200,,,0,
+google/gemma-3-12b,B07,B,2,True,True,False,1.0,False,True,True,0,1.0,8835.834792000242,168.0,,14.796175465318665,913,123,0,1036,200,,,0,
+google/gemma-3-12b,B07,B,3,True,True,False,1.0,False,True,True,0,1.0,8982.893794003758,196.0,,14.646501331879005,913,123,0,1036,200,,,0,
+google/gemma-3-12b,B08,B,1,True,True,False,1.0,False,True,True,0,1.0,9543.558336998103,263.0,,14.737277651323437,923,131,0,1054,200,,,0,
+google/gemma-3-12b,B08,B,2,True,True,False,1.0,False,True,True,0,1.0,9364.64169700048,163.0,,14.823235183525796,923,131,0,1054,200,,,0,
+google/gemma-3-12b,B08,B,3,True,True,False,1.0,False,True,True,0,1.0,9496.214619008242,218.0,,14.756868759168128,923,131,0,1054,200,,,0,
+google/gemma-3-12b,C01,C,1,True,False,False,1.0,True,False,False,0,1.0,9379.01120200695,284.0,,14.896967985728246,913,130,0,1043,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C01,C,2,True,False,False,1.0,True,False,False,0,1.0,9256.15725699754,177.0,,14.913397898403966,913,130,0,1043,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C01,C,3,True,False,False,1.0,True,False,False,0,1.0,9271.530387995881,228.0,,14.993776429414376,913,130,0,1043,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C02,C,1,True,True,False,1.0,False,True,False,0,1.0,8679.487187997438,278.0,,15.043225028743748,912,121,0,1033,200,,,0,
+google/gemma-3-12b,C02,C,2,True,True,False,1.0,False,True,False,0,1.0,8538.944134008489,170.0,,15.120076525081522,912,121,0,1033,200,,,0,
+google/gemma-3-12b,C02,C,3,True,True,False,1.0,False,True,False,0,1.0,8618.204769998556,166.0,,15.073837511257105,912,121,0,1033,200,,,0,
+google/gemma-3-12b,C03,C,1,True,True,False,0.7777777777777778,False,False,True,2,0.0,9938.976852004998,432.0,,15.079340445058477,903,137,0,1040,200,,,0,
+google/gemma-3-12b,C03,C,2,True,True,False,0.7777777777777778,False,False,True,2,0.0,9746.555285993963,165.0,,15.027783431346062,903,138,0,1041,200,,,0,
+google/gemma-3-12b,C03,C,3,True,True,False,0.7777777777777778,False,False,True,2,0.0,9791.866090003168,198.0,,15.012677553468794,903,138,0,1041,200,,,0,
+google/gemma-3-12b,C04,C,1,True,False,False,1.0,True,False,False,0,1.0,9635.034380000434,263.0,,14.913039728226545,913,134,0,1047,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C04,C,2,True,False,False,1.0,True,False,False,0,1.0,9579.718260007212,175.0,,14.861962315830896,913,134,0,1047,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C04,C,3,True,False,False,1.0,True,False,False,0,1.0,9547.043892001966,168.0,,14.856065238082303,913,134,0,1047,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C05,C,1,True,False,False,0.8888888888888888,False,False,False,1,0.0,11331.099553994136,268.0,,14.631567287529714,913,156,0,1069,200,,,2,Missing top-level keys: conflicts | conflicts must be an array of strings.
+google/gemma-3-12b,C05,C,2,True,False,False,0.8888888888888888,False,False,False,1,0.0,11493.58876599581,169.0,,14.658451173298387,913,159,0,1072,200,,,2,Missing top-level keys: conflicts | conflicts must be an array of strings.
+google/gemma-3-12b,C05,C,3,True,False,False,0.8888888888888888,False,False,False,1,0.0,11383.796908005024,184.0,,14.637332582012416,913,157,0,1070,200,,,2,Missing top-level keys: conflicts | conflicts must be an array of strings.
+google/gemma-3-12b,C06,C,1,True,False,False,1.0,True,False,False,0,1.0,10194.56058400101,285.0,,14.775783293296238,908,140,0,1048,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C06,C,2,True,False,False,1.0,True,False,False,0,1.0,9936.109275004128,195.0,,14.96452499016884,908,140,0,1048,200,,,1,conflicts must be an array of strings.
+google/gemma-3-12b,C06,C,3,True,False,False,1.0,True,False,False,0,1.0,9950.320812989958,168.0,,14.968420908574597,908,140,0,1048,200,,,1,conflicts must be an array of strings.

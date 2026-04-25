@@ -1,0 +1,43 @@
+models:
+  - alias: deepseek/deepseek-r1-0528-qwen3-8b
+    family: deepseek
+    source: llm_eval_outputs
+  - alias: gemma-3-27b-it
+    family: gemma
+    source: llm_eval_outputs
+  - alias: glm-z1-9b-0414
+    family: glm
+    source: llm_eval_outputs
+  - alias: google/gemma-3-12b
+    family: gemma
+    source: llm_eval_outputs
+  - alias: mistralai/ministral-3-14b-reasoning
+    family: mistral
+    source: llm_eval_outputs
+  - alias: openai/gpt-oss-20b
+    family: gpt_oss
+    source: llm_eval_outputs
+  - alias: phi-4-reasoning-vision-15b-q4-k-m
+    family: phi
+    source: llm_eval_outputs
+  - alias: phi-4-reasoning-vision-15b-q6-k
+    family: phi
+    source: llm_eval_outputs
+  - alias: qwen/qwen3-14b
+    family: qwen
+    source: llm_eval_outputs
+  - alias: qwen/qwen3-14b-128k
+    family: qwen
+    source: llm_eval_outputs
+  - alias: qwen/qwen3-30b-a3b-instruct-2507
+    family: qwen
+    source: llm_eval_outputs
+  - alias: qwen/qwen3.5-9b
+    family: qwen
+    source: llm_eval_outputs
+  - alias: qwen/qwen3.5-35b-a3b
+    family: qwen
+    source: llm_eval_outputs
+  - alias: unsloth/gpt-oss-20b
+    family: gpt_oss
+    source: llm_eval_outputs

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ufce-agent://llm/config/parser_schema_v1.json",
+  "title": "UFCE Bank CF Parser Output Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task",
+    "status",
+    "cf_request",
+    "missing_fields",
+    "conflicts",
+    "notes"
+  ],
+  "properties": {
+    "task": {
+      "const": "extract_cf_request"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial",
+        "needs_clarification",
+        "conflict"
+      ]
+    },
+    "cf_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Income": {
+          "type": "number"
+        },
+        "CCAvg": {
+          "type": "number"
+        },
+        "Family": {
+          "type": "integer"
+        },
+        "Education": {
+          "type": "integer"
+        },
+        "Mortgage": {
+          "type": "number"
+        },
+        "CDAccount": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "Online": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "SecuritiesAccount": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "CreditCard": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        }
+      }
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Income",
+          "CCAvg",
+          "Family",
+          "Education",
+          "Mortgage",
+          "CDAccount",
+          "Online",
+          "SecuritiesAccount",
+          "CreditCard"
+        ]
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

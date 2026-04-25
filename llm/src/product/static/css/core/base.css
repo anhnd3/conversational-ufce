@@ -1,0 +1,113 @@
+* { box-sizing: border-box; }
+
+html,
+body {
+  min-height: 100%;
+}
+
+body.ufce-app {
+  margin: 0;
+  color: var(--text);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.9), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(227,214,191,0.65), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+}
+
+body.session-body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.88), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(227, 214, 191, 0.65), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, #f0e5d7 100%);
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+p,
+pre {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+button[disabled],
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+textarea,
+input[type="number"],
+select {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fffefb;
+  color: var(--text);
+}
+
+textarea {
+  min-height: 134px;
+  resize: vertical;
+  padding: 14px;
+  line-height: 1.5;
+}
+
+input[type="number"],
+select {
+  padding: 10px 12px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 14px;
+  padding: 12px;
+  background: #f6efe3;
+  border: 1px solid var(--line-soft);
+  overflow: auto;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid rgba(217, 204, 185, 0.92);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

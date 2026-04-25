@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% import "partials/home_macros.html" as home_ui %}
+
+{% block page_title %}UFCE Agent Demo{% endblock %}
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/pages/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="home-main">
+  <section class="panel hero-shell">
+    <div class="hero-copy">
+      <h1>UFCE Agent Thesis Demo</h1>
+      <p>
+        Conversational recourse demo with a bank-first runtime, persisted sessions, and bounded refinement.
+      </p>
+      <div class="hero-actions">
+        <button id="new-session" class="button" type="button">Start New Bank Session</button>
+        <button id="browse-datasets" class="button button-secondary" type="button">Browse Dataset Bundles</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel section">
+    <div class="section-head">
+      <div>
+        <h2>Persisted Sessions</h2>
+        <p>Resume paths are promoted near the top of the page. Archived sessions remain accessible as read-only evidence.</p>
+      </div>
+    </div>
+    {% if sessions %}
+    <div class="session-list">
+      {% for session in sessions %}
+      {{ home_ui.session_summary_row(session) }}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No persisted sessions yet.</div>
+    {% endif %}
+  </section>
+
+  <section id="dataset-section" class="panel section">
+    <div class="section-head">
+      <div>
+        <h2>Dataset Bundles</h2>
+        <p>Selection comes first here. Full feature guidance moves into the selected dataset details instead of staying inline on every tile.</p>
+      </div>
+    </div>
+    <div class="dataset-grid">
+      {% for dataset in datasets %}
+      {{ home_ui.dataset_card(dataset, selected_dataset.dataset_key if selected_dataset else '') }}
+      {% endfor %}
+    </div>
+
+    <section id="dataset-detail-panel" class="dataset-detail-panel" {% if not selected_dataset %}hidden{% endif %}>
+      <article class="detail-pane">
+        <div class="section-head">
+          <div>
+            <h3 id="dataset-detail-title">{{ selected_dataset.display_name if selected_dataset else "Dataset details" }}</h3>
+            <p id="dataset-detail-note">{{ selected_dataset.support_note if selected_dataset else "" }}</p>
+          </div>
+          <span
+            id="dataset-detail-status"
+            class="status {{ 'status-active' if selected_dataset and selected_dataset.availability_status == 'active' else 'status-blocked' }}"
+          >
+            {{ selected_dataset.availability_status if selected_dataset else "unknown" }}
+          </span>
+        </div>
+
+        {% if selected_dataset %}
+        <div id="dataset-detail-actions" class="card-actions detail-actions">
+          {% if selected_dataset.availability_status == 'active' %}
+          <button class="button button-small start-dataset" type="button" data-dataset="{{ selected_dataset.dataset_key }}">Start Session</button>
+          {% else %}
+          <span class="button-disabled-note">Reference Only In This MVP</span>
+          {% endif %}
+        </div>
+        <div id="dataset-detail-meta" class="meta-grid">
+          <div class="meta-card">
+            <span class="meta-label">Outcome label</span>
+            <strong class="meta-value meta-value-wrap">{{ selected_dataset.outcome_label }}</strong>
+          </div>
+          <div class="meta-card">
+            <span class="meta-label">Desired outcome</span>
+            <strong class="meta-value meta-value-wrap">{{ selected_dataset.desired_outcome }}</strong>
+          </div>
+          <div class="meta-card">
+            <span class="meta-label">Training logic</span>
+            <strong class="meta-value meta-value-wrap">{{ selected_dataset.training_logic_version }}</strong>
+          </div>
+          <div class="meta-card">
+            <span class="meta-label">Step provenance</span>
+            <strong class="meta-value meta-value-wrap">{{ selected_dataset.step_provenance }}</strong>
+          </div>
+        </div>
+        <div class="detail-feature-block">
+          <strong>Key changeable features</strong>
+          <ul id="dataset-detail-changeable" class="tag-list">
+            {% for feature in selected_dataset.f2change %}
+            <li class="tag">{{ feature }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="detail-feature-block">
+          <strong>Locked / non-changeable features</strong>
+          <ul id="dataset-detail-locked" class="tag-list">
+            {% set locked_meta = namespace(total=0) %}
+            {% for feature in selected_dataset.full_feature_list %}
+              {% if feature not in selected_dataset.f2change %}
+                {% if locked_meta.total < 6 %}
+                <li class="tag tag-muted">{{ feature }}</li>
+                {% endif %}
+                {% set locked_meta.total = locked_meta.total + 1 %}
+              {% endif %}
+            {% endfor %}
+            {% if locked_meta.total > 6 %}
+            <li class="tag tag-muted">+{{ locked_meta.total - 6 }} more</li>
+            {% endif %}
+          </ul>
+        </div>
+        <details class="dataset-guide-details">
+          <summary>View Full Feature Guide</summary>
+          <div id="dataset-detail-guides" class="feature-guide-list">
+            {% for feature in selected_dataset.feature_guides %}
+            <article class="feature-guide">
+              <strong>{{ feature.feature_name }}</strong>
+              <div class="secondary-copy">Type: {{ feature.feature_kind }} · Changeable: {{ "yes" if feature.changeable else "no" }} · Step: {{ feature.step if feature.step is not none else "not recorded" }}</div>
+              <p>{{ feature.definition }}</p>
+              <p><strong>How to check:</strong> {{ feature.check_guidance }}</p>
+              <p><strong>How to change:</strong> {{ feature.change_guidance }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </details>
+        {% endif %}
+      </article>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block page_data %}
+<script id="home-page-data" type="application/json">
+{{ {"datasets": datasets, "defaultDatasetKey": (selected_dataset.dataset_key if selected_dataset else ""), "apiPrefix": api_prefix} | tojson }}
+</script>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', path='js/pages/home.js') }}"></script>
+{% endblock %}

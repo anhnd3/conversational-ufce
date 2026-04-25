@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 31,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 14
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.0,
+      "avg_request_latency_ms": 4955.847058374275,
+      "avg_tokens_per_second": 27.82532807900596,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 1.0,
+      "field_accuracy_mean": 1.0,
+      "missing_fields_accuracy": 1.0,
+      "run_count": 24,
+      "schema_valid_rate": 1.0,
+      "stability": 0.75,
+      "status_accuracy": 1.0,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 1.5833333333333333,
+      "avg_request_latency_ms": 4722.084981459072,
+      "avg_tokens_per_second": 27.7260141553681,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 0.4583333333333333,
+      "field_accuracy_mean": 0.8240740740740741,
+      "missing_fields_accuracy": 0.8333333333333334,
+      "run_count": 24,
+      "schema_valid_rate": 0.7916666666666666,
+      "stability": 0.75,
+      "status_accuracy": 0.5833333333333334,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 3.0,
+      "avg_request_latency_ms": 4970.5674230014365,
+      "avg_tokens_per_second": 28.122470127599232,
+      "case_count": 6,
+      "conflict_accuracy": 0.16666666666666666,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.6666666666666666,
+      "missing_fields_accuracy": 0.5,
+      "run_count": 18,
+      "schema_valid_rate": 0.5,
+      "stability": 0.3333333333333333,
+      "status_accuracy": 0.6666666666666666,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "mistralai/ministral-3-14b-reasoning",
+  "overall": {
+    "avg_hallucination_count": 1.393939393939394,
+    "avg_request_latency_ms": 4874.857311667063,
+    "avg_tokens_per_second": 27.870252665481267,
+    "case_count": 22,
+    "conflict_accuracy": 0.7727272727272727,
+    "exact_match_rate": 0.5303030303030303,
+    "field_accuracy_mean": 0.8451178451178452,
+    "missing_fields_accuracy": 0.803030303030303,
+    "run_count": 66,
+    "schema_valid_rate": 0.7878787878787878,
+    "stability": 0.6363636363636364,
+    "status_accuracy": 0.7575757575757576,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/mistralai_ministral-3-14b-reasoning_20260308_035120",
+  "run_id": "run_20260308_035120"
+}

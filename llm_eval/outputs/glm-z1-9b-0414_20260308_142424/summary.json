@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 56,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 51
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.8333333333333334,
+      "avg_request_latency_ms": 10428.110745542048,
+      "avg_tokens_per_second": 59.95354418445209,
+      "case_count": 8,
+      "conflict_accuracy": 0.20833333333333334,
+      "exact_match_rate": 0.20833333333333334,
+      "field_accuracy_mean": 0.25,
+      "missing_fields_accuracy": 0.20833333333333334,
+      "run_count": 24,
+      "schema_valid_rate": 0.20833333333333334,
+      "stability": 0.25,
+      "status_accuracy": 0.25,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 0.7083333333333334,
+      "avg_request_latency_ms": 16964.989766708943,
+      "avg_tokens_per_second": 49.641823117291885,
+      "case_count": 8,
+      "conflict_accuracy": 0.2916666666666667,
+      "exact_match_rate": 0.20833333333333334,
+      "field_accuracy_mean": 0.7546296296296297,
+      "missing_fields_accuracy": 0.3333333333333333,
+      "run_count": 24,
+      "schema_valid_rate": 0.25,
+      "stability": 0.0,
+      "status_accuracy": 0.3333333333333333,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 1.1111111111111112,
+      "avg_request_latency_ms": 35653.33380044386,
+      "avg_tokens_per_second": 48.46851875159831,
+      "case_count": 6,
+      "conflict_accuracy": 0.1111111111111111,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.8827160493827161,
+      "missing_fields_accuracy": 0.2222222222222222,
+      "run_count": 18,
+      "schema_valid_rate": 0.2222222222222222,
+      "stability": 0.0,
+      "status_accuracy": 0.3333333333333333,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "glm-z1-9b-0414",
+  "overall": {
+    "avg_hallucination_count": 0.8636363636363636,
+    "avg_request_latency_ms": 19684.763950030505,
+    "avg_tokens_per_second": 53.07154776925189,
+    "case_count": 22,
+    "conflict_accuracy": 0.21212121212121213,
+    "exact_match_rate": 0.15151515151515152,
+    "field_accuracy_mean": 0.6060606060606061,
+    "missing_fields_accuracy": 0.25757575757575757,
+    "run_count": 66,
+    "schema_valid_rate": 0.22727272727272727,
+    "stability": 0.09090909090909091,
+    "status_accuracy": 0.30303030303030304,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/glm-z1-9b-0414_20260308_142424",
+  "run_id": "run_20260308_142424"
+}

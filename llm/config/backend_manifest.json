@@ -1,0 +1,40 @@
+{
+  "backends": [
+    {
+      "backend_id": "ufce",
+      "request_contract_version": "canonical_request_v1",
+      "candidate_contract_version": "canonical_candidate_v1",
+      "capabilities": {
+        "supports_numeric": true,
+        "supports_binary": true,
+        "supports_categorical": false,
+        "supports_multi_candidate": true
+      },
+      "enabled": true
+    },
+    {
+      "backend_id": "dice",
+      "request_contract_version": "canonical_request_v1",
+      "candidate_contract_version": "canonical_candidate_v1",
+      "capabilities": {
+        "supports_numeric": true,
+        "supports_binary": true,
+        "supports_categorical": false,
+        "supports_multi_candidate": true
+      },
+      "enabled": true
+    },
+    {
+      "backend_id": "ar",
+      "request_contract_version": "canonical_request_v1",
+      "candidate_contract_version": "canonical_candidate_v1",
+      "capabilities": {
+        "supports_numeric": true,
+        "supports_binary": true,
+        "supports_categorical": false,
+        "supports_multi_candidate": true
+      },
+      "enabled": true
+    }
+  ]
+}

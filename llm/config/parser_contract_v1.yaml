@@ -1,0 +1,44 @@
+target_cf_fields:
+  - name: Income
+    type: float
+    description: Target income value
+  - name: CCAvg
+    type: float
+    description: Average credit card spending
+  - name: Family
+    type: int
+    description: Family size
+  - name: Education
+    type: int
+    description: Education category code
+  - name: Mortgage
+    type: float
+    description: Mortgage value
+  - name: CDAccount
+    type: binary
+    description: 1=yes, 0=no
+  - name: Online
+    type: binary
+    description: 1=yes, 0=no
+  - name: SecuritiesAccount
+    type: binary
+    description: 1=yes, 0=no
+  - name: CreditCard
+    type: binary
+    description: 1=yes, 0=no
+output_contract:
+  task: extract_cf_request
+  status_enum:
+    - complete
+    - partial
+    - needs_clarification
+    - conflict
+  rules:
+    - Return only fields explicitly inferable from the input.
+    - Do not invent missing values.
+    - Use canonical field names exactly as defined.
+    - Binary fields must be 0 or 1.
+    - Education must be a numeric category code when provided.
+    - missing_fields must list canonical field names that are not specified but would be needed for a complete CF request.
+    - conflicts must describe contradictory or invalid instructions briefly.
+    - notes may contain short normalization notes if needed; otherwise return an empty list.

@@ -1,0 +1,82 @@
+{% macro hero_session(session) -%}
+<article class="hero-session">
+  <div class="hero-session-head">
+    <strong>{{ session.session_id }}</strong>
+    <span class="status {{ 'status-active' if session.lifecycle_status == 'active' else 'status-archived' }}">
+      {{ session.lifecycle_status }}
+    </span>
+  </div>
+  <div class="hero-session-meta">
+    {{ session.dataset_key }} · {{ session.current_public_state or "not_started" }} · updated {{ session.updated_at }}
+  </div>
+  <a class="button button-secondary" href="/sessions/{{ session.session_id }}">Resume Session</a>
+</article>
+{%- endmacro %}
+
+{% macro session_summary_row(session) -%}
+<article class="session-row">
+  <div class="session-row-main">
+    <div class="session-row-head">
+      <a href="/sessions/{{ session.session_id }}"><strong>{{ session.session_id }}</strong></a>
+      <span class="status {{ 'status-active' if session.lifecycle_status == 'active' else 'status-archived' }}">
+        {{ session.lifecycle_status }}
+      </span>
+    </div>
+    <div class="session-meta-row">
+      <span>Dataset: {{ session.dataset_key }}</span>
+      <span>Visible state: {{ session.current_public_state or "not_started" }}</span>
+      <span>Pending clarification: {{ "yes" if session.has_pending_clarification else "no" }}</span>
+      <span>Updated: {{ session.updated_at }}</span>
+    </div>
+  </div>
+  <a class="button button-ghost" href="/sessions/{{ session.session_id }}">Resume Session</a>
+</article>
+{%- endmacro %}
+
+{% macro dataset_card(dataset, selected_dataset_key) -%}
+<article
+  class="dataset-card {{ 'is-active' if dataset.availability_status == 'active' else 'is-blocked' }}{% if selected_dataset_key and dataset.dataset_key == selected_dataset_key %} is-selected{% endif %}"
+  data-dataset-card
+  data-dataset-key="{{ dataset.dataset_key }}"
+>
+  <div class="card-header">
+    <div>
+      <h3>{{ dataset.display_name }}</h3>
+      <p>{{ dataset.support_note }}</p>
+    </div>
+    <span class="status {{ 'status-active' if dataset.availability_status == 'active' else 'status-blocked' }}">
+      {{ dataset.availability_status }}
+    </span>
+  </div>
+  <div class="meta-grid">
+    <div class="meta-card">
+      <span class="meta-label">Bundle</span>
+      <strong class="meta-value meta-value-wrap">{{ dataset.artifact_version }}</strong>
+    </div>
+    <div class="meta-card">
+      <span class="meta-label">Training logic</span>
+      <strong class="meta-value meta-value-wrap">{{ dataset.training_logic_version }}</strong>
+    </div>
+    <div class="meta-card">
+      <span class="meta-label">Outcome</span>
+      <strong class="meta-value meta-value-wrap">{{ dataset.outcome_label }} -> {{ dataset.desired_outcome }}</strong>
+    </div>
+  </div>
+  <ul class="tag-list">
+    {% for feature in dataset.f2change[:6] %}
+    <li class="tag">{{ feature }}</li>
+    {% endfor %}
+    {% if dataset.f2change|length > 6 %}
+    <li class="tag tag-muted">+{{ dataset.f2change|length - 6 }} more</li>
+    {% endif %}
+  </ul>
+  <div class="card-actions">
+    {% if dataset.availability_status == 'active' %}
+    <button class="button button-small start-dataset" type="button" data-dataset="{{ dataset.dataset_key }}">Start Session</button>
+    {% else %}
+    <span class="button-disabled-note">Blocked In This MVP</span>
+    {% endif %}
+    <button class="button button-ghost button-small select-dataset" type="button" data-dataset="{{ dataset.dataset_key }}">View Details</button>
+  </div>
+</article>
+{%- endmacro %}

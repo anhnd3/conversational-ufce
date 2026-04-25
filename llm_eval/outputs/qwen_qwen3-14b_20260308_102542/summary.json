@@ -1,0 +1,74 @@
+{
+  "benchmark_name": "ufce_bank_cf_parser_v1",
+  "failure_counts": {
+    "api_error_count": 0,
+    "exact_match_fail_count": 25,
+    "invalid_json_count": 0,
+    "schema_invalid_count": 2
+  },
+  "groups": {
+    "A": {
+      "avg_hallucination_count": 0.0,
+      "avg_request_latency_ms": 7193.591579207957,
+      "avg_tokens_per_second": 71.53875729165445,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 1.0,
+      "field_accuracy_mean": 1.0,
+      "missing_fields_accuracy": 1.0,
+      "run_count": 24,
+      "schema_valid_rate": 1.0,
+      "stability": 1.0,
+      "status_accuracy": 1.0,
+      "valid_json_rate": 1.0
+    },
+    "B": {
+      "avg_hallucination_count": 0.0,
+      "avg_request_latency_ms": 11912.857560335397,
+      "avg_tokens_per_second": 74.16730329578675,
+      "case_count": 8,
+      "conflict_accuracy": 1.0,
+      "exact_match_rate": 0.7083333333333334,
+      "field_accuracy_mean": 1.0,
+      "missing_fields_accuracy": 0.9166666666666666,
+      "run_count": 24,
+      "schema_valid_rate": 1.0,
+      "stability": 0.625,
+      "status_accuracy": 0.7916666666666666,
+      "valid_json_rate": 1.0
+    },
+    "C": {
+      "avg_hallucination_count": 0.1111111111111111,
+      "avg_request_latency_ms": 35881.89871333291,
+      "avg_tokens_per_second": 60.912850198878985,
+      "case_count": 6,
+      "conflict_accuracy": 0.16666666666666666,
+      "exact_match_rate": 0.0,
+      "field_accuracy_mean": 0.9876543209876543,
+      "missing_fields_accuracy": 0.16666666666666666,
+      "run_count": 18,
+      "schema_valid_rate": 0.8888888888888888,
+      "stability": 0.0,
+      "status_accuracy": 0.8333333333333334,
+      "valid_json_rate": 1.0
+    }
+  },
+  "model_alias": "qwen/qwen3-14b",
+  "overall": {
+    "avg_hallucination_count": 0.030303030303030304,
+    "avg_request_latency_ms": 16733.772063470195,
+    "avg_tokens_per_second": 69.59661754058197,
+    "case_count": 22,
+    "conflict_accuracy": 0.7727272727272727,
+    "exact_match_rate": 0.6212121212121212,
+    "field_accuracy_mean": 0.9966329966329966,
+    "missing_fields_accuracy": 0.7424242424242424,
+    "run_count": 66,
+    "schema_valid_rate": 0.9696969696969697,
+    "stability": 0.5909090909090909,
+    "status_accuracy": 0.8787878787878788,
+    "valid_json_rate": 1.0
+  },
+  "run_dir": "/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/llm_eval/outputs/qwen_qwen3-14b_20260308_102542",
+  "run_id": "run_20260308_102542"
+}
