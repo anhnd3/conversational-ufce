@@ -35,6 +35,7 @@ from llm.src.product.schemas import (
     SessionBlockedResponse,
     UiReviewConstraint,
     UiReviewField,
+    UiResponseSummary,
     UiReviewPayload,
     VersionResponse,
 )
@@ -468,6 +469,9 @@ def serialize_turn_response(payload: dict) -> TurnResponse:
         payload,
         ui_review=ui_review,
     )
+    ui_response_summary = None
+    if isinstance(payload.get("ui_response_summary"), dict):
+        ui_response_summary = UiResponseSummary(**payload["ui_response_summary"])
     return TurnResponse(
         session_id=payload["session_id"],
         turn_id=payload["turn_id"],
@@ -501,6 +505,7 @@ def serialize_turn_response(payload: dict) -> TurnResponse:
         constraint_feedback_delta=payload["constraint_feedback_delta"],
         refinement_rounds_used=payload["refinement_rounds_used"],
         refinement_round_limit=payload["refinement_round_limit"],
+        ui_response_summary=ui_response_summary,
         ui_review=ui_review,
         render_hints=render_hints,
     )
@@ -539,6 +544,7 @@ def _build_session_page_render_context(
         session,
         page_state=page_state,
         render_hints=session_render_hints,
+        latest_visible_turn=latest_visible_turn,
     )
     show_advanced_controls_by_default = _show_advanced_controls_by_default(session_render_hints)
     return {
@@ -1808,14 +1814,59 @@ def _build_constraint_summary_line(items: list[UiReviewConstraint], *, empty_tex
     return summary
 
 
+def _extract_ui_response_summary(turn: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(turn, dict):
+        return None
+    payload = turn.get("ui_response_summary")
+    if isinstance(payload, UiResponseSummary):
+        return payload.model_dump()
+    if not isinstance(payload, dict):
+        return None
+    required = ("response_kind", "tone", "headline", "short_summary")
+    if not all(isinstance(payload.get(key), str) for key in required):
+        return None
+    return payload
+
+
 def _build_next_action_summary(
     session: SessionDetail,
     *,
     page_state: str,
     render_hints: SessionRenderHints,
+    latest_visible_turn: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     if page_state == "fresh":
         return None
+    ui_response_summary = _extract_ui_response_summary(latest_visible_turn)
+    if ui_response_summary is not None:
+        next_actions = list(ui_response_summary.get("next_actions") or [])
+        action_facts = [
+            str(item.get("label"))
+            for item in next_actions
+            if isinstance(item, dict) and isinstance(item.get("label"), str)
+        ]
+        title = "Result" if render_hints.primary_action_type == PRIMARY_ACTION_NO_ACTION_REQUIRED else "Next Action"
+        headline = render_hints.primary_chat_text
+        body = _next_action_body_from_render_hints(render_hints)
+        facts = list(render_hints.primary_action_items)
+        if not facts:
+            facts = action_facts
+        return {
+            "title": title,
+            "headline": headline,
+            "summary_line": headline,
+            "body": body,
+            "facts": facts,
+            "tone": str(ui_response_summary.get("tone") or "info"),
+            "response_kind": str(ui_response_summary.get("response_kind") or ""),
+            "changed_items": [
+                dict(item) for item in list(ui_response_summary.get("changed_items") or []) if isinstance(item, dict)
+            ],
+            "blocked_reasons": [
+                dict(item) for item in list(ui_response_summary.get("blocked_reasons") or []) if isinstance(item, dict)
+            ],
+            "next_actions": [dict(item) for item in next_actions if isinstance(item, dict)],
+        }
     title = "Result" if render_hints.primary_action_type == PRIMARY_ACTION_NO_ACTION_REQUIRED else "Next Action"
     return {
         "title": title,
@@ -1823,6 +1874,11 @@ def _build_next_action_summary(
         "summary_line": render_hints.primary_chat_text,
         "body": _next_action_body_from_render_hints(render_hints),
         "facts": list(render_hints.primary_action_items),
+        "tone": None,
+        "response_kind": "",
+        "changed_items": [],
+        "blocked_reasons": [],
+        "next_actions": [],
     }
 
 

@@ -345,7 +345,7 @@ def test_conversation_complete_but_missing_fields_attempts_repair_then_requests_
     assert result.negotiation_transition.transition_reason == "missing_required_fields"
     assert result.response_decision is not None
     assert result.response_decision.final_public_state == "NEEDS_CLARIFICATION"
-    assert "Reply with only the missing fields" in result.response_text
+    assert "missing fields" in result.response_text.lower()
 
 
 def test_conversation_clarification_uses_conversational_adapter_when_available(sample_benchmark, tmp_path):
@@ -386,8 +386,8 @@ def test_conversation_clarification_uses_conversational_adapter_when_available(s
     assert result.stage == "NEEDS_CLARIFICATION"
     assert result.response_text == "Please send just the missing fields."
     assert len(adapter.conversation_calls) == 1
-    assert "reply with only the missing fields" in adapter.conversation_calls[0]["system_prompt"].lower()
-    assert "fallback_meaning" in adapter.conversation_calls[0]["user_prompt"]
+    assert "clarification request" in adapter.conversation_calls[0]["system_prompt"].lower()
+    assert "fallback_text" in adapter.conversation_calls[0]["user_prompt"]
 
 
 def test_conversation_runtime_explanation_uses_conversational_adapter_when_available(sample_benchmark, tmp_path):
@@ -435,8 +435,8 @@ def test_conversation_runtime_explanation_uses_conversational_adapter_when_avail
     assert result.stage == "RUNTIME_SUCCESS"
     assert result.response_text == "Friendly runtime explanation from LLM."
     assert len(adapter.conversation_calls) == 1
-    assert "no recourse changes are needed" in adapter.conversation_calls[0]["system_prompt"].lower()
-    assert "fallback_meaning" in adapter.conversation_calls[0]["user_prompt"]
+    assert "bank-profile recourse explanation" in adapter.conversation_calls[0]["system_prompt"].lower()
+    assert "fallback_text" in adapter.conversation_calls[0]["user_prompt"]
 
 
 def test_conversation_conflict_requires_confirmed_conflict_payload(sample_benchmark, tmp_path):

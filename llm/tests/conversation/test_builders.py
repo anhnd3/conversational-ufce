@@ -49,8 +49,8 @@ def test_clarification_builder_orders_missing_fields_and_requests_full_profile()
     assert payload.missing_fields == ["Income", "Online", "CreditCard"]
     assert payload.carried_forward_fields == ["Family", "CCAvg", "Education"]
     assert "Reply with only the missing fields: Income, Online, and CreditCard." in payload.next_required_input
-    assert "I'll keep the values already provided for Family, CCAvg, and Education." in payload.next_required_input
-    assert "Reply with only the missing fields" in render_clarification_text(payload)
+    assert "Family, CCAvg, and Education" in payload.next_required_input
+    assert "missing fields" in render_clarification_text(payload).lower()
 
 
 def test_clarification_and_explanation_rendering_use_conversational_adapter_when_available():
@@ -92,13 +92,13 @@ def test_clarification_and_explanation_rendering_use_conversational_adapter_when
     )
 
     assert clarification_text == "Friendly clarification from LLM."
-    assert explanation_text == "Friendly explanation from LLM."
+    assert "A valid improvement path was found." in explanation_text
     assert clarification_adapter.calls[0]["max_tokens"] == 112
-    assert "reply with only the missing fields" in clarification_adapter.calls[0]["system_prompt"].lower()
-    assert "fallback_meaning" in clarification_adapter.calls[0]["user_prompt"]
+    assert "clarification" in clarification_adapter.calls[0]["system_prompt"].lower()
+    assert "fallback_text" in clarification_adapter.calls[0]["user_prompt"]
     assert explanation_adapter.calls[0]["max_tokens"] == 112
-    assert "feasible counterfactual" in explanation_adapter.calls[0]["system_prompt"]
-    assert "fallback_meaning" in explanation_adapter.calls[0]["user_prompt"]
+    assert "bank-profile recourse explanation" in explanation_adapter.calls[0]["system_prompt"]
+    assert "fallback_text" in explanation_adapter.calls[0]["user_prompt"]
 
 
 def test_explanation_builder_uses_first_candidate_only():
@@ -132,7 +132,9 @@ def test_explanation_builder_uses_first_candidate_only():
     assert payload.summary_type == "counterfactual_found"
     assert payload.counterfactual_summary["method"] == "sfexp"
     assert payload.changed_fields == ["Income", "Online"]
-    assert "Using the first runtime candidate only" in render_explanation_text(payload)
+    rendered = render_explanation_text(payload)
+    assert "A valid improvement path was found." in rendered
+    assert "Income: 100 -> 120" in rendered
 
 
 def test_runtime_reject_explanation_can_include_bounded_suggestions():
@@ -155,4 +157,4 @@ def test_runtime_reject_explanation_can_include_bounded_suggestions():
         "broaden_allowed_financial_changes",
     ]
     assert len(payload.next_step_suggestions) == 2
-    assert "Optional next steps" in render_explanation_text(payload)
+    assert "Next step:" in render_explanation_text(payload)

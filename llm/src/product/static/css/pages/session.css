@@ -430,6 +430,56 @@ body.session-body {
   line-height: 1.5;
 }
 
+.response-summary-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(36, 26, 18, 0.1);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.response-summary-card--success {
+  border-left: 4px solid #1f8f5f;
+}
+
+.response-summary-card--info {
+  border-left: 4px solid #2f6fbb;
+}
+
+.response-summary-card--warning {
+  border-left: 4px solid #b07a2c;
+}
+
+.response-summary-card--danger {
+  border-left: 4px solid #b1433f;
+}
+
+.change-list,
+.blocked-reason-list,
+.next-action-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.change-item,
+.blocked-reason-item,
+.next-action-item {
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.change-arrow {
+  margin: 0 4px;
+  color: var(--muted);
+}
+
+.next-action-item.is-primary strong {
+  color: var(--accent);
+}
+
 .context-subdetail {
   border-top: 1px solid rgba(36, 26, 18, 0.08);
   padding-top: 12px;
