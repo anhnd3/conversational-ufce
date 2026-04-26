@@ -10,7 +10,9 @@ UFCE Core Module P3 — UFCE-only optimized reproduction runner.
 from __future__ import annotations
 
 import argparse
+import copy
 import glob
+import json
 import os
 import platform
 import sys
@@ -198,6 +200,43 @@ TUNED_RUN2: Dict[str, Dict[str, int]] = {
     "wine": {"radius": 7, "n_neighbors": 1000, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
     "movie": {"radius": 160, "n_neighbors": 100, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
 }
+
+FINAL_RUNTIME_CONFIG: Dict[str, Dict[str, int]] = {
+    "bank": {"radius": 500, "n_neighbors": 1000, "min_act": 0, "min_feas": 0, "ufce_flip_filter": 0},
+    "bupa": {"radius": 70, "n_neighbors": 200, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
+    "grad": {"radius": 500, "n_neighbors": 400, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
+    "wine": {"radius": 7, "n_neighbors": 1000, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
+    "movie": {"radius": 80, "n_neighbors": 50, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
+}
+
+FINAL_BLINDSPOT_BUNDLE = {
+    "bank": {
+        "uf_mode": "scaled_up_150",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    },
+    "bupa": {
+        "uf_mode": "neutral_all_1",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    },
+    "grad": {
+        "uf_mode": "neutral_all_1",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    },
+    "wine": {
+        "uf_mode": "neutral_all_1",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    },
+    "movie": {
+        "uf_mode": "neutral_all_1",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    },
+}
+
 ALL_DATASETS = ["bank", "bupa", "grad", "wine", "movie"]
 
 METRICS = ["Prox-Jac", "Prox-Euc", "Sparsity", "Actionability", "Plausibility", "Feasibility"]
@@ -305,6 +344,34 @@ def get_step_config(dataset: str) -> Dict[str, float]:
     return {}
 
 
+def map_nested_numeric(obj, fn):
+    if isinstance(obj, dict):
+        return {k: map_nested_numeric(v, fn) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [map_nested_numeric(v, fn) for v in obj]
+    if isinstance(obj, tuple):
+        return tuple(map_nested_numeric(v, fn) for v in obj)
+    if isinstance(obj, (int, float, np.integer, np.floating)):
+        return fn(float(obj))
+    return obj
+
+
+def apply_uf_mode(author_uf: Dict, mode: str) -> Dict:
+    if mode == "author_public":
+        return copy.deepcopy(author_uf)
+    if mode == "neutral_all_1":
+        return map_nested_numeric(author_uf, lambda _x: 1.0)
+    if mode == "scaled_up_150":
+        return map_nested_numeric(author_uf, lambda x: x * 1.5)
+    raise ValueError(f"Unsupported uf_mode: {mode}")
+
+
+def apply_f2change_mode(author_f2change: List[str], mode: str) -> List[str]:
+    if mode == "author_public":
+        return list(author_f2change)
+    raise ValueError(f"Unsupported f2change_mode for final reproduction: {mode}")
+
+
 def print_feature_relations(X: pd.DataFrame, features: List[str], mi_pairs: List) -> None:
     print("=== Feature Relations ===")
     print(f"- Top-5 MI feature pairs: {mi_pairs[:5]}")
@@ -333,10 +400,13 @@ def print_feature_relations(X: pd.DataFrame, features: List[str], mi_pairs: List
 
 
 def resolve_effective_cfg(dataset: str, args) -> Dict[str, int]:
-    if dataset not in TUNED_RUN2:
-        allowed = ", ".join(sorted(TUNED_RUN2.keys()))
-        raise ValueError(f"Dataset '{dataset}' missing from TUNED_RUN2. Allowed: {allowed}")
-    tuned = TUNED_RUN2[dataset]
+    config_source = FINAL_RUNTIME_CONFIG if args.runtime_profile == "final_freeze" else TUNED_RUN2
+
+    if dataset not in config_source:
+        allowed = ", ".join(sorted(config_source.keys()))
+        raise ValueError(f"Dataset '{dataset}' missing from runtime profile. Allowed: {allowed}")
+
+    tuned = config_source[dataset]
     return {
         "radius": int(args.radius) if args.radius is not None else int(tuned["radius"]),
         "n_neighbors": int(args.n_neighbors) if args.n_neighbors is not None else int(tuned["n_neighbors"]),
@@ -951,7 +1021,27 @@ def run_for_dataset(dataset: str, args, run_id: str) -> Dict[str, object]:
         _data_lab0,
         data_lab1,
     ) = get_dataset_constraints(dataset, datasetdf)
+    
+    bundle_cfg = {
+        "uf_mode": "author_public",
+        "step_mode": "local_reproduction",
+        "f2change_mode": "author_public",
+    }
+
+    if args.bundle_mode == "final_blindspot_best":
+        bundle_cfg = FINAL_BLINDSPOT_BUNDLE[dataset]
+
+    uf = apply_uf_mode(uf, bundle_cfg["uf_mode"])
+    f2change = apply_f2change_mode(f2change, bundle_cfg["f2change_mode"])
     step = get_step_config(dataset)
+
+    print(
+        "[BUNDLE] "
+        f"dataset={dataset} bundle_mode={args.bundle_mode} "
+        f"uf_mode={bundle_cfg['uf_mode']} "
+        f"step_mode={bundle_cfg['step_mode']} "
+        f"f2change_mode={bundle_cfg['f2change_mode']}"
+    )
     mi_fp = ufc.get_top_MI_features(x_all, features)
     movie_distance_scaler = None
     if dataset == "movie":
@@ -1064,8 +1154,59 @@ def run_for_dataset(dataset: str, args, run_id: str) -> Dict[str, object]:
     }
 
 
+def write_run_manifest(args, run_id: str, out_dir: str, extra: Optional[Dict[str, object]] = None) -> str:
+    manifest = {
+        "run_id": run_id,
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+        "script": "scripts/reproduce_results_v3.py",
+        "dataset": args.dataset,
+        "runtime_profile": args.runtime_profile,
+        "bundle_mode": args.bundle_mode,
+        "no_cf": args.no_cf,
+        "max_folds": args.max_folds,
+        "fold_file": args.fold_file,
+        "contprox_metric": args.contprox_metric,
+        "ufce_flip_filter_override": args.ufce_flip_filter,
+        "data_dir": args.data_dir,
+        "folds_dir": args.folds_dir,
+        "out_dir": out_dir,
+        "final_runtime_config": FINAL_RUNTIME_CONFIG,
+        "final_blindspot_bundle": FINAL_BLINDSPOT_BUNDLE,
+        "environment": {
+            "python": sys.version.split()[0],
+            "platform": platform.platform(),
+            "numpy": safe_version("numpy"),
+            "pandas": safe_version("pandas"),
+            "scipy": safe_version("scipy"),
+            "scikit-learn": safe_version("scikit-learn"),
+            "matplotlib": safe_version("matplotlib"),
+            "ufce": getattr(ufce, "__version__", "unknown"),
+        },
+        "extra": extra or {},
+    }
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.join(out_dir, f"run_manifest_{run_id}.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False, default=str)
+    return path
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--runtime_profile",
+        type=str,
+        default="tuned_run2",
+        choices=["tuned_run2", "final_freeze"],
+        help="Runtime config profile to use.",
+    )
+    parser.add_argument(
+        "--bundle_mode",
+        type=str,
+        default="author_public",
+        choices=["author_public", "final_blindspot_best"],
+        help="UF/f2change/step bundle mode.",
+    )
     parser.add_argument("--dataset", type=str, default="bank", choices=["bank", "grad", "wine", "bupa", "movie", "all"])
     parser.add_argument("--data_dir", type=str, default=os.path.join("ufce", "data"), help="Repo-relative path to data folder")
     parser.add_argument("--folds_dir", type=str, default=os.path.join("ufce", "data", "folds"), help="Repo-relative path to folds folder")
@@ -1126,6 +1267,9 @@ def main() -> None:
 
     print_env_versions()
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    manifest_path = write_run_manifest(args, run_id, args.out_dir)
+    print(f"- Run manifest saved: {manifest_path}")
 
     if args.dataset != "all":
         run_for_dataset(args.dataset, args, run_id)

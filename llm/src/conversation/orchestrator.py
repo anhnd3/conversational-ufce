@@ -36,10 +36,12 @@ from llm.src.conversation.types import (
 from llm.src.orchestration.clarification_flow import (
     build_clarification_payload,
     build_clarification_limit_reached_payload,
+    build_user_response_payload_from_clarification,
     render_clarification_text,
 )
 from llm.src.orchestration.explanation_flow import (
     build_explanation_payload,
+    build_user_response_payload_from_explanation,
     render_explanation_text,
 )
 from llm.src.orchestration.unsupported_flow import render_unsupported_request_text
@@ -264,6 +266,7 @@ class BankConversationOrchestrator:
         invariant_validation = None
         clarification_payload = None
         explanation_payload = None
+        user_response_payload = None
         parser_failure_cause = None
         is_case_complete = False
         case_completion_reason = None
@@ -373,10 +376,25 @@ class BankConversationOrchestrator:
                 policy=self.canonical_validator.context.policy,
                 dataset_label=dataset_package.primary_subject_label(),
             )
+            response_payload = build_user_response_payload_from_explanation(
+                explanation_payload=explanation_payload,
+                runtime_result=explanation_runtime_result,
+                current_profile=runtime_payload["profile"],
+                policy=self.canonical_validator.context.policy,
+                dataset_label=dataset_package.primary_subject_label(),
+                active_constraint_spec=runtime_payload.get("constraint_spec"),
+                transition_reason=transition_reason,
+            )
+            user_response_payload = response_payload.to_dict()
             response_text = render_explanation_text(
                 explanation_payload,
                 dataset_label=dataset_package.primary_subject_label(),
                 parser_adapter=self.parser_adapter,
+                runtime_result=explanation_runtime_result,
+                current_profile=runtime_payload["profile"],
+                policy=self.canonical_validator.context.policy,
+                active_constraint_spec=runtime_payload.get("constraint_spec"),
+                transition_reason=transition_reason,
             )
             response_decision = ResponseDecision(
                 final_public_state=final_stage,
@@ -408,6 +426,10 @@ class BankConversationOrchestrator:
                 carried_forward_fields=list((builder_result.partial_profile_snapshot or {}).keys()),
                 dataset_label=dataset_package.primary_subject_label(),
             )
+            user_response_payload = build_user_response_payload_from_clarification(
+                clarification_payload,
+                dataset_label=dataset_package.primary_subject_label(),
+            ).to_dict()
             response_text = render_clarification_text(
                 clarification_payload,
                 dataset_label=dataset_package.primary_subject_label(),
@@ -453,6 +475,10 @@ class BankConversationOrchestrator:
                     restart_required=False,
                     dataset_label=dataset_package.primary_subject_label(),
                 )
+            user_response_payload = build_user_response_payload_from_clarification(
+                clarification_payload,
+                dataset_label=dataset_package.primary_subject_label(),
+            ).to_dict()
             response_text = render_clarification_text(
                 clarification_payload,
                 dataset_label=dataset_package.primary_subject_label(),
@@ -546,6 +572,7 @@ class BankConversationOrchestrator:
             clarification_payload=clarification_payload,
             explanation_payload=explanation_payload,
             response_text=response_text,
+            user_response_payload=user_response_payload,
             parser_failure_cause=parser_failure_cause,
             is_case_complete=is_case_complete,
             case_completion_reason=case_completion_reason,

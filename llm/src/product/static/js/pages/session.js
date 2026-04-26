@@ -629,6 +629,38 @@
     if (pageState === "fresh") {
       return null;
     }
+    const uiResponseSummary = extractUiResponseSummary(latestTurn);
+    if (uiResponseSummary) {
+      const nextActions = Array.isArray(uiResponseSummary.next_actions)
+        ? uiResponseSummary.next_actions.filter((item) => item && typeof item === "object")
+        : [];
+      let headline = renderHints && typeof renderHints.primary_chat_text === "string"
+        ? renderHints.primary_chat_text
+        : String(uiResponseSummary.headline || "");
+      let body = renderHints ? nextActionBodyFromRenderHints(renderHints) : String(uiResponseSummary.short_summary || "");
+      if (!body && latestRuntimeSummary) {
+        body = latestRuntimeSummary.supporting_copy + (pageState === "restart_required" ? " " + restartHelperCopy(session) : "");
+      }
+      const facts = renderHints && Array.isArray(renderHints.primary_action_items) && renderHints.primary_action_items.length > 0
+        ? renderHints.primary_action_items.filter((item) => typeof item === "string")
+        : nextActions.map((item) => String(item.label || "")).filter(Boolean);
+      return {
+        title: renderHints && renderHints.primary_action_type === "no_action_required" ? "Result" : "Next Action",
+        headline: headline,
+        summary_line: headline,
+        body: body,
+        facts: facts,
+        tone: String(uiResponseSummary.tone || "info"),
+        response_kind: String(uiResponseSummary.response_kind || ""),
+        changed_items: Array.isArray(uiResponseSummary.changed_items)
+          ? uiResponseSummary.changed_items.filter((item) => item && typeof item === "object")
+          : [],
+        blocked_reasons: Array.isArray(uiResponseSummary.blocked_reasons)
+          ? uiResponseSummary.blocked_reasons.filter((item) => item && typeof item === "object")
+          : [],
+        next_actions: nextActions,
+      };
+    }
     if (!renderHints) {
       if (latestRuntimeSummary) {
         return {
@@ -667,7 +699,31 @@
       facts: Array.isArray(renderHints.primary_action_items)
         ? renderHints.primary_action_items.filter((item) => typeof item === "string")
         : (latestRuntimeSummary ? buildInlineOutcomeFacts(latestRuntimeSummary) : []),
+      tone: null,
+      response_kind: "",
+      changed_items: [],
+      blocked_reasons: [],
+      next_actions: [],
     };
+  }
+
+  function extractUiResponseSummary(turn) {
+    if (!turn || typeof turn !== "object") {
+      return null;
+    }
+    const summary = turn.ui_response_summary;
+    if (!summary || typeof summary !== "object") {
+      return null;
+    }
+    if (
+      typeof summary.response_kind !== "string"
+      || typeof summary.tone !== "string"
+      || typeof summary.headline !== "string"
+      || typeof summary.short_summary !== "string"
+    ) {
+      return null;
+    }
+    return summary;
   }
 
   function nextActionBodyFromRenderHints(renderHints) {
@@ -1127,6 +1183,7 @@
     const factsHtml = Array.isArray(nextActionSummary.facts) && nextActionSummary.facts.length > 0
       ? `<div id="result-facts-row" class="fact-row">${nextActionSummary.facts.map((fact) => `<span class="fact-chip">${escapeHtml(fact)}</span>`).join("")}</div>`
       : "";
+    const responseSummaryCard = renderResponseSummaryCard(nextActionSummary);
     const restartButton = currentPageData.pageState === "restart_required"
       ? '<button class="button" type="button" data-start-new-case="true">Start New Case</button>'
       : "";
@@ -1145,9 +1202,77 @@
             <p id="result-summary-copy">${escapeHtml(nextActionSummary.body || "")}</p>
           </div>
           ${factsHtml}
+          ${responseSummaryCard}
           ${restartButton}
         </div>
       </details>
+    `;
+  }
+
+  function renderResponseSummaryCard(summary) {
+    if (!summary || typeof summary !== "object" || !summary.tone) {
+      return "";
+    }
+    const tone = String(summary.tone || "info");
+    const toneLabel = tone === "success"
+      ? "Success"
+      : tone === "warning"
+        ? "Blocked"
+        : tone === "danger"
+          ? "Warning"
+          : "Needs input";
+    const changedItems = Array.isArray(summary.changed_items) ? summary.changed_items : [];
+    const blockedReasons = Array.isArray(summary.blocked_reasons) ? summary.blocked_reasons : [];
+    const nextActions = Array.isArray(summary.next_actions) ? summary.next_actions : [];
+    const changedHtml = changedItems.length > 0
+      ? `
+      <div class="section-block change-list-block">
+        <span class="section-label">What changed</span>
+        <ul class="change-list">
+          ${changedItems.map((item) => {
+            if (item.user_facing_text) {
+              return `<li class="change-item">${escapeHtml(String(item.user_facing_text))}</li>`;
+            }
+            return `<li class="change-item"><strong>${escapeHtml(String(item.display_name || item.field_name || ""))}</strong> <span class="change-arrow" aria-hidden="true">→</span> <span>${escapeHtml(String(item.before))} → ${escapeHtml(String(item.after))}</span></li>`;
+          }).join("")}
+        </ul>
+      </div>
+      `
+      : "";
+    const blockedHtml = blockedReasons.length > 0
+      ? `
+      <div class="section-block blocked-reason-list-block">
+        <span class="section-label">Why blocked</span>
+        <ul class="blocked-reason-list">
+          ${blockedReasons.map((item) => {
+            const fields = Array.isArray(item.fields) && item.fields.length > 0
+              ? `<div class="fact-row">${item.fields.map((fieldName) => `<span class="fact-chip">${escapeHtml(String(fieldName))}</span>`).join("")}</div>`
+              : "";
+            return `<li class="blocked-reason-item"><strong>${escapeHtml(String(item.title || ""))}</strong><p>${escapeHtml(String(item.detail || ""))}</p>${fields}</li>`;
+          }).join("")}
+        </ul>
+      </div>
+      `
+      : "";
+    const actionHtml = nextActions.length > 0
+      ? `
+      <div class="section-block next-action-list-block">
+        <span class="section-label">Next action</span>
+        <ul class="next-action-list">
+          ${nextActions.map((item) => `<li class="next-action-item${item.primary ? " is-primary" : ""}"><strong>${escapeHtml(String(item.label || ""))}</strong><p>${escapeHtml(String(item.detail || ""))}</p></li>`).join("")}
+        </ul>
+      </div>
+      `
+      : "";
+    return `
+      <div class="response-summary-card response-summary-card--${escapeHtml(tone)}">
+        <span class="pill pill-${escapeHtml(badgeTone(tone))}">${escapeHtml(toneLabel)}</span>
+        <strong>${escapeHtml(String(summary.headline || ""))}</strong>
+        <p>${escapeHtml(String(summary.body || ""))}</p>
+      </div>
+      ${changedHtml}
+      ${blockedHtml}
+      ${actionHtml}
     `;
   }
 
@@ -1565,6 +1690,10 @@
     const sessionDetail = await fetchSessionDetailJson();
     rebuildDerivedPageData(sessionDetail, currentPageData.latestTurn || null);
     renderPageState();
+    const clarificationState = currentPageData.pageState === "clarification" || currentPageData.pageState === "refinement_clarification";
+    if (clarificationState && dom.composerInput && !dom.composerInput.disabled) {
+      dom.composerInput.focus();
+    }
     if (shouldAutoScroll) {
       scrollTranscriptToBottom();
     }

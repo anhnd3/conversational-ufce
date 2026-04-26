@@ -135,6 +135,42 @@ class SessionRenderHints(TurnRenderHints):
     composer_context: ComposerContextPayload
 
 
+class UiChangeItem(ProductBaseModel):
+    field_name: str
+    display_name: str
+    before: Optional[Any]
+    after: Optional[Any]
+    unit: Optional[str] = None
+    direction: Optional[str] = None
+    user_facing_text: Optional[str] = None
+
+
+class UiBlockedReason(ProductBaseModel):
+    code: str
+    title: str
+    detail: str
+    fields: List[str]
+    source: Optional[str] = None
+
+
+class UiNextAction(ProductBaseModel):
+    action_type: str
+    label: str
+    detail: str
+    fields: List[str]
+    primary: bool
+
+
+class UiResponseSummary(ProductBaseModel):
+    response_kind: str
+    tone: str
+    headline: str
+    short_summary: str
+    changed_items: List[UiChangeItem]
+    blocked_reasons: List[UiBlockedReason]
+    next_actions: List[UiNextAction]
+
+
 class TurnResponse(ProductBaseModel):
     session_id: str
     turn_id: str
@@ -159,6 +195,7 @@ class TurnResponse(ProductBaseModel):
     constraint_feedback_delta: Optional[Dict[str, Any]]
     refinement_rounds_used: Optional[int]
     refinement_round_limit: Optional[int]
+    ui_response_summary: Optional[UiResponseSummary] = None
     ui_review: Optional[UiReviewPayload] = None
     render_hints: Optional[TurnRenderHints] = None
 

@@ -122,6 +122,7 @@ class ProductSessionService:
         )
         public_state = _extract_public_state(result)
         debug_summary = build_debug_summary(result)
+        debug_summary["user_response_payload"] = _normalize_user_response_payload(getattr(result, "user_response_payload", None))
         updated_runtime_request = _extract_runtime_request_for_session_update(result, stored_session)
         active_constraint_spec_session = _extract_active_constraint_spec_for_session_update(
             updated_runtime_request,
@@ -245,6 +246,7 @@ class ProductSessionService:
         )
         public_state = payload["public_state"]
         debug_summary = build_debug_summary(result)
+        debug_summary["user_response_payload"] = _normalize_user_response_payload(getattr(result, "user_response_payload", None))
         canonical_session_state = _build_canonical_session_state_for_turn(
             result=result,
             stored_session=stored_session,
@@ -415,6 +417,7 @@ class ProductSessionService:
                 },
             },
             "debug_summary": turn.debug_summary_json or build_empty_debug_summary(turn.artifact_dir),
+            "ui_response_summary": _extract_turn_ui_response_summary(turn),
             "clarification_turns_used": turn.clarification_turns_used,
             "is_case_complete": turn.is_case_complete,
             "case_completion_reason": turn.case_completion_reason,
@@ -512,6 +515,42 @@ def build_empty_debug_summary(artifact_dir: str | None) -> dict[str, Any]:
         "artifact_dir": artifact_dir,
         "timing_metrics": None,
     }
+
+
+def _normalize_user_response_payload(payload: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    response_kind = payload.get("response_kind")
+    tone = payload.get("tone")
+    headline = payload.get("headline")
+    short_summary = payload.get("short_summary")
+    if not all(isinstance(item, str) for item in [response_kind, tone, headline, short_summary]):
+        return None
+    changed_items = payload.get("changed_items")
+    blocked_reasons = payload.get("blocked_reasons")
+    next_actions = payload.get("next_actions")
+    if not isinstance(changed_items, list):
+        changed_items = []
+    if not isinstance(blocked_reasons, list):
+        blocked_reasons = []
+    if not isinstance(next_actions, list):
+        next_actions = []
+    return {
+        "response_kind": response_kind,
+        "tone": tone,
+        "headline": headline,
+        "short_summary": short_summary,
+        "changed_items": [dict(item) for item in changed_items if isinstance(item, dict)],
+        "blocked_reasons": [dict(item) for item in blocked_reasons if isinstance(item, dict)],
+        "next_actions": [dict(item) for item in next_actions if isinstance(item, dict)],
+    }
+
+
+def _extract_turn_ui_response_summary(turn: StoredTurn) -> dict[str, Any] | None:
+    payload = None
+    if isinstance(turn.debug_summary_json, dict):
+        payload = turn.debug_summary_json.get("user_response_payload")
+    return _normalize_user_response_payload(payload)
 
 
 def check_database(repository: SessionRepository) -> dict[str, Any]:

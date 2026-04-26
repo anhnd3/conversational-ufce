@@ -274,6 +274,7 @@ class ConversationTurnResult:
     clarification_payload: ClarificationPayload | None
     explanation_payload: ExplanationPayload | None
     response_text: str
+    user_response_payload: dict[str, Any] | None = None
     parser_quality_metadata: dict[str, Any] | None = None
     parser_failure_cause: str | None = None
     artifact_record: ArtifactRecord | None = None
@@ -326,6 +327,9 @@ class ConversationTurnResult:
             "explanation_payload": None
             if self.explanation_payload is None
             else self.explanation_payload.to_dict(),
+            "user_response_payload": None
+            if self.user_response_payload is None
+            else dict(self.user_response_payload),
             "response_text": self.response_text,
             "parser_failure_cause": self.parser_failure_cause,
             "artifact_record": None

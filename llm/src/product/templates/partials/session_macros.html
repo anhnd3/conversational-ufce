@@ -101,6 +101,81 @@
   {% endif %}
 {%- endmacro %}
 
+{% macro change_list(changed_items) -%}
+{% if changed_items %}
+<div class="section-block change-list-block">
+  <span class="section-label">What changed</span>
+  <ul class="change-list">
+    {% for item in changed_items %}
+    <li class="change-item">
+      {% if item.user_facing_text %}
+      {{ item.user_facing_text }}
+      {% else %}
+      <strong>{{ item.display_name }}</strong>
+      <span class="change-arrow" aria-hidden="true">→</span>
+      <span>{{ item.before }} → {{ item.after }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro blocked_reason_list(blocked_reasons) -%}
+{% if blocked_reasons %}
+<div class="section-block blocked-reason-list-block">
+  <span class="section-label">Why blocked</span>
+  <ul class="blocked-reason-list">
+    {% for reason in blocked_reasons %}
+    <li class="blocked-reason-item">
+      <strong>{{ reason.title }}</strong>
+      <p>{{ reason.detail }}</p>
+      {% if reason.fields %}
+      <div class="fact-row">
+        {% for field_name in reason.fields %}
+        <span class="fact-chip">{{ field_name }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro next_action_list(next_actions) -%}
+{% if next_actions %}
+<div class="section-block next-action-list-block">
+  <span class="section-label">Next action</span>
+  <ul class="next-action-list">
+    {% for action in next_actions %}
+    <li class="next-action-item{{ ' is-primary' if action.primary else '' }}">
+      <strong>{{ action.label }}</strong>
+      <p>{{ action.detail }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro response_summary_card(summary) -%}
+{% if summary %}
+<div class="response-summary-card response-summary-card--{{ summary.tone if summary.tone else 'info' }}">
+  <span class="pill pill-{{ badge_tone(summary.tone if summary.tone else 'info') }}">
+    {% if summary.tone == 'success' %}Success{% elif summary.tone == 'warning' %}Blocked{% elif summary.tone == 'danger' %}Warning{% else %}Needs input{% endif %}
+  </span>
+  <strong>{{ summary.headline }}</strong>
+  <p>{{ summary.body }}</p>
+</div>
+{{ change_list(summary.changed_items) }}
+{{ blocked_reason_list(summary.blocked_reasons) }}
+{{ next_action_list(summary.next_actions) }}
+{% endif %}
+{%- endmacro %}
+
 {% macro technical_turn(turn, tone) -%}
 <article class="technical-turn" data-turn-id="{{ turn.turn_id }}">
   <div class="technical-head">

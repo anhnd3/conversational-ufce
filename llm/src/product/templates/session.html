@@ -211,6 +211,7 @@
                 {% endfor %}
               </div>
               {% endif %}
+              {{ session_ui.response_summary_card(next_action_summary) }}
               {% if page_state == "restart_required" %}
               <button class="button" type="button" data-start-new-case="true">Start New Case</button>
               {% endif %}

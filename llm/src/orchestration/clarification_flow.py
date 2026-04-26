@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from llm.src.conversation.types import ClarificationPayload
+from llm.src.orchestration.llm_response_guard import accept_llm_rewrite
+from llm.src.orchestration.user_response_payload import NextAction, UserResponsePayload
+from llm.src.orchestration.user_response_text import render_deterministic_user_response_text
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -70,6 +73,92 @@ def build_clarification_limit_reached_payload(*, dataset_label: str = "bank prof
     )
 
 
+def build_user_response_payload_from_clarification(
+    payload: ClarificationPayload,
+    *,
+    dataset_label: str,
+) -> UserResponsePayload:
+    facts = {
+        "missing_fields": list(payload.missing_fields),
+        "conflicts": list(payload.conflicts),
+        "carried_forward_fields": list(payload.carried_forward_fields),
+        "remaining_rounds": payload.remaining_rounds,
+        "reply_strategy": payload.reply_strategy,
+        "restart_required": payload.restart_required,
+    }
+
+    if payload.clarification_type == "clarification_limit_reached":
+        return UserResponsePayload(
+            response_kind="clarification_limit_reached",
+            tone="warning",
+            headline="Clarification limit reached",
+            short_summary=(
+                "The case could not be completed within the allowed clarification rounds."
+            ),
+            next_actions=[
+                NextAction(
+                    action_type="start_new_case",
+                    label="Start new case",
+                    detail=f"Start a new case with one complete corrected {dataset_label}.",
+                    primary=True,
+                )
+            ],
+            technical_facts=facts,
+        )
+
+    if payload.clarification_type == "refinement_clarification":
+        return UserResponsePayload(
+            response_kind="refinement_clarification",
+            tone="info",
+            headline="Refinement needs clarification",
+            short_summary="The refinement request is still ambiguous and needs one clear follow-up.",
+            next_actions=[
+                NextAction(
+                    action_type="provide_missing_fields",
+                    label="Clarify refinement",
+                    detail=payload.next_required_input,
+                    fields=[],
+                    primary=True,
+                )
+            ],
+            technical_facts=facts,
+        )
+
+    if payload.reply_strategy == "start_new_case":
+        return UserResponsePayload(
+            response_kind="conflict",
+            tone="danger",
+            headline="Conflicting values were found",
+            short_summary="A restart is required to avoid merging inconsistent values.",
+            next_actions=[
+                NextAction(
+                    action_type="start_new_case",
+                    label="Start new case",
+                    detail=_build_restart_required_next_input(dataset_label=dataset_label),
+                    primary=True,
+                )
+            ],
+            technical_facts=facts,
+        )
+
+    return UserResponsePayload(
+        response_kind="clarification_required",
+        tone="info",
+        headline="More profile details are required",
+        short_summary="Reply only with the missing fields. Existing values will be carried forward.",
+        next_actions=[
+            NextAction(
+                action_type="provide_missing_fields",
+                label="Provide missing fields",
+                detail="Reply with only the listed missing values.",
+                fields=list(payload.missing_fields),
+                primary=True,
+            )
+        ],
+        technical_facts=facts,
+    )
+
+
 def render_clarification_text(
     payload: ClarificationPayload,
     *,
@@ -89,12 +178,14 @@ def render_clarification_text_with_dataset(
     dataset_label: str = "bank profile",
     parser_adapter=None,
 ) -> str:
-    fallback_text = _build_programmatic_clarification_text(payload, dataset_label=dataset_label)
+    user_payload = build_user_response_payload_from_clarification(payload, dataset_label=dataset_label)
+    fallback_text = render_deterministic_user_response_text(user_payload, dataset_label=dataset_label)
 
     if parser_adapter is not None and hasattr(parser_adapter, "generate_conversational_response"):
         system_prompt = _load_system_prompt(_prompt_path_for_payload(payload))
         user_prompt = _build_clarification_user_prompt(
             payload,
+            user_response_payload=user_payload,
             dataset_label=dataset_label,
             fallback_text=fallback_text,
         )
@@ -104,8 +195,11 @@ def render_clarification_text_with_dataset(
                 user_prompt=user_prompt,
                 max_tokens=112,
             )
-            if llm_text:
-                return llm_text
+            return accept_llm_rewrite(
+                llm_text=str(llm_text or ""),
+                fallback_text=fallback_text,
+                payload=user_payload,
+            )
         except Exception:
             pass
 
@@ -119,18 +213,23 @@ def build_clarification_response(
     conflicts: list[str],
     carried_forward_fields: list[str] | None = None,
     parser_adapter=None,
+    dataset_label: str = "bank profile",
 ) -> dict[str, object]:
     payload = build_clarification_payload(
         required_fields=required_fields,
         missing_fields=missing_fields,
         conflicts=conflicts,
         carried_forward_fields=carried_forward_fields,
+        dataset_label=dataset_label,
     )
+    user_payload = build_user_response_payload_from_clarification(payload, dataset_label=dataset_label)
     return {
         "clarification_payload": payload.to_dict(),
+        "user_response_payload": user_payload.to_dict(),
         "response_text": render_clarification_text(
             payload,
             parser_adapter=parser_adapter,
+            dataset_label=dataset_label,
         ),
     }
 
@@ -138,52 +237,27 @@ def build_clarification_response(
 def _build_clarification_user_prompt(
     payload: ClarificationPayload,
     *,
+    user_response_payload: UserResponsePayload,
     dataset_label: str,
     fallback_text: str,
 ) -> str:
     factual_summary = {
         "dataset_label": dataset_label,
         "clarification_payload": payload.to_dict(),
-        "fallback_meaning": fallback_text,
+        "response_payload": user_response_payload.to_dict(),
+        "fallback_text": fallback_text,
+        "rules": [
+            "Do not ask for fields not listed in missing_fields.",
+            "Do not drop any missing fields.",
+            "Do not change reply_strategy.",
+            "Do not suggest continuing when restart_required is true.",
+            "Return plain text only.",
+        ],
     }
     return (
-        "Rewrite the clarification for the end user as a brief, natural response.\n"
-        "Keep the meaning exactly aligned with the factual summary.\n"
-        "Do not invent any missing values or change the reply strategy.\n"
-        "Return plain text only.\n\n"
+        "Rewrite the clarification as a brief user-facing response.\n"
+        "Keep the meaning exactly aligned with the factual summary.\n\n"
         f"{json.dumps(factual_summary, ensure_ascii=True, indent=2)}"
-    )
-
-
-def _build_programmatic_clarification_text(payload: ClarificationPayload, *, dataset_label: str = "bank profile") -> str:
-    if payload.clarification_type == "clarification_limit_reached":
-        return (
-            "I couldn't resolve this case within the clarification limit. "
-            f"Please start a new case and submit one complete {dataset_label}."
-        )
-
-    if payload.reply_strategy == "start_new_case":
-        conflict_text = "; ".join(payload.conflicts) if payload.conflicts else None
-        if conflict_text:
-            return (
-                "Your request contains conflicting instructions: "
-                f"{conflict_text}. "
-                f"{_build_restart_required_next_input(dataset_label=dataset_label)}"
-            )
-        return (
-            f"I can't continue this case as-is. "
-            f"{_build_restart_required_next_input(dataset_label=dataset_label)}"
-        )
-
-    missing_text = _format_field_list(payload.missing_fields) if payload.missing_fields else f"the remaining {dataset_label} fields"
-    carried_text = _format_field_list(payload.carried_forward_fields)
-    if carried_text:
-        return (
-            f"Reply with only the missing fields: {missing_text}. "
-            f"I'll keep the values already provided for {carried_text}."
-        )
-    return (
-        f"Reply with only the missing fields: {missing_text}."
     )
 
 
@@ -194,16 +268,29 @@ def _build_missing_fields_next_input(
     carried_forward_fields: list[str],
 ) -> str:
     missing_text = _format_field_list(missing_fields) if missing_fields else f"the remaining {dataset_label} fields"
+    example = _build_missing_field_example(missing_fields)
     if carried_forward_fields:
         return (
             f"Reply with only the missing fields: {missing_text}. "
-            f"I'll keep the values already provided for {_format_field_list(carried_forward_fields)}."
+            f"I will keep {_format_field_list(carried_forward_fields)}. "
+            f"Example: {example}."
         )
-    return f"Reply with only the missing fields: {missing_text}."
+    return f"Reply with only the missing fields: {missing_text}. Example: {example}."
 
 
 def _build_restart_required_next_input(*, dataset_label: str) -> str:
     return f"Start a new case and submit one corrected {dataset_label}."
+
+
+def _build_missing_field_example(missing_fields: list[str]) -> str:
+    if not missing_fields:
+        return "Field = value"
+    sample_values = ["42", "80", "3", "2"]
+    parts: list[str] = []
+    for index, field_name in enumerate(missing_fields[:3]):
+        sample = sample_values[index] if index < len(sample_values) else "value"
+        parts.append(f"{field_name} = {sample}")
+    return ", ".join(parts)
 
 
 def _format_field_list(fields: list[str]) -> str:

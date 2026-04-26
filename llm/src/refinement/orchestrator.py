@@ -13,7 +13,12 @@ from llm.src.conversation.types import (
     ParserAdapterResult,
     ResponseDecision,
 )
-from llm.src.orchestration.explanation_flow import build_explanation_payload, render_explanation_text
+from llm.src.orchestration.clarification_flow import build_user_response_payload_from_clarification
+from llm.src.orchestration.explanation_flow import (
+    build_explanation_payload,
+    build_user_response_payload_from_explanation,
+    render_explanation_text,
+)
 from llm.src.parser.output_repair import should_attempt_repair
 from llm.src.refinement.classifier import (
     build_refinement_clarification_reasons,
@@ -102,6 +107,7 @@ class ConstraintRefinementOrchestrator:
         invariant_validation = None
         clarification_payload = None
         explanation_payload = None
+        user_response_payload = None
         response_decision = None
         assistant_text = ""
         stage = parent_public_state
@@ -168,6 +174,10 @@ class ConstraintRefinementOrchestrator:
                 parent_refinement_revision_index=parent_refinement_revision_index,
             )
             assistant_text = render_refinement_clarification_text(clarification_payload)
+            user_response_payload = build_user_response_payload_from_clarification(
+                clarification_payload,
+                dataset_label=dataset_package.primary_subject_label(),
+            ).to_dict()
             stage = ConversationStage.NEEDS_CLARIFICATION
             public_state = parent_public_state
             restart_required = False
@@ -246,10 +256,24 @@ class ConstraintRefinementOrchestrator:
                 policy=dataset_package.runtime_context().policy,
                 dataset_label=dataset_package.primary_subject_label(),
             )
+            user_response_payload = build_user_response_payload_from_explanation(
+                explanation_payload=explanation_payload,
+                runtime_result=explanation_runtime_result,
+                current_profile=runtime_payload["profile"],
+                policy=dataset_package.runtime_context().policy,
+                dataset_label=dataset_package.primary_subject_label(),
+                active_constraint_spec=runtime_payload.get("constraint_spec"),
+                transition_reason=None,
+            ).to_dict()
             assistant_text = render_explanation_text(
                 explanation_payload,
                 dataset_label=dataset_package.primary_subject_label(),
                 parser_adapter=self.parser_adapter,
+                runtime_result=explanation_runtime_result,
+                current_profile=runtime_payload["profile"],
+                policy=dataset_package.runtime_context().policy,
+                active_constraint_spec=runtime_payload.get("constraint_spec"),
+                transition_reason=None,
             )
             response_decision = ResponseDecision(
                 final_public_state=public_state,
@@ -284,6 +308,7 @@ class ConstraintRefinementOrchestrator:
             clarification_payload=clarification_payload,
             explanation_payload=explanation_payload,
             response_text=assistant_text,
+            user_response_payload=user_response_payload,
             parser_failure_cause=None,
             is_case_complete=is_case_complete,
             case_completion_reason=case_completion_reason,
