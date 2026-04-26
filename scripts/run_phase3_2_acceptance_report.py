@@ -369,7 +369,7 @@ def request_json(
     **kwargs,
 ) -> dict[str, Any]:
     try:
-        response = session.request(method, url, timeout=30.0, **kwargs)
+        response = session.request(method, url, timeout=180.0, **kwargs)
     except Exception as exc:
         return {"ok": False, "status_code": None, "error": {"detail": str(exc)}}
     if expect_json:

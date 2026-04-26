@@ -16,7 +16,7 @@ FIELD_PROVENANCE_PARSER_AGREE = "parser_and_extractor_agree"
 DENSE_STRUCTURED_BANK_FIELD_THRESHOLD = 6
 SUBTHRESHOLD_STRUCTURED_BANK_FIELD_THRESHOLD = DENSE_STRUCTURED_BANK_FIELD_THRESHOLD - 1
 NUMBER_VALUE_PATTERN = r"[-+]?\d+(?:\.\d+)?"
-VALUE_CONNECTOR_PATTERN = r"(?:=|:|is)?"
+VALUE_CONNECTOR_PATTERN = r"(?:=|:|is|to|should\s+be|must\s+be|will\s+be)?"
 POSITIVE_VALUE_PATTERN = r"(?:yes|true|y|1)"
 NEGATIVE_VALUE_PATTERN = r"(?:no|false|n|0)"
 NEGATIVE_VERB_PATTERN = r"(?:do\s+not|don't|dont|not)"
@@ -247,7 +247,10 @@ def extract_explicit_bank_values(
                 integer_field=policy.feature_type_map.get(field_name) == "int",
                 binary_field=False,
             )
-        if has_explicit_label_reference(text=text, aliases=aliases):
+        label_referenced = has_explicit_label_reference(text=text, aliases=aliases)
+        if policy.feature_type_map.get(field_name) == "binary" and matches:
+            label_referenced = True
+        if label_referenced:
             labeled_fields.append(field_name)
         if not matches:
             continue

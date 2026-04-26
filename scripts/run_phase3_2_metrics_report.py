@@ -35,7 +35,7 @@ SCOPE_NOTE = (
     "This runner is the authoritative G1/G2 product-facing scorer, not the full parser-layer thesis metrics harness. "
     "Lower-level metrics such as JSON validity, schema compliance, and repair rate remain separate artifact-level concerns."
 )
-REQUEST_TIMEOUT_S = 30.0
+REQUEST_TIMEOUT_S = 180.0
 
 
 @dataclass

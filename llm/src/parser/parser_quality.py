@@ -467,13 +467,13 @@ def _recover_profile_fields_from_user_text(
     recovered_field_provenance = dict(dense_recovery_result.field_provenance)
     recovery_applied = bool(dense_recovery_result.recovery_applied)
 
-    if _candidate_missing_profile_field(recovered_candidate, field_name="CCAvg"):
+    if any(_candidate_missing_profile_field(recovered_candidate, field_name=field_name) for field_name in required_fields):
         explicit_recovery_result = recover_explicit_labeled_bank_fields(
             user_input=user_text,
             candidate=recovered_candidate,
             policy=_BankPolicyAdapter(),
             required_fields=required_fields,
-            target_fields=("CCAvg",),
+            target_fields=tuple(required_fields),
         )
         recovered_candidate = (
             explicit_recovery_result.candidate
@@ -534,11 +534,22 @@ def _extract_constraint_spec_from_user_text(
     found_do_not_change = False
     for field_name in feature_order:
         for alias in ordered_aliases_for_field(field_name=field_name):
-            pattern = re.compile(
-                rf"\b(?:do\s+not|don't|dont)\s+change\s+{build_alias_pattern(alias)}\b",
-                re.IGNORECASE,
+            alias_pattern = build_alias_pattern(alias)
+            patterns = (
+                re.compile(
+                    rf"\b(?:do\s+not|don't|dont)\s+change\s+{alias_pattern}\b",
+                    re.IGNORECASE,
+                ),
+                re.compile(
+                    rf"\bkeep\s+{alias_pattern}\s+unchanged\b",
+                    re.IGNORECASE,
+                ),
+                re.compile(
+                    rf"\bgiu\s+{alias_pattern}\s+khong\s+thay\s+doi\b",
+                    re.IGNORECASE,
+                ),
             )
-            if pattern.search(text):
+            if any(pattern.search(text) for pattern in patterns):
                 disallowed_fields.append(field_name)
                 found_do_not_change = True
                 break
