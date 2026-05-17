@@ -4,7 +4,7 @@ from argparse import Namespace
 import json
 from pathlib import Path
 
-from scripts import run_part2_closeout_bundle as runner
+from scripts.archieve import run_part2_closeout_bundle as runner
 
 
 def build_args(tmp_path: Path) -> Namespace:

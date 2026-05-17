@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 from llm.src.phase2.catalog import DEFAULT_CATALOG_PATH, load_catalog
 from llm.src.phase2.taxonomy import classify_turn_result
-from scripts.run_phase1_closeout_suite import (
+from scripts.archieve.run_phase1_closeout_suite import (
     SuiteOutcome,
     build_default_scenarios,
     build_runner_command,

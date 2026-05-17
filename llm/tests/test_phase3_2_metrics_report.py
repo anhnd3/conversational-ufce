@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
-from scripts.run_phase3_2_metrics_report import (
+from scripts.archieve.run_phase3_2_metrics_report import (
     IsolatedServiceHandle,
     build_case_result,
     build_metrics_summary,

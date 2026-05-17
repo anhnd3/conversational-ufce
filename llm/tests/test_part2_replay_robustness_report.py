@@ -4,7 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from llm.src.phase3.phase3_2_catalog import load_catalog
-from scripts.run_part2_replay_robustness_report import (
+from scripts.archieve.run_part2_replay_robustness_report import (
     build_replay_summary,
     compute_replay_aggregate_blocks,
 )

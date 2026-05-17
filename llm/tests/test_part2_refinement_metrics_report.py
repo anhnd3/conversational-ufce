@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
 
-from scripts.run_part2_refinement_metrics_report import (
+from scripts.archieve.run_part2_refinement_metrics_report import (
     build_refinement_not_allowed_payload,
     build_refinement_round_result,
     build_refinement_summary,

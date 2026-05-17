@@ -4,7 +4,7 @@ import json
 from types import SimpleNamespace
 
 from llm.src.phase2.taxonomy import PRIMARY_ACCEPTANCE_TARGET
-from scripts.run_part2_bank_evidence_pack import (
+from scripts.archieve.run_part2_bank_evidence_pack import (
     AttemptRunOutcome,
     PrimaryCaseOutcome,
     SupplementalCaseOutcome,

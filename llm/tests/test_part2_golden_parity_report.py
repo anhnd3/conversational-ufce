@@ -4,7 +4,7 @@ from argparse import Namespace
 import json
 from pathlib import Path
 
-from scripts import run_part2_golden_parity_report as runner
+from scripts.archieve import run_part2_golden_parity_report as runner
 
 
 def test_classify_case_delta_marks_unexpected_regression_for_kind_mismatch():

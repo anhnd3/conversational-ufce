@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from scripts.run_part2_agent_portability_report import (
+from scripts.archieve.run_part2_agent_portability_report import (
     build_backend_aggregate,
     build_agent_portability_summary,
     compute_attempt_stability,

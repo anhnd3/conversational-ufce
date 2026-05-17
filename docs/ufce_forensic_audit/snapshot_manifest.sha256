@@ -1,0 +1,12 @@
+# UFCE static forensic audit snapshot manifest
+# audit_date: 2026-04-10
+# paper_doi: 10.1007/s44196-024-00508-6
+# note: no local .git metadata was available, so this manifest is the fixed snapshot identifier for the audited source set
+
+119387ca63f0d18f6fd7cc8f1d752ed8e6158ce90fe645c71bc1cc4e9218e382  /mnt/d/Workspace/MasterAI/Thesis/2024_Introducing User Feedback-Based Counterfactual Explanations (UFCE).pdf
+aea00e5d376d4547cde0f054b8ca0da76061796d7d16a5a208f8e3b5a60ab1a6  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py
+e53b8cd0c8368c6c28aa9283349d97e9f8d651c3775391ce51a3dc591e34a734  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/cfmethods.py
+e8b53c6aecc484a21d49913dc9bed5e467567d9428182e3e27df525bb50ebc53  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/goodness.py
+10aeedd877b2f42d25bda9e441683572a7d7bd5c8a8150ad712b6eb9eaac9c51  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/evaluations.py
+26162b2736aa3b631077587f7b632a656efdcd1a114aaff1ddeaf3f59664e1d4  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/experiments.py
+44e67f91e467df4209e225a3104ff8ade37046528df113f9b5811e497353e53b  /mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/data_processing.py

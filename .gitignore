@@ -185,4 +185,5 @@ archive
 logs
 .vscode
 outputs/*
-docs
+docs/thesis/*
+docs/reports/*

@@ -1,0 +1,4028 @@
+{
+  "constrained_subset": [
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-001"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 34.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-002"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-003"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 100.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-004"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-005"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 155.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-006"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 72.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-007"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 17.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-008"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 104.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-009"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-010"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 114.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-011"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-012"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-013"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-014"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-015"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 16.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-016"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 25.0,
+        "Mortgage": 111.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-017"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-018"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 260.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 62.0,
+        "Mortgage": 260.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-019"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 43.0,
+        "Mortgage": 163.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-020"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 152.0,
+        "Mortgage": 159.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-021"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 97.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-022"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-023"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 153.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 158.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-024"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-025"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 35.0,
+        "Mortgage": 122.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-026"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-027"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 41.0,
+        "Mortgage": 193.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-028"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-029"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 50.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-030"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-031"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 116.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 121.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-032"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 71.0,
+        "Mortgage": 198.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-033"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 80.0,
+        "Mortgage": 285.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-034"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-035"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-036"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-037"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 104.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-038"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-039"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 38.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 43.0,
+        "Mortgage": 153.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-040"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-041"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-042"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 8.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-043"
+    },
+    {
+      "constraint_spec": {
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 131.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-044"
+    },
+    {
+      "constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 72.0,
+        "Mortgage": 207.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-045"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 44.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-046"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 8.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 139.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-047"
+    },
+    {
+      "constraint_spec": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 24.0
+          }
+        }
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 1,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-048"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-C-049"
+    },
+    {
+      "constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-C-050"
+    }
+  ],
+  "constrained_subset_count": 50,
+  "corpus_sha256": "f23af4350558057e087a279c4e885622fac3a2b8f0c101f25b3b0fbeed03d91f",
+  "corpus_version": "part2_tier_c_bank_backend_v2",
+  "dataset": "bank",
+  "desired_outcome": 1,
+  "helper_desired_outcome": 1,
+  "rejected_label": 0,
+  "seed_count": 200,
+  "seeds": [
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-001"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 34.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-002"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-003"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 100.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-004"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-005"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 155.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-006"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 72.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-007"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-008"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 104.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-009"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-010"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 114.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-011"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-012"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-013"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-014"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-015"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-016"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 25.0,
+        "Mortgage": 111.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-017"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-018"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 62.0,
+        "Mortgage": 260.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-019"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 43.0,
+        "Mortgage": 163.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-020"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 152.0,
+        "Mortgage": 159.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-021"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 97.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-022"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-023"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 158.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-024"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-025"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 35.0,
+        "Mortgage": 122.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-026"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-027"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 41.0,
+        "Mortgage": 193.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-028"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-029"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 50.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-030"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-031"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 121.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-032"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 71.0,
+        "Mortgage": 198.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-033"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 80.0,
+        "Mortgage": 285.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-034"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-035"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-036"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-037"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 104.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-038"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-039"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 43.0,
+        "Mortgage": 153.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-040"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-041"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-042"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 8.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-043"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 131.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-044"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 72.0,
+        "Mortgage": 207.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-045"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 44.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-046"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 8.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 139.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-047"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 1,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-048"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-049"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-050"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 125.0,
+        "Mortgage": 112.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-051"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-052"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 32.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-053"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 105.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-054"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 131.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-055"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 105.0,
+        "Mortgage": 336.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-056"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 132.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-057"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-058"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-059"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 115.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-060"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 69.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-061"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 130.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-062"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-063"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 135.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-064"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 12.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-065"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-066"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 19.0,
+        "Mortgage": 118.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-067"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 41.0,
+        "Mortgage": 174.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-068"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-069"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 82.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-070"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 50.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-071"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-072"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 42.0,
+        "Mortgage": 126.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-073"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 78.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-074"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 51.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-075"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-076"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 34.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-077"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 64.0,
+        "Mortgage": 236.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-078"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 121.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-079"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-080"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-081"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 161.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-082"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 94.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-083"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-084"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-085"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 30.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-086"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 44.0,
+        "Mortgage": 198.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-087"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-088"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 38.0,
+        "Mortgage": 166.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-089"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 35.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-090"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 69.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-091"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 43.0,
+        "Mortgage": 136.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-092"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 32.0,
+        "Mortgage": 166.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-093"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-094"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 9.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-095"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-096"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 82.0,
+        "Mortgage": 309.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-097"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 103.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-098"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-099"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-100"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 35.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-101"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 61.0,
+        "Mortgage": 193.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-102"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-103"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 112.0,
+        "Mortgage": 366.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-104"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 12.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-105"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 38.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-106"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-107"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-108"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 78.0,
+        "Mortgage": 118.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-109"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-110"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 115.0,
+        "Mortgage": 101.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-111"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 82.0,
+        "Mortgage": 251.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-112"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-113"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-114"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 276.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-115"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.75,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 51.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-116"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-117"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 98.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-118"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-119"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-120"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 128.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-121"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-122"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-123"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 31.0,
+        "Mortgage": 161.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-124"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 58.0,
+        "Mortgage": 149.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-125"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-126"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 54.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-127"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-128"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 7.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 124.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-129"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-130"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 188.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-131"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 163.0,
+        "Mortgage": 116.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-132"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-133"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 7.5,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 118.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-134"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-135"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-136"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 58.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-137"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-138"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-139"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-140"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 79.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-141"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 41.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-142"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-143"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-144"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-145"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-146"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 43.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-147"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-148"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 23.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-149"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-150"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 4,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-151"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 138.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-152"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-153"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 7.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 171.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-154"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-155"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-156"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 44.0,
+        "Mortgage": 135.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-157"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 65.0,
+        "Mortgage": 244.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-158"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-159"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-160"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 38.0,
+        "Mortgage": 164.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-161"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 10.0,
+        "Mortgage": 81.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-162"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 135.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-163"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-164"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 115.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-165"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-166"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 169.0,
+        "Mortgage": 122.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-167"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-168"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 4.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-169"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 140.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-170"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-171"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-172"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 6.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 144.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-173"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 95.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-174"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 5.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 165.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-175"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 9.0,
+        "Mortgage": 89.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-176"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 59.0,
+        "Mortgage": 90.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-177"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-178"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-179"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 68.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-180"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 65.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-181"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 61.0,
+        "Mortgage": 105.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-182"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 91.0,
+        "Mortgage": 100.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-183"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 31.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "seed_id": "TIERC-184"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 71.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-185"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-186"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-187"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 55.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-188"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 69.0,
+        "Mortgage": 209.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-189"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 7.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 155.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-190"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 94.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-191"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 249.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-192"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 125.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-193"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-194"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 72.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-195"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 61.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-196"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 25.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-197"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-198"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 104.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-199"
+    },
+    {
+      "dataset": "bank",
+      "profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 41.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "seed_id": "TIERC-200"
+    }
+  ],
+  "selection_rule": "predictor_rejected_factual_seeds",
+  "selection_space": "raw_feature_space"
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ufce-agent://docs/validation/schemas/part2_tier_a_scorer_output_schema_v1.json",
+  "title": "Part II Tier A Scorer Output Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "total_cases",
+    "M1_json_validity_rate",
+    "M2_schema_compliance_rate",
+    "M3_canonical_validation_pass_rate",
+    "M4_repair_rate",
+    "M5_final_parser_failure_rate",
+    "M7_parser_latency_ms",
+    "per_case_results"
+  ],
+  "properties": {
+    "total_cases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "M1_json_validity_rate": {
+      "$ref": "#/$defs/binaryMetric"
+    },
+    "M2_schema_compliance_rate": {
+      "$ref": "#/$defs/binaryMetric"
+    },
+    "M3_canonical_validation_pass_rate": {
+      "$ref": "#/$defs/binaryMetric"
+    },
+    "M4_repair_rate": {
+      "$ref": "#/$defs/binaryMetric"
+    },
+    "M5_final_parser_failure_rate": {
+      "$ref": "#/$defs/binaryMetric"
+    },
+    "M6_constraint_extraction_fidelity": {
+      "$ref": "#/$defs/exactMatchMetric"
+    },
+    "M36_constraint_delta_fidelity": {
+      "$ref": "#/$defs/exactMatchMetric"
+    },
+    "M7_parser_latency_ms": {
+      "$ref": "#/$defs/latencyMetric"
+    },
+    "per_case_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "$defs": {
+    "binaryMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator",
+        "mean"
+      ],
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mean": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "exactMatchMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator",
+        "mean",
+        "component_mean"
+      ],
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mean": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "component_mean": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "latencyMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mean",
+        "p50",
+        "p95",
+        "max"
+      ],
+      "properties": {
+        "mean": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "p50": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "p95": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "max": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

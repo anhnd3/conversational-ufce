@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from llm.src.phase3.catalog import DEFAULT_CATALOG_PATH, Phase31ValidationScenario
-from scripts.run_phase3_1_closeout_suite import (
+from scripts.archieve.run_phase3_1_closeout_suite import (
     AutomatedSuiteResult,
     LiveScenarioOutcome,
     build_closeout_summary,

@@ -1,0 +1,165 @@
+{
+  "catalog_version": "phase3_1_validation_catalog_v2",
+  "runner_compat_version": "phase3_1_closeout_runner_v1",
+  "created_timestamp_utc": "2026-03-21T14:20:00Z",
+  "prompt_template_version": "parser_system_prompt_v1",
+  "change_notes": [
+    "Version 2 expands the closeout gate from 7 to 9 live scenarios by adding the two highest-value reset-no-merge follow-up sanity cases.",
+    "The runner semantics now validate reset-no-merge explicitly, including turn-2 runtime presence and no-stale-reuse checks."
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "P31-NR-01",
+      "slug": "phase31_no_recourse_success",
+      "description": "Stable no-recourse-needed runtime success.",
+      "turns": [
+        "My target profile is Income 140, CCAvg 7.7376709303, Family 2, Education 2, Mortgage 32, CDAccount yes, Online yes, SecuritiesAccount yes, and CreditCard no."
+      ],
+      "expected_final_state": "RUNTIME_SUCCESS",
+      "accept": {
+        "kind": "no_recourse_needed",
+        "summary_type": "no_recourse_needed",
+        "included_suggestion_types": []
+      }
+    },
+    {
+      "scenario_id": "P31-CF-01",
+      "slug": "phase31_counterfactual_success",
+      "description": "Stable counterfactual runtime success.",
+      "turns": [
+        "Please set Income to 55 and CCAvg to 2.2. Family should be 4, Education 3, Mortgage 120. I do not want a CD account, I do not use online banking, I do not have a securities account, and I do not want a credit card."
+      ],
+      "expected_final_state": "RUNTIME_SUCCESS",
+      "accept": {
+        "kind": "counterfactual_found",
+        "summary_type": "counterfactual_found"
+      }
+    },
+    {
+      "scenario_id": "P31-CL-01",
+      "slug": "phase31_clarification_merge_to_success",
+      "description": "Clarification follow-up that merges and reaches runtime success.",
+      "turns": [
+        "Please set Income to 55 and CCAvg to 2.2. Family should be 4, Education 3, and Mortgage 120.",
+        "CD account no, online no, securities account no, and credit card no."
+      ],
+      "expected_final_state": "RUNTIME_SUCCESS",
+      "accept": {
+        "kind": "clarification_merge_success",
+        "turn1_final_state": "NEEDS_CLARIFICATION",
+        "turn2_final_state": "RUNTIME_SUCCESS",
+        "turn2_merge_applied": true
+      }
+    },
+    {
+      "scenario_id": "P31-CL-02",
+      "slug": "phase31_clarification_still_incomplete",
+      "description": "Clarification follow-up that merges partial data and still needs clarification.",
+      "turns": [
+        "Please set Income to 55 and CCAvg to 2.2. Family should be 4, Education 3, and Mortgage 120.",
+        "CD account no and online no."
+      ],
+      "expected_final_state": "NEEDS_CLARIFICATION",
+      "accept": {
+        "kind": "clarification_still_incomplete",
+        "turn1_final_state": "NEEDS_CLARIFICATION",
+        "turn2_final_state": "NEEDS_CLARIFICATION",
+        "turn2_merge_applied": true
+      }
+    },
+    {
+      "scenario_id": "P31-CF-02",
+      "slug": "phase31_conflict_fresh_request_required",
+      "description": "Explicit contradictory income values should surface a conflict and stop runtime execution.",
+      "turns": [
+        "My target profile is Income 40 and Income 60, Family 2, CCAvg 3.0, Education 2, Mortgage 50, CDAccount no, Online yes, SecuritiesAccount no, and CreditCard no."
+      ],
+      "expected_final_state": "CONFLICT",
+      "accept": {
+        "kind": "conflict",
+        "runtime_result_absent": true
+      }
+    },
+    {
+      "scenario_id": "P31-UN-01",
+      "slug": "phase31_unsupported_intent",
+      "description": "Open-ended advice request outside the supported bank profile contract.",
+      "turns": [
+        "Give me general financial advice about how to optimize my finances."
+      ],
+      "expected_final_state": "UNSUPPORTED_REQUEST",
+      "accept": {
+        "kind": "unsupported",
+        "template_type": "unsupported_request",
+        "runtime_result_absent": true
+      }
+    },
+    {
+      "scenario_id": "P31-RJ-01",
+      "slug": "phase31_runtime_reject_with_bounded_suggestions",
+      "description": "Stable runtime reject with deterministic next-step suggestions.",
+      "turns": [
+        "My target profile is Income 30, CCAvg 0.8, Family 2, Education 1, Mortgage 0, CDAccount no, Online yes, SecuritiesAccount no, and CreditCard no."
+      ],
+      "expected_final_state": "RUNTIME_REJECT",
+      "accept": {
+        "kind": "runtime_reject",
+        "summary_type": "runtime_reject",
+        "included_suggestion_types": [
+          "revise_target_profile",
+          "broaden_allowed_financial_changes"
+        ]
+      }
+    },
+    {
+      "scenario_id": "P31-RS-01",
+      "slug": "phase31_reset_unrelated_no_merge",
+      "description": "Clarification pending followed by an unrelated next message should reset pending state and remain unmerged.",
+      "turns": [
+        "I want Income 40, CCAvg 1.5, Family 3, Education 2, and Mortgage 80.",
+        "Give me general financial advice about how to optimize my finances."
+      ],
+      "expected_final_state": "UNSUPPORTED_REQUEST",
+      "accept": {
+        "kind": "reset_no_merge",
+        "turn1_final_state": "NEEDS_CLARIFICATION",
+        "turn2_final_state": "UNSUPPORTED_REQUEST",
+        "expected_turn2_runtime_presence": false,
+        "forbidden_turn2_fields": [
+          "Income",
+          "CCAvg",
+          "Family",
+          "Education",
+          "Mortgage"
+        ]
+      }
+    },
+    {
+      "scenario_id": "P31-RS-02",
+      "slug": "phase31_reset_fresh_full_profile",
+      "description": "Clarification pending followed by a fresh full profile should reset pending state and execute as a new request.",
+      "turns": [
+        "I want Income 40, CCAvg 1.5, Family 3, Education 2, and Mortgage 80.",
+        "Income 72, CCAvg 4.8, Family 1, Education 2, Mortgage 200, CDAccount yes, Online no, SecuritiesAccount yes, CreditCard no."
+      ],
+      "expected_final_state": "RUNTIME_SUCCESS",
+      "accept": {
+        "kind": "reset_no_merge",
+        "turn1_final_state": "NEEDS_CLARIFICATION",
+        "turn2_final_state": "RUNTIME_SUCCESS",
+        "expected_turn2_runtime_presence": true,
+        "expected_turn2_profile": {
+          "Income": 72,
+          "CCAvg": 4.8,
+          "Family": 1,
+          "Education": 2,
+          "Mortgage": 200,
+          "CDAccount": 1,
+          "Online": 0,
+          "SecuritiesAccount": 1,
+          "CreditCard": 0
+        }
+      }
+    }
+  ]
+}

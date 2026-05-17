@@ -4,6 +4,41 @@ UFCE Agent now contains the completed Part II bank conversational UFCE MVP after
 
 The LLM is a structured extraction layer only. It does not generate counterfactuals. The deterministic backend remains the authority for the bank-only conversational runtime.
 
+## Final Thesis Quickstart
+
+Minimal flow for reviewers:
+
+```bash
+cp .env.example .env
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+
+# Check environment (recommended)
+python scripts/final/thesis/doctor.py
+
+# Part I: UFCE core evidence
+python scripts/final/part1/99_part1_closeout.py --out-dir outputs/final/part1_closeout
+
+# Part II: Conversational evidence (requires LM Studio running)
+python scripts/final/part2/99_part2_closeout.py --out-dir outputs/final/part2_closeout
+
+# Product demo server (optional, for evaluator demonstration)
+python scripts/final/product/01_serve_demo.py
+```
+
+For full instructions and advanced options see `docs/FINAL_RUNBOOK.md`.
+
+## Development and Historical Workflows
+
+Historical phase commands are documented in:
+- `docs/DEVELOPMENT_HISTORY.md` (evolution of the project)
+- `docs/FINAL_SCRIPT_INVENTORY.md` (scripts with their role in final evidence)
+
+Important note for reviewers:
+- The repository does not include heavy generated artifacts. All production outputs must be regenerated via the official final scripts above; `.gitignore` intentionally excludes runtime-generated data.
+- If you need to inspect existing historical results, they are located under `outputs/`. Do not modify them as part of evidence generation.
+
 ## Project Status
 
 - `Phase 1`: complete as a thesis-safe bank conversational backend MVP

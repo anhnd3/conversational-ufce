@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
 
-from scripts.run_part2_thesis_metrics_report import (
+from scripts.archieve.run_part2_thesis_metrics_report import (
     build_feature_ranges,
     build_session_result,
     build_thesis_summary,

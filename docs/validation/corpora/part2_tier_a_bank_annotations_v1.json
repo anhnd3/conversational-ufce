@@ -1,0 +1,909 @@
+{
+  "annotation_schema_version": "part2_tier_a_annotation_schema_v1",
+  "case_count": 50,
+  "cases": [
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 68, Family 2, CCAvg 3.5, Education 1, Mortgage 90, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 68, Family 2, CCAvg 3.5, Education 1, Mortgage 90, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 68, Family 2, CCAvg 3.5, Education 1, Mortgage 90, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 68, Family 2, CCAvg 3.5, Education 1, Mortgage 90, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 68, Family 2, CCAvg 3.5, Education 1, Mortgage 90, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-03-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 55, Family 4, CCAvg 2.1, Education 3, Mortgage 150, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard no. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-03-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 55, Family 4, CCAvg 2.1, Education 3, Mortgage 150, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard no. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-03-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 55, Family 4, CCAvg 2.1, Education 3, Mortgage 150, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard no. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-03-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 55, Family 4, CCAvg 2.1, Education 3, Mortgage 150, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard no. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-03-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 55, Family 4, CCAvg 2.1, Education 3, Mortgage 150, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard no. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-03-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-03-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-03-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-03-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-03-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-04-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 101, Family 1, CCAvg 5.2, Education 2, Mortgage 20, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard yes. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-04-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 101, Family 1, CCAvg 5.2, Education 2, Mortgage 20, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard yes. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-04-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 101, Family 1, CCAvg 5.2, Education 2, Mortgage 20, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard yes. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-04-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 101, Family 1, CCAvg 5.2, Education 2, Mortgage 20, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard yes. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-04-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 101, Family 1, CCAvg 5.2, Education 2, Mortgage 20, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard yes. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-04-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-04-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-04-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-04-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-04-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-05-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 43, Family 3, CCAvg 1.3, Education 2, Mortgage 240, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-05-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 43, Family 3, CCAvg 1.3, Education 2, Mortgage 240, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-05-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 43, Family 3, CCAvg 1.3, Education 2, Mortgage 240, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-05-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 43, Family 3, CCAvg 1.3, Education 2, Mortgage 240, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-05-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "Income 43, Family 3, CCAvg 1.3, Education 2, Mortgage 240, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-05-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-05-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-05-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-05-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-05-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120.0
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    }
+  ],
+  "corpus_sha256": "c2432c5915ec78da9299a3a9929d079ccd20f698dc107af489697f83cfb768a9",
+  "corpus_version": "part2_tier_a_bank_annotations_v1",
+  "scorer_output_schema_version": "part2_tier_a_scorer_output_schema_v1"
+}

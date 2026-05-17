@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from llm.src.conversation.parser_adapter import DEFAULT_BENCHMARK_PATH, DEFAULT_SCHEMA_PATH, DEFAULT_SYSTEM_PROMPT_PATH
-from scripts.build_phase2_chapter_pack import main as build_chapter_pack_main
+from scripts.archieve.build_phase2_chapter_pack import main as build_chapter_pack_main
 
 
 def write_turn(folder: Path, *, stage: str, summary_type: str | None, user_input: str, parser_status: str) -> None:

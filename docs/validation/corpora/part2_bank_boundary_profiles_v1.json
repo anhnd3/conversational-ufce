@@ -1,0 +1,1754 @@
+{
+  "bucket_counts": {
+    "core_boundary": 20,
+    "full_boundary": 20,
+    "negative_out_of_range": 10,
+    "rare_adversarial": 10
+  },
+  "case_count": 60,
+  "cases": [
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-001",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 23.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-002",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 6.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 153.0,
+        "Mortgage": 323.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-003",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 43.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-004",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 6.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 153.0,
+        "Mortgage": 222.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-005",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 25.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-006",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 84.0,
+        "Mortgage": 241.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-007",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-008",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 3.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 85.0,
+        "Mortgage": 280.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-009",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-010",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 5.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 151.0,
+        "Mortgage": 323.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-011",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 19.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-012",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 74.0,
+        "Mortgage": 179.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-013",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 25.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-014",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 6.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 153.0,
+        "Mortgage": 313.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-015",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 19.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-016",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 78.0,
+        "Mortgage": 80.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-017",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-018",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 85.0,
+        "Mortgage": 322.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-019",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_lower_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 90.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "core_boundary",
+      "case_id": "BOUNDARY-CORE-020",
+      "expected_validity": "valid",
+      "generation_rule": "common_core_upper_clamped",
+      "notes": [
+        "inside common-core bounds",
+        "clamped to template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 6.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 153.0,
+        "Mortgage": 323.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-001",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-002",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Income": 95.0,
+        "Mortgage": 322.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-003",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-004",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 93.0,
+        "Mortgage": 146.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-005",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-006",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 3.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 111.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-007",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 13.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-008",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 62.0,
+        "Mortgage": 164.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-009",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 12.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-010",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 89.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-011",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-012",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 108.0,
+        "Mortgage": 383.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-013",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-014",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 79.0,
+        "Mortgage": 119.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-015",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 10.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-016",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 33.0,
+        "Mortgage": 111.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-017",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 30.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-018",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 70.0,
+        "Mortgage": 251.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-019",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_lower_template_min",
+      "notes": [
+        "inside full observed bounds",
+        "template-local minimum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "full_boundary",
+      "case_id": "BOUNDARY-FULL-020",
+      "expected_validity": "valid",
+      "generation_rule": "full_observed_upper_template_max",
+      "notes": [
+        "inside full observed bounds",
+        "template-local maximum profile"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 104.0,
+        "Mortgage": 157.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-001",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-002",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-003",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-004",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 14.0,
+        "Mortgage": 236.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-005",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 64.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-006",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 79.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-007",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 70.0,
+        "Mortgage": 141.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-008",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 4.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 161.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-009",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 141.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "rare_adversarial",
+      "case_id": "BOUNDARY-RARE-010",
+      "expected_validity": "valid",
+      "generation_rule": "rare_seed_extreme_local_anchor",
+      "notes": [
+        "rare observed discrete pattern",
+        "numeric stress stays inside template-local range"
+      ],
+      "seed_profile": {
+        "CCAvg": 4.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 91.0,
+        "Mortgage": 509.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-001",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_income_below_full_min",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 9.0,
+        "Mortgage": 408.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-002",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_income_above_full_max",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 199.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-003",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_ccavg_below_full_min",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": -0.1,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-004",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_ccavg_above_full_max",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 8.1,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 23.0,
+        "Mortgage": 91.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "source_template": {
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-005",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_mortgage_below_full_min",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Income": 10.0,
+        "Mortgage": -1.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-006",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_mortgage_above_full_max",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 61.0,
+        "Mortgage": 510.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-007",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_income_below_full_min_repeat",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 9.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-008",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_ccavg_above_full_max_repeat",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 8.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 59.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-009",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_mortgage_above_full_max_repeat",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 510.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      }
+    },
+    {
+      "bucket": "negative_out_of_range",
+      "case_id": "BOUNDARY-NEG-010",
+      "expected_validity": "reject",
+      "generation_rule": "negative_out_of_range_income_above_full_max_repeat",
+      "notes": [
+        "one numeric feature moved just outside full observed range",
+        "discrete fields remain observed-valid"
+      ],
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 199.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "source_template": {
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      }
+    }
+  ],
+  "corpus_sha256": "acabeb5bfe59848afc020a0438437cdcbe0d7fac478dfdc4b5e335147ab8f1ff",
+  "corpus_version": "part2_bank_boundary_profiles_v1",
+  "dataset": "bank"
+}

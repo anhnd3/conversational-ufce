@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.run_phase3_2_acceptance_report import build_acceptance_summary, render_markdown
+from scripts.archieve.run_phase3_2_acceptance_report import build_acceptance_summary, render_markdown
 
 
 def test_build_acceptance_summary_tracks_failed_gates(tmp_path):

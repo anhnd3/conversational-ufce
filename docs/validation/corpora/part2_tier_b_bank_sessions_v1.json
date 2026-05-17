@@ -1,0 +1,5877 @@
+{
+  "case_count": 250,
+  "cases": [
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-001",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 49, Family 4, CCAvg 1.6, Education 1, Mortgage 0.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-002",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 34.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 34, Family 3, CCAvg 1.5, Education 1, Mortgage 0.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-003",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 11, Family 1, CCAvg 1, Education 1, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-004",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 100.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 100, Family 1, CCAvg 2.7, Education 2, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-005",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 45, Family 4, CCAvg 1, Education 2, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-006",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 155.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 29, Family 4, CCAvg 0.4, Education 2, Mortgage 155.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-007",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 72.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 72, Family 2, CCAvg 1.5, Education 2, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-008",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 22, Family 1, CCAvg 0.3, Education 3, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-009",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 104.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 81, Family 3, CCAvg 0.6, Education 2, Mortgage 104.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-010",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 105.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 105, Family 4, CCAvg 2.4, Education 3, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-011",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 45, Family 3, CCAvg 0.1, Education 2, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-012",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 114.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 114, Family 2, CCAvg 3.8, Education 3, Mortgage 0.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-013",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 40, Family 4, CCAvg 2.5, Education 2, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-014",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 112, Family 1, CCAvg 2, Education 1, Mortgage 0.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-015",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 22, Family 1, CCAvg 1.5, Education 3, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-016",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 81, Family 4, CCAvg 2.4, Education 1, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-017",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 21, Family 1, CCAvg 0.5, Education 2, Mortgage 0.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-018",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 25.0,
+        "Mortgage": 111.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 25, Family 4, CCAvg 0.9, Education 2, Mortgage 111.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-019",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 63, Family 3, CCAvg 2, Education 3, Mortgage 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-020",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 62.0,
+        "Mortgage": 260.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 62, Family 1, CCAvg 1.2, Education 1, Mortgage 260.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-021",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 43.0,
+        "Mortgage": 163.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 43, Family 2, CCAvg 0.7, Education 1, Mortgage 163, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-022",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 152.0,
+        "Mortgage": 159.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 152, Family 2, CCAvg 3.9, Education 1, Mortgage 159, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-023",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 97.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 3, CCAvg 0.5, Education 1, Mortgage 97, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-024",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 83, Family 4, CCAvg 0.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-025",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 158.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 158, Family 1, CCAvg 2.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-026",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 48, Family 1, CCAvg 2.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-027",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 35.0,
+        "Mortgage": 122.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 35, Family 1, CCAvg 1.2, Education 3, Mortgage 122, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-028",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 1, CCAvg 2, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-029",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 41.0,
+        "Mortgage": 193.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 41, Family 2, CCAvg 0.6, Education 3, Mortgage 193, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-030",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 18, Family 3, CCAvg 0.9, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-031",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 50.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 50, Family 4, CCAvg 1.8, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-032",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 81, Family 3, CCAvg 0.7, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-033",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 121.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 121, Family 1, CCAvg 2.9, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-034",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 71.0,
+        "Mortgage": 198.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 71, Family 1, CCAvg 1.4, Education 3, Mortgage 198, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-035",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 80.0,
+        "Mortgage": 285.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 80, Family 4, CCAvg 0.7, Education 3, Mortgage 285, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-036",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 84, Family 3, CCAvg 1.6, Education 3, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-037",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 60, Family 3, CCAvg 2.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-038",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 45, Family 1, CCAvg 0.7, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-039",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 5.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 104.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 104, Family 1, CCAvg 5.7, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-040",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 52, Family 4, CCAvg 2.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-041",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 43.0,
+        "Mortgage": 153.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 43, Family 3, CCAvg 0.7, Education 2, Mortgage 153, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-042",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 4.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 81, Family 2, CCAvg 4.5, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-043",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 49, Family 1, CCAvg 1.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-044",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 8.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 8, Family 4, CCAvg 0.7, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-045",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 131.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 131, Family 1, CCAvg 2.9, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-046",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 72.0,
+        "Mortgage": 207.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 72, Family 1, CCAvg 0.1, Education 1, Mortgage 207, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-047",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 44.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 44, Family 1, CCAvg 0.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-048",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 8.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 139.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 139, Family 2, CCAvg 8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-049",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 1,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 3, CCAvg 0.1, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount yes, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-050",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 93, Family 2, CCAvg 0.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-051",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 4.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 188.0,
+        "Mortgage": 455.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 188, Family 2, CCAvg 4.5, Education 1, Mortgage 455, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-052",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 39, Family 3, CCAvg 1.7, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-053",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 5.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 125.0,
+        "Mortgage": 112.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 125, Family 1, CCAvg 5.7, Education 1, Mortgage 112, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-054",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 22, Family 1, CCAvg 1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-055",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 32.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 32, Family 4, CCAvg 0, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-056",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 105.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 105, Family 2, CCAvg 3.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-057",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 131.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 131, Family 1, CCAvg 3.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-058",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 105.0,
+        "Mortgage": 336.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 105, Family 2, CCAvg 2.8, Education 1, Mortgage 336, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-059",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 132.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 45, Family 4, CCAvg 2, Education 3, Mortgage 132, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-060",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 60, Family 3, CCAvg 2.1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-061",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 20, Family 4, CCAvg 0.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-062",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 115.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 115, Family 1, CCAvg 3.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-063",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 69.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 69, Family 4, CCAvg 1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-064",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 5.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 130.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 130, Family 1, CCAvg 5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-065",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 4.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 85, Family 1, CCAvg 4, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-066",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 3.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 135.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 135, Family 2, CCAvg 3.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-067",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 12.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 12, Family 3, CCAvg 0.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-068",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 3, CCAvg 0.5, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-069",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 19.0,
+        "Mortgage": 118.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 19, Family 2, CCAvg 0.4, Education 1, Mortgage 118, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-070",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 41.0,
+        "Mortgage": 174.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 41, Family 4, CCAvg 1.3, Education 1, Mortgage 174, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-071",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 40.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 40, Family 3, CCAvg 2.7, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-072",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 4.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 82.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 82, Family 1, CCAvg 4, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-073",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 50.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 50, Family 1, CCAvg 2.4, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-074",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 18, Family 1, CCAvg 0.9, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-075",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 109.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 109, Family 4, CCAvg 1.8, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-076",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 42.0,
+        "Mortgage": 126.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 42, Family 4, CCAvg 2.2, Education 2, Mortgage 126, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-077",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 78.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 78, Family 3, CCAvg 1.1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-078",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 51.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 51, Family 2, CCAvg 1.1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-079",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 4,
+        "Income": 113.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 113, Family 4, CCAvg 2.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-080",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 4, CCAvg 1.1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-081",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 34.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 34, Family 3, CCAvg 0.6, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-082",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 64.0,
+        "Mortgage": 236.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 64, Family 2, CCAvg 1.7, Education 3, Mortgage 236, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-083",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 121.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 121, Family 1, CCAvg 2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-084",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 48, Family 4, CCAvg 0.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-085",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 5.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 80, Family 1, CCAvg 5.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-086",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 161.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 161, Family 1, CCAvg 2.9, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-087",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 94.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 94, Family 1, CCAvg 0.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-088",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 15, Family 3, CCAvg 0.1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-089",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 74, Family 1, CCAvg 1.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-090",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 30.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 30, Family 3, CCAvg 1.3, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-091",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 44.0,
+        "Mortgage": 198.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 44, Family 3, CCAvg 1, Education 3, Mortgage 198, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-092",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 22, Family 2, CCAvg 0.3, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-093",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 38.0,
+        "Mortgage": 166.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 38, Family 4, CCAvg 1.3, Education 1, Mortgage 166, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-094",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 35.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 35, Family 3, CCAvg 0.1, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-095",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 69.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 69, Family 4, CCAvg 2.9, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-096",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 43.0,
+        "Mortgage": 136.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 43, Family 1, CCAvg 0.7, Education 1, Mortgage 136, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-097",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 32.0,
+        "Mortgage": 166.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 32, Family 1, CCAvg 0.6, Education 3, Mortgage 166, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-098",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 49, Family 1, CCAvg 2.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-099",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 9.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 9, Family 3, CCAvg 1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-G1-100",
+      "dataset": "bank",
+      "group": "G1",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 45, Family 4, CCAvg 1.3, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-001",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 82.0,
+        "Mortgage": 309.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 82, Family 3, CCAvg 1, Education 1, Mortgage 309. Do not change Income.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-002",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 103.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 92, Family 2, CCAvg 2.8, Education 1, Mortgage 103. Do not change Mortgage.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-003",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 39, Family 3, CCAvg 0.5, Education 3, Mortgage 0. Keep Mortgage at or below 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-004",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 81, Family 3, CCAvg 1.8, Education 2, Mortgage 0. Change at most one thing.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-005",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 35.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 35, Family 1, CCAvg 1.5, Education 2, Mortgage 0. Prefer smaller edits.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-006",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 61.0,
+        "Mortgage": 193.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 61, Family 2, CCAvg 2.3, Education 3, Mortgage 193. Do not change Income and change at most one thing.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-007",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 73, Family 3, CCAvg 3, Education 1, Mortgage 0. Do not change Income and prefer smaller edits.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 107.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-008",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 4.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 112.0,
+        "Mortgage": 366.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 112, Family 1, CCAvg 4.6, Education 1, Mortgage 366. Keep Income at or above 107.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-009",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 12.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 12, Family 2, CCAvg 0.2, Education 3, Mortgage 0. Do not change Income.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-010",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 38.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 38, Family 3, CCAvg 0.9, Education 3, Mortgage 0. Do not change Mortgage.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-011",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 2,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 73, Family 2, CCAvg 0.7, Education 2, Mortgage 0. Keep Mortgage at or below 0.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-012",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 3.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 84, Family 1, CCAvg 3.6, Education 2, Mortgage 0. Change at most one thing.",
+        "SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-013",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 78.0,
+        "Mortgage": 118.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 78, Family 4, CCAvg 2.4, Education 1, Mortgage 118. Prefer smaller edits.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-014",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 80, Family 3, CCAvg 0.5, Education 1, Mortgage 0. Do not change Income and change at most one thing.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-015",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 115.0,
+        "Mortgage": 101.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 115, Family 2, CCAvg 1.3, Education 1, Mortgage 101. Do not change Income and prefer smaller edits.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 77.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-016",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 82.0,
+        "Mortgage": 251.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 82, Family 1, CCAvg 2.7, Education 2, Mortgage 251. Keep Income at or above 77.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-017",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 74, Family 2, CCAvg 0, Education 1, Mortgage 0. Do not change Income.",
+        "SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-018",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 70, Family 3, CCAvg 0.5, Education 3, Mortgage 0. Do not change Mortgage.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 276.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-019",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 81.0,
+        "Mortgage": 276.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 81, Family 3, CCAvg 1.5, Education 1, Mortgage 276. Keep Mortgage at or below 276.",
+        "SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-020",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.75,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 51.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "clarification_followup",
+      "turns": [
+        "Income 51, Family 2, CCAvg 1.75, Education 3, Mortgage 0. Change at most one thing.",
+        "SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-021",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 39, Family 3, CCAvg 1.1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-022",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 98.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 98, Family 3, CCAvg 1.8, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-023",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 45, Family 4, CCAvg 2.1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 44.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-024",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 49.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 49, Family 4, CCAvg 2.5, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Income at or above 44."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-025",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 128.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 128, Family 2, CCAvg 0.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-026",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 42, Family 3, CCAvg 1.5, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard yes. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-027",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 18, Family 1, CCAvg 1.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-028",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 31.0,
+        "Mortgage": 161.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 31, Family 2, CCAvg 0.4, Education 3, Mortgage 161, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-029",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 58.0,
+        "Mortgage": 149.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 58, Family 3, CCAvg 2, Education 1, Mortgage 149, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-030",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 48.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 48, Family 1, CCAvg 2.1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-031",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 54.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 54, Family 4, CCAvg 1.6, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 65.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-032",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 70, Family 2, CCAvg 1.5, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Keep Income at or above 65."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-033",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 7.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 124.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 124, Family 1, CCAvg 7.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-034",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 1,
+        "Income": 84.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 84, Family 1, CCAvg 2.67, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 188.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-035",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 3.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 188.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 83, Family 4, CCAvg 3.6, Education 3, Mortgage 188, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 188."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-036",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 163.0,
+        "Mortgage": 116.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 163, Family 2, CCAvg 0.4, Education 1, Mortgage 116, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-037",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 42, Family 3, CCAvg 2.2, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-038",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 7.5,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 118.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 118, Family 2, CCAvg 7.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard yes. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-039",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 24, Family 1, CCAvg 1.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 17.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-040",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 22.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 22, Family 2, CCAvg 1, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount yes, Online yes, CreditCard yes. Keep Income at or above 17."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-041",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 58.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 58, Family 4, CCAvg 1.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-042",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 60, Family 4, CCAvg 1.6, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-043",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 15.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 15, Family 4, CCAvg 0.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-044",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 83, Family 4, CCAvg 2.67, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-045",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 79.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 79, Family 2, CCAvg 1.5, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-046",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 41.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 41, Family 4, CCAvg 1.7, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-047",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 80.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 80, Family 2, CCAvg 2.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 47.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-048",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 52, Family 1, CCAvg 2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Keep Income at or above 47."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-049",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 70, Family 4, CCAvg 2.6, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-050",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 92, Family 2, CCAvg 1.1, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-051",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 43.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 43, Family 1, CCAvg 1.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-052",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 21, Family 3, CCAvg 1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-053",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 23.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 23, Family 3, CCAvg 0.9, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-054",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 13, Family 4, CCAvg 1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-055",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 4,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 112, Family 4, CCAvg 2.1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 133.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-056",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 138.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 138, Family 2, CCAvg 2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Income at or above 133."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-057",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 11, Family 3, CCAvg 0.4, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-058",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 7.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 171.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 171, Family 2, CCAvg 7.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-059",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 42.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 42, Family 4, CCAvg 1.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-060",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 85, Family 4, CCAvg 1.1, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-061",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 44.0,
+        "Mortgage": 135.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 44, Family 3, CCAvg 1, Education 2, Mortgage 135, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-062",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 65.0,
+        "Mortgage": 244.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 65, Family 4, CCAvg 1.8, Education 2, Mortgage 244, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-063",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 24, Family 4, CCAvg 0.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 6.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-064",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 11.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 11, Family 1, CCAvg 0.1, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Income at or above 6."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-065",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 2,
+        "Income": 38.0,
+        "Mortgage": 164.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 38, Family 2, CCAvg 1, Education 3, Mortgage 164, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-066",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 10.0,
+        "Mortgage": 81.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 10, Family 4, CCAvg 0.7, Education 2, Mortgage 81, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-067",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 135.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 135, Family 1, CCAvg 1.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-068",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 63, Family 2, CCAvg 1.5, Education 2, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-069",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 115.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 115, Family 1, CCAvg 1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-070",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 45.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 45, Family 1, CCAvg 0.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-071",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 169.0,
+        "Mortgage": 122.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 169, Family 2, CCAvg 2.1, Education 1, Mortgage 122, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 107.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-072",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 112.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 112, Family 2, CCAvg 1.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Income at or above 107."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-073",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 4.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 93, Family 1, CCAvg 4.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-074",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 140.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 1, CCAvg 0.3, Education 3, Mortgage 140, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-075",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 85.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 85, Family 1, CCAvg 2.67, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-076",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 21.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 21, Family 4, CCAvg 0.6, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-077",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 6.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 144.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 144, Family 2, CCAvg 6.8, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-078",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 13.0,
+        "Mortgage": 95.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 13, Family 4, CCAvg 1, Education 1, Mortgage 95, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-079",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 5.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 165.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 165, Family 1, CCAvg 5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 4.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-080",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 9.0,
+        "Mortgage": 89.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 9, Family 4, CCAvg 0.7, Education 1, Mortgage 89, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Income at or above 4."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-081",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 59.0,
+        "Mortgage": 90.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 59, Family 4, CCAvg 0, Education 1, Mortgage 90, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-082",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 29.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 29, Family 1, CCAvg 1.9, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-083",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 20, Family 2, CCAvg 1.4, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-084",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 68.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 68, Family 4, CCAvg 2, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-085",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 65.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 65, Family 4, CCAvg 2.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-086",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 61.0,
+        "Mortgage": 105.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 61, Family 2, CCAvg 1.9, Education 2, Mortgage 105, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-087",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 91.0,
+        "Mortgage": 100.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 91, Family 4, CCAvg 1.4, Education 2, Mortgage 100, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 26.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-088",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 31.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 31, Family 1, CCAvg 1, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online yes, CreditCard no. Keep Income at or above 26."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-089",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 71.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 71, Family 4, CCAvg 0.1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-090",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.67,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 73.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 73, Family 4, CCAvg 2.67, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-091",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 20.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 20, Family 2, CCAvg 0, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-092",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 55.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 55, Family 1, CCAvg 0.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-093",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 69.0,
+        "Mortgage": 209.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 69, Family 2, CCAvg 1.7, Education 1, Mortgage 209, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-094",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 7.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 155.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 155, Family 1, CCAvg 7.4, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Do not change Income and change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ],
+        "prefer_fewer_changes": true
+      },
+      "case_id": "TIERB-G2-095",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 94.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 94, Family 1, CCAvg 1.9, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income and prefer smaller edits."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Income": {
+            "min": 87.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-096",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 92.0,
+        "Mortgage": 249.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 92, Family 2, CCAvg 0, Education 1, Mortgage 249, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Keep Income at or above 87."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "case_id": "TIERB-G2-097",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 125.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 125, Family 2, CCAvg 0.6, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Income."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "case_id": "TIERB-G2-098",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 3.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 74, Family 3, CCAvg 3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no. Do not change Mortgage."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 0.0
+          }
+        }
+      },
+      "case_id": "TIERB-G2-099",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 72.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 72, Family 3, CCAvg 0.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no. Keep Mortgage at or below 0."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": {
+        "max_changed_features": 1
+      },
+      "case_id": "TIERB-G2-100",
+      "dataset": "bank",
+      "group": "G2",
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 61.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "single_turn",
+      "turns": [
+        "Income 61, Family 1, CCAvg 2.2, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes. Change at most one thing."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-001",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 25.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 25, Family 2, CCAvg 0.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-002",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 83, Family 2, CCAvg 1.7, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-003",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 3,
+        "Income": 104.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 104, Family 3, CCAvg 2.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-004",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 41.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 41, Family 3, CCAvg 1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-005",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 86."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 58.0,
+        "Mortgage": 91.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 58, Family 4, CCAvg 1.8, Education 3, Mortgage 91, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-006",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 93.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 93, Family 1, CCAvg 1.5, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-007",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 39.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 39, Family 2, CCAvg 1.7, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-008",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 7.5,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 148.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 148, Family 2, CCAvg 7.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-009",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.9,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 4,
+        "Income": 53.0,
+        "Mortgage": 98.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 53, Family 4, CCAvg 1.9, Education 3, Mortgage 98, SecuritiesAccount yes, CDAccount yes, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-010",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 140."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 71.0,
+        "Mortgage": 145.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 71, Family 2, CCAvg 1.7, Education 1, Mortgage 145, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-011",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 92.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 92, Family 1, CCAvg 2.8, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-012",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.1,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 61.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 61, Family 4, CCAvg 2.1, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-013",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 38.0,
+        "Mortgage": 135.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 38, Family 3, CCAvg 2.5, Education 2, Mortgage 135, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-014",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 58.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 58, Family 4, CCAvg 1.7, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-015",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 145."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 1,
+        "Income": 80.0,
+        "Mortgage": 150.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 80, Family 1, CCAvg 0.8, Education 2, Mortgage 150, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-016",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 71.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 71, Family 4, CCAvg 1.8, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-017",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 89.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 89, Family 3, CCAvg 0.5, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-018",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 83.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 83, Family 1, CCAvg 1.8, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-019",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 28.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 28, Family 3, CCAvg 0.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-020",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 52.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 52, Family 4, CCAvg 1.7, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-021",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 70.0,
+        "Mortgage": 169.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 70, Family 1, CCAvg 1.2, Education 1, Mortgage 169, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-022",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 71.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 71, Family 1, CCAvg 1.4, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-023",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 3.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 75.0,
+        "Mortgage": 280.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 75, Family 1, CCAvg 3.7, Education 3, Mortgage 280, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-024",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.8,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 78.0,
+        "Mortgage": 78.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 78, Family 4, CCAvg 0.8, Education 1, Mortgage 78, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-025",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 2,
+        "Income": 25.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 25, Family 2, CCAvg 1, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-026",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 60.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 60, Family 2, CCAvg 0.6, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-027",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 2,
+        "Income": 99.0,
+        "Mortgage": 264.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 99, Family 2, CCAvg 1.4, Education 1, Mortgage 264, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-028",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.6,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 3,
+        "Income": 55.0,
+        "Mortgage": 113.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 55, Family 3, CCAvg 2.6, Education 3, Mortgage 113, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-029",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 3,
+        "Income": 29.0,
+        "Mortgage": 117.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 29, Family 3, CCAvg 1, Education 2, Mortgage 117, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-030",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 53.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 53, Family 3, CCAvg 2.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-031",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 138.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 138, Family 1, CCAvg 0, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-032",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 2,
+        "Income": 42.0,
+        "Mortgage": 138.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 42, Family 2, CCAvg 0.7, Education 3, Mortgage 138, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-033",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.3,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 4,
+        "Income": 99.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 99, Family 4, CCAvg 2.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-034",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 3,
+        "Income": 18.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 18, Family 3, CCAvg 0.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-035",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 24.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 24, Family 4, CCAvg 0.3, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-036",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 55.0,
+        "Mortgage": 77.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 55, Family 1, CCAvg 1.4, Education 1, Mortgage 77, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-037",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.0,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 1,
+        "Income": 58.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 58, Family 1, CCAvg 0, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-038",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.3,
+        "CDAccount": 1,
+        "CreditCard": 1,
+        "Education": 3,
+        "Family": 1,
+        "Income": 33.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 33, Family 1, CCAvg 0.3, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount yes, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-039",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.8,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 2,
+        "Family": 4,
+        "Income": 74.0,
+        "Mortgage": 112.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 74, Family 4, CCAvg 1.8, Education 2, Mortgage 112, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-040",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.7,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 38.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 38, Family 2, CCAvg 0.7, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-041",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.6,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 4,
+        "Income": 23.0,
+        "Mortgage": 98.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 23, Family 4, CCAvg 0.6, Education 3, Mortgage 98, SecuritiesAccount yes, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-042",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 2,
+        "Income": 61.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 61, Family 2, CCAvg 1.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-043",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.9,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 81.0,
+        "Mortgage": 138.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 81, Family 1, CCAvg 2.9, Education 1, Mortgage 138, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-044",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 1,
+        "Income": 129.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 129, Family 1, CCAvg 2.5, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-045",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.75,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 1,
+        "Income": 33.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 33, Family 1, CCAvg 0.75, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online no, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-046",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Income."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 1,
+        "Family": 4,
+        "Income": 63.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 63, Family 4, CCAvg 2.2, Education 1, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-047",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Do not change Mortgage."
+      ],
+      "seed_profile": {
+        "CCAvg": 1.4,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 2,
+        "Family": 4,
+        "Income": 70.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 70, Family 4, CCAvg 1.4, Education 2, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-048",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Change at most one thing."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 45.0,
+        "Mortgage": 158.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 45, Family 4, CCAvg 0.2, Education 1, Mortgage 158, SecuritiesAccount no, CDAccount no, Online yes, CreditCard yes."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-049",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Prefer smaller edits."
+      ],
+      "seed_profile": {
+        "CCAvg": 0.5,
+        "CDAccount": 0,
+        "CreditCard": 0,
+        "Education": 3,
+        "Family": 3,
+        "Income": 65.0,
+        "Mortgage": 0.0,
+        "Online": 1,
+        "SecuritiesAccount": 0
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 65, Family 3, CCAvg 0.5, Education 3, Mortgage 0, SecuritiesAccount no, CDAccount no, Online yes, CreditCard no."
+      ]
+    },
+    {
+      "active_constraint_spec_expected": null,
+      "case_id": "TIERB-REF-050",
+      "dataset": "bank",
+      "group": "REFINEMENT",
+      "refinement_feedback": [
+        "Mortgage must stay under 0."
+      ],
+      "seed_profile": {
+        "CCAvg": 2.2,
+        "CDAccount": 0,
+        "CreditCard": 1,
+        "Education": 1,
+        "Family": 4,
+        "Income": 74.0,
+        "Mortgage": 0.0,
+        "Online": 0,
+        "SecuritiesAccount": 1
+      },
+      "session_shape": "refinement",
+      "turns": [
+        "Income 74, Family 4, CCAvg 2.2, Education 1, Mortgage 0, SecuritiesAccount yes, CDAccount no, Online no, CreditCard yes."
+      ]
+    }
+  ],
+  "corpus_sha256": "6dbd89e11be870a1a5d8a0d7747fa58968fc62b2fba27ea8062e811930000f78",
+  "corpus_version": "part2_tier_b_bank_sessions_v1",
+  "dataset": "bank",
+  "group_counts": {
+    "G1": 100,
+    "G2": 100,
+    "REFINEMENT": 50
+  }
+}

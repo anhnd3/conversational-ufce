@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from scripts.export_part2_case_studies import collect_case_studies, render_markdown
+from scripts.archieve.export_part2_case_studies import collect_case_studies, render_markdown
 
 
 def write_case(root, name, *, manifest, turn_result):

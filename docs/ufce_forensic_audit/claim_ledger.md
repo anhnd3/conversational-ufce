@@ -1,0 +1,27 @@
+# Paper Claim Ledger
+
+Status vocabulary:
+
+- `implemented`
+- `mismatched`
+- `omitted`
+- `secondary/dead-path`
+- `uncertain-entry-path`
+
+| Claim ID | Paper Reference | Narrowest Defensible Claim | Primary Code Mapping | Status | Linked Finding |
+| --- | --- | --- | --- | --- | --- |
+| CL-01 | Sect. 4.1, PDF p. 6; Sect. 4.4, PDF p. 8; Algorithm 2, PDF p. 9 | User feedback is a per-feature feasible interval map `p = {xi: [pil, piu]}` and interval construction validates both lower and upper bounds against the neighborhood. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/data_processing.py:90-228`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:239-325` | mismatched | UF-AUD-03 |
+| CL-02 | Sect. 4.3, PDF p. 7 | KDTree neighborhood is computed in the desired space with a radius faithful to data distribution and used to restrict perturbations to plausible regions. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:199-211`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/cfmethods.py:197-324` | mismatched | UF-AUD-04 |
+| CL-03 | Algorithm 3, PDF p. 10 | `Single_F` performs binary-search-like traversal over feature values and returns a valid and plausible single-feature counterfactual. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:328-391` | mismatched | UF-AUD-01, UF-AUD-02, UF-AUD-07 |
+| CL-04 | Algorithm 4, PDF pp. 10-11 | `Double_F` perturbs the first feature, predicts the second with a learned dependency model, and returns only valid and plausible candidates. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:429-580` | mismatched | UF-AUD-05, UF-AUD-07 |
+| CL-05 | Sect. 4.4, PDF p. 8; Algorithm 1 and Algorithm 5 references | `Triple_F` extends the same validity-and-plausibility contract to three features. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:582-867` | mismatched | UF-AUD-06, UF-AUD-07 |
+| CL-06 | Sect. 4.4, PDF p. 8 | Dependency models `h` and `g` are trained to predict feature values from the available dataset and are used inside UFCE2 and UFCE3. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:394-427`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:429-867` | implemented | none |
+| CL-07 | Algorithm 5, PDF p. 11 | Suitable counterfactual selection uses `delta(z, x) = prox_Jac(z, x) + lambda * prox_Euc(z, x)` over candidates that satisfy the target outcome. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/cfmethods.py:20-31`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/cfmethods.py:57-195`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/experiments.py:218-285` | mismatched | UF-AUD-08, UF-AUD-10 |
+| CL-08 | Sect. 3.3, Eq. (2)-(4), PDF pp. 5-6 | Categorical proximity is Jaccard-based, numerical proximity is MAD-weighted Euclidean distance normalized to `[0, 1]`, and mixed-distance addition occurs on a common scale. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/goodness.py:140-261`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:938-958`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/evaluations.py:7-57` | mismatched | UF-AUD-09 |
+| CL-09 | Sect. 3.3 and Sect. 4.1, PDF pp. 6-7 | Plausibility is Boolean and based on LOF; Algorithms 3-4 use plausibility during search. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:960-1001`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:343-867` | mismatched | UF-AUD-07 |
+| CL-10 | Sect. 3.3, PDF p. 7; Sect. 5.2, PDF p. 13 | Feasibility is `valid AND plausible AND actionable >= threshold`, and experiment text states a 30% actionability threshold. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/ufce.py:1068-1182`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/evaluations.py:217-320` | mismatched | UF-AUD-12 |
+| CL-11 | Sect. 4.5, PDF p. 8; paper examples | Protected features are part of the UFCE input contract and prevent immutable features from being altered. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/data_processing.py:90-228` | mismatched | UF-AUD-11 |
+| CL-12 | Sect. 5.1.3 and Sect. 5.2, PDF pp. 12-13 | Basic DiCE varies the user-selected features and is range-checked afterwards; DiCE-UF takes the same user feedback as UFCE; AR is configured with user-guided input features and checked afterwards. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/cfmethods.py:57-195`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/evaluations.py:217-320` | mismatched | UF-AUD-13 |
+| CL-13 | Abstract; Sect. 5.1.1; Sect. 5.4, PDF pp. 1, 12, 16 | The reported evaluation covers five datasets. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/experiments.py:61-62` | uncertain-entry-path | UF-AUD-14 |
+| CL-14 | Sect. 5.1.2, PDF p. 11; conclusion and supplementary discussion | LR is reported in detail and MLP is part of the repository-backed evaluation. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/experiments.py:61-62`; `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/data_processing.py:65-88` | uncertain-entry-path | UF-AUD-14 |
+| CL-15 | Table 3 and Sect. 5.1.2, PDF p. 12 | Table 3 reports average fivefold CV accuracy. | `/mnt/d/Workspace/MasterAI/Thesis/UFCE_Agent/ufce/core_author/data_processing.py:65-84` | mismatched | UF-AUD-15 |

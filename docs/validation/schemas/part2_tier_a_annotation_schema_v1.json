@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ufce-agent://docs/validation/schemas/part2_tier_a_annotation_schema_v1.json",
+  "title": "Part II Tier A Annotation Corpus Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "corpus_version",
+    "annotation_schema_version",
+    "scorer_output_schema_version",
+    "case_count",
+    "cases"
+  ],
+  "properties": {
+    "corpus_version": {
+      "type": "string"
+    },
+    "annotation_schema_version": {
+      "const": "part2_tier_a_annotation_schema_v1"
+    },
+    "scorer_output_schema_version": {
+      "const": "part2_tier_a_scorer_output_schema_v1"
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    },
+    "corpus_sha256": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "annotation_type",
+        "group",
+        "input_text",
+        "active_constraint_spec",
+        "pending_refinement_clarification",
+        "expected_constraint_spec",
+        "expected_delta",
+        "tags"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "annotation_type": {
+          "type": "string",
+          "enum": [
+            "initial_constraint_spec",
+            "refinement_delta"
+          ]
+        },
+        "group": {
+          "type": "string",
+          "enum": [
+            "M6",
+            "M36"
+          ]
+        },
+        "input_text": {
+          "type": "string"
+        },
+        "active_constraint_spec": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "pending_refinement_clarification": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "expected_constraint_spec": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "expected_delta": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

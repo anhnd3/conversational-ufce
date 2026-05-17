@@ -1,0 +1,60 @@
+{
+  "corpus_version": "part2_bank_golden_parity_v1",
+  "dataset": "bank",
+  "cases": [
+    {
+      "case_id": "BANK-GOLDEN-001",
+      "kind": "runtime_success_no_recourse",
+      "runtime_request": {
+        "dataset": "bank",
+        "profile": {
+          "Income": 140,
+          "Family": 2,
+          "CCAvg": 7.7376709303,
+          "Education": 2,
+          "Mortgage": 32,
+          "SecuritiesAccount": 1,
+          "CDAccount": 1,
+          "Online": 1,
+          "CreditCard": 0
+        }
+      }
+    },
+    {
+      "case_id": "BANK-GOLDEN-002",
+      "kind": "runtime_success_counterfactual",
+      "runtime_request": {
+        "dataset": "bank",
+        "profile": {
+          "Income": 100,
+          "Family": 1,
+          "CCAvg": 2.7,
+          "Education": 2,
+          "Mortgage": 0,
+          "SecuritiesAccount": 0,
+          "CDAccount": 0,
+          "Online": 0,
+          "CreditCard": 0
+        }
+      }
+    },
+    {
+      "case_id": "BANK-GOLDEN-003",
+      "kind": "runtime_reject_infeasible",
+      "runtime_request": {
+        "dataset": "bank",
+        "profile": {
+          "Income": 49,
+          "Family": 4,
+          "CCAvg": 1.6,
+          "Education": 1,
+          "Mortgage": 0,
+          "SecuritiesAccount": 1,
+          "CDAccount": 0,
+          "Online": 0,
+          "CreditCard": 0
+        }
+      }
+    }
+  ]
+}

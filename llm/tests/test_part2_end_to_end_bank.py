@@ -7,7 +7,7 @@ from llm.src.part2_eval.corpora import (
     G5_AGENT_PORTABILITY_SYNTH300_CORPUS_PATH,
     TIER_B_SYNTH300_CORPUS_PATH,
 )
-from scripts import run_part2_end_to_end_bank as runner
+from scripts.archieve import run_part2_end_to_end_bank as runner
 
 
 def build_args(tmp_path: Path) -> Namespace:

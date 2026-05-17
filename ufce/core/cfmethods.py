@@ -640,6 +640,8 @@ def dfexp(
         instance_generated = pd.DataFrame(columns=list(order))
         instance_flip_candidates = pd.DataFrame(columns=list(order))
         instance_selected = pd.DataFrame(columns=list(order))
+        raw_primary = 0
+        raw_explore = 0
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1])
             cc2, cfsexp2 = ufc.Double_F(X, X_test[t:t+1], protectedf, F[:], catf, numf, intervals, features, bb, desired_outcome, order, k)
@@ -727,8 +729,8 @@ def dfexp(
                         "mi_feature_pairs": [list(item) for item in F[:]],
                     },
                     "source_path": "double_feature",
-                    "raw_primary_count": int(raw_primary if "raw_primary" in locals() else 0),
-                    "raw_explore_count": int(raw_explore if "raw_explore" in locals() else 0),
+                    "raw_primary_count": int(raw_primary),
+                    "raw_explore_count": int(raw_explore),
                 }
             )
     end = time.perf_counter()
@@ -798,6 +800,8 @@ def tfexp(
         instance_generated = pd.DataFrame(columns=list(order))
         instance_flip_candidates = pd.DataFrame(columns=list(order))
         instance_selected = pd.DataFrame(columns=list(order))
+        raw_primary = 0
+        raw_explore = 0
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1]) 
             cc3, cfsexp2 = ufc.Triple_F(X, X_test[t:t+1], protectdf, F[:], catf, numf, intervals, feature2change, bb, desired_outcome, order, k) 
@@ -879,8 +883,8 @@ def tfexp(
                         "mi_feature_pairs": [list(item) for item in F[:]],
                     },
                     "source_path": "triple_feature",
-                    "raw_primary_count": int(raw_primary if "raw_primary" in locals() else 0),
-                    "raw_explore_count": int(raw_explore if "raw_explore" in locals() else 0),
+                    "raw_primary_count": int(raw_primary),
+                    "raw_explore_count": int(raw_explore),
                 }
             )
     end = time.perf_counter()

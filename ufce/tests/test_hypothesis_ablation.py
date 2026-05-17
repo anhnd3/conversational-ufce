@@ -16,8 +16,8 @@ MPL_DIR = ROOT / ".pytest_cache" / "matplotlib"
 MPL_DIR.mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("MPLCONFIGDIR", str(MPL_DIR))
 
-from scripts.reproduce_full_table7_result import run_one_fold
-from scripts.ufce_hypothesis_ablation import (
+from scripts.archieve.reproduce_full_table7_result import run_one_fold
+from scripts.archieve.ufce_hypothesis_ablation import (
     ANCHOR_PUBLIC_NAME,
     DEFAULT_DATASETS,
     build_anchor_specs,

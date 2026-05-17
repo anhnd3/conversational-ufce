@@ -15,7 +15,7 @@ MPL_DIR = ROOT / ".pytest_cache" / "matplotlib"
 MPL_DIR.mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("MPLCONFIGDIR", str(MPL_DIR))
 
-from scripts.reproduce_results_v3 import build_movie_distance_scaler as reproduce_v3_movie_distance_scaler
+from scripts.archieve.reproduce_results_v3 import build_movie_distance_scaler as reproduce_v3_movie_distance_scaler
 from ufce.core.data_processing import classify_dataset_getModel, get_movie_user_constraints
 from ufce.model_bundles.lr_bundle import (
     DATASET_DROP_COLUMNS,

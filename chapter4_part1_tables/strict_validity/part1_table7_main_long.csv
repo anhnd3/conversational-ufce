@@ -1,0 +1,151 @@
+dataset,method,metric,author,ours,delta
+Bank Loan,UFCE1,Prox-Jac,0.6,0.6562155388471178,0.05621553884711783
+Bank Loan,UFCE1,Prox-Euc,10.0,0.7970666666666668,-9.202933333333334
+Bank Loan,UFCE1,Sparsity,1.0,1.0,0.0
+Bank Loan,UFCE1,Actionability,14.0,16.2,2.1999999999999993
+Bank Loan,UFCE1,Plausibility,14.0,16.2,2.1999999999999993
+Bank Loan,UFCE1,Feasibility,14.0,16.2,2.1999999999999993
+Bank Loan,UFCE2,Prox-Jac,0.0,0.14804505135387486,0.14804505135387486
+Bank Loan,UFCE2,Prox-Euc,23.1,40.91984123334425,17.81984123334425
+Bank Loan,UFCE2,Sparsity,2.0,1.9875,-0.012499999999999956
+Bank Loan,UFCE2,Actionability,30.0,15.8,-14.2
+Bank Loan,UFCE2,Plausibility,30.0,15.8,-14.2
+Bank Loan,UFCE2,Feasibility,30.0,15.8,-14.2
+Bank Loan,UFCE3,Prox-Jac,0.0,0.5316268606509124,0.5316268606509124
+Bank Loan,UFCE3,Prox-Euc,40.12,59.945959845093896,19.825959845093898
+Bank Loan,UFCE3,Sparsity,3.0,2.438966445210664,-0.5610335547893359
+Bank Loan,UFCE3,Actionability,44.0,41.4,-2.6000000000000014
+Bank Loan,UFCE3,Plausibility,43.0,45.0,2.0
+Bank Loan,UFCE3,Feasibility,43.0,41.4,-1.6000000000000014
+Bank Loan,DiCE,Prox-Jac,0.7,,
+Bank Loan,DiCE,Prox-Euc,121.45,,
+Bank Loan,DiCE,Sparsity,5.2,,
+Bank Loan,DiCE,Actionability,8.0,,
+Bank Loan,DiCE,Plausibility,39.0,,
+Bank Loan,DiCE,Feasibility,8.0,,
+Bank Loan,AR,Prox-Jac,0.62,,
+Bank Loan,AR,Prox-Euc,129.56,,
+Bank Loan,AR,Sparsity,5.3,,
+Bank Loan,AR,Actionability,9.0,,
+Bank Loan,AR,Plausibility,45.0,,
+Bank Loan,AR,Feasibility,9.0,,
+Graduate Admission,UFCE1,Prox-Jac,0.0,0.0,0.0
+Graduate Admission,UFCE1,Prox-Euc,2.34,0.6368571428571431,-1.7031428571428568
+Graduate Admission,UFCE1,Sparsity,1.0,1.0,0.0
+Graduate Admission,UFCE1,Actionability,8.0,8.6,0.5999999999999996
+Graduate Admission,UFCE1,Plausibility,8.0,8.6,0.5999999999999996
+Graduate Admission,UFCE1,Feasibility,8.0,8.6,0.5999999999999996
+Graduate Admission,UFCE2,Prox-Jac,0.0,0.0,0.0
+Graduate Admission,UFCE2,Prox-Euc,4.85,0.4297183012745515,-4.420281698725448
+Graduate Admission,UFCE2,Sparsity,2.0,1.1466666666666667,-0.8533333333333333
+Graduate Admission,UFCE2,Actionability,13.0,2.6,-10.4
+Graduate Admission,UFCE2,Plausibility,13.0,2.6,-10.4
+Graduate Admission,UFCE2,Feasibility,13.0,2.6,-10.4
+Graduate Admission,UFCE3,Prox-Jac,0.0,0.0,0.0
+Graduate Admission,UFCE3,Prox-Euc,6.32,0.6382187114175548,-5.681781288582446
+Graduate Admission,UFCE3,Sparsity,2.8,1.5,-1.2999999999999998
+Graduate Admission,UFCE3,Actionability,13.0,1.0,-12.0
+Graduate Admission,UFCE3,Plausibility,13.0,1.0,-12.0
+Graduate Admission,UFCE3,Feasibility,13.0,1.0,-12.0
+Graduate Admission,DiCE,Prox-Jac,0.4,,
+Graduate Admission,DiCE,Prox-Euc,22.12,,
+Graduate Admission,DiCE,Sparsity,4.4,,
+Graduate Admission,DiCE,Actionability,3.0,,
+Graduate Admission,DiCE,Plausibility,9.0,,
+Graduate Admission,DiCE,Feasibility,3.0,,
+Graduate Admission,AR,Prox-Jac,0.4,,
+Graduate Admission,AR,Prox-Euc,13.34,,
+Graduate Admission,AR,Sparsity,4.15,,
+Graduate Admission,AR,Actionability,5.0,,
+Graduate Admission,AR,Plausibility,9.0,,
+Graduate Admission,AR,Feasibility,5.0,,
+Red Wine,UFCE1,Prox-Jac,,,
+Red Wine,UFCE1,Prox-Euc,14.9,0.588752819548872,-14.311247180451128
+Red Wine,UFCE1,Sparsity,1.0,1.0,0.0
+Red Wine,UFCE1,Actionability,43.0,19.2,-23.8
+Red Wine,UFCE1,Plausibility,28.0,18.8,-9.2
+Red Wine,UFCE1,Feasibility,28.0,18.8,-9.2
+Red Wine,UFCE2,Prox-Jac,,,
+Red Wine,UFCE2,Prox-Euc,8.45,0.5907424343337466,-7.859257565666253
+Red Wine,UFCE2,Sparsity,2.0,1.975,-0.02499999999999991
+Red Wine,UFCE2,Actionability,50.0,9.6,-40.4
+Red Wine,UFCE2,Plausibility,41.0,8.2,-32.8
+Red Wine,UFCE2,Feasibility,41.0,8.2,-32.8
+Red Wine,UFCE3,Prox-Jac,,,
+Red Wine,UFCE3,Prox-Euc,21.95,0.735449568640191,-21.214550431359807
+Red Wine,UFCE3,Sparsity,3.0,2.8,-0.20000000000000018
+Red Wine,UFCE3,Actionability,50.0,3.0,-47.0
+Red Wine,UFCE3,Plausibility,42.0,2.6,-39.4
+Red Wine,UFCE3,Feasibility,42.0,2.6,-39.4
+Red Wine,DiCE,Prox-Jac,,,
+Red Wine,DiCE,Prox-Euc,43.1,,
+Red Wine,DiCE,Sparsity,7.0,,
+Red Wine,DiCE,Actionability,10.0,,
+Red Wine,DiCE,Plausibility,33.0,,
+Red Wine,DiCE,Feasibility,10.0,,
+Red Wine,AR,Prox-Jac,,,
+Red Wine,AR,Prox-Euc,38.25,,
+Red Wine,AR,Sparsity,7.2,,
+Red Wine,AR,Actionability,11.0,,
+Red Wine,AR,Plausibility,42.0,,
+Red Wine,AR,Feasibility,11.0,,
+BUPA,UFCE1,Prox-Jac,,,
+BUPA,UFCE1,Prox-Euc,10.0,0.3566328700539223,-9.643367129946078
+BUPA,UFCE1,Sparsity,1.0,1.0,0.0
+BUPA,UFCE1,Actionability,17.0,16.4,-0.6000000000000014
+BUPA,UFCE1,Plausibility,15.0,16.0,1.0
+BUPA,UFCE1,Feasibility,15.0,16.0,1.0
+BUPA,UFCE2,Prox-Jac,,,
+BUPA,UFCE2,Prox-Euc,9.0,0.0,-9.0
+BUPA,UFCE2,Sparsity,2.0,0.0,-2.0
+BUPA,UFCE2,Actionability,15.0,0.0,-15.0
+BUPA,UFCE2,Plausibility,15.0,16.0,1.0
+BUPA,UFCE2,Feasibility,15.0,0.0,-15.0
+BUPA,UFCE3,Prox-Jac,,,
+BUPA,UFCE3,Prox-Euc,17.1,0.0,-17.1
+BUPA,UFCE3,Sparsity,2.9,0.0,-2.9
+BUPA,UFCE3,Actionability,13.0,0.0,-13.0
+BUPA,UFCE3,Plausibility,13.0,0.2,-12.8
+BUPA,UFCE3,Feasibility,13.0,0.0,-13.0
+BUPA,DiCE,Prox-Jac,,,
+BUPA,DiCE,Prox-Euc,51.45,,
+BUPA,DiCE,Sparsity,4.5,,
+BUPA,DiCE,Actionability,1.0,,
+BUPA,DiCE,Plausibility,1.0,,
+BUPA,DiCE,Feasibility,1.0,,
+BUPA,AR,Prox-Jac,,,
+BUPA,AR,Prox-Euc,40.65,,
+BUPA,AR,Sparsity,4.2,,
+BUPA,AR,Actionability,9.0,,
+BUPA,AR,Plausibility,15.0,,
+BUPA,AR,Feasibility,9.0,,
+Movie,UFCE1,Prox-Jac,0.0,,
+Movie,UFCE1,Prox-Euc,20.0,,
+Movie,UFCE1,Sparsity,1.0,,
+Movie,UFCE1,Actionability,20.0,0.0,-20.0
+Movie,UFCE1,Plausibility,8.0,0.0,-8.0
+Movie,UFCE1,Feasibility,8.0,0.0,-8.0
+Movie,UFCE2,Prox-Jac,0.0,,
+Movie,UFCE2,Prox-Euc,32.0,,
+Movie,UFCE2,Sparsity,2.0,,
+Movie,UFCE2,Actionability,14.0,0.0,-14.0
+Movie,UFCE2,Plausibility,14.0,0.0,-14.0
+Movie,UFCE2,Feasibility,14.0,0.0,-14.0
+Movie,UFCE3,Prox-Jac,0.0,,
+Movie,UFCE3,Prox-Euc,43.0,,
+Movie,UFCE3,Sparsity,3.0,,
+Movie,UFCE3,Actionability,18.0,0.0,-18.0
+Movie,UFCE3,Plausibility,18.0,0.0,-18.0
+Movie,UFCE3,Feasibility,18.0,0.0,-18.0
+Movie,DiCE,Prox-Jac,0.55,,
+Movie,DiCE,Prox-Euc,78.0,,
+Movie,DiCE,Sparsity,10.0,,
+Movie,DiCE,Actionability,5.0,,
+Movie,DiCE,Plausibility,19.0,,
+Movie,DiCE,Feasibility,5.0,,
+Movie,AR,Prox-Jac,0.45,,
+Movie,AR,Prox-Euc,80.0,,
+Movie,AR,Sparsity,9.0,,
+Movie,AR,Actionability,8.0,,
+Movie,AR,Plausibility,19.0,,
+Movie,AR,Feasibility,8.0,,
