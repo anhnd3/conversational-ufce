@@ -26,6 +26,9 @@ models:
   - alias: qwen/qwen3-14b
     family: qwen
     source: llm_eval_outputs
+  - alias: qwen3-14b
+    family: qwen
+    source: lm_studio
   - alias: qwen/qwen3-14b-128k
     family: qwen
     source: llm_eval_outputs

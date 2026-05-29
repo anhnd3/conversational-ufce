@@ -11,7 +11,7 @@ from llm.src.utils.hashing import make_run_id
 from llm.src.utils.time import local_now_iso
 
 
-DB_SCHEMA_VERSION = 6
+DB_SCHEMA_VERSION = 7
 SESSION_LIFECYCLE_ACTIVE = "active"
 SESSION_LIFECYCLE_ARCHIVED = "archived"
 _UNSET = object()
@@ -45,6 +45,7 @@ class StoredSession:
     canonical_session_state_json: dict[str, Any] | None
     canonical_state_source: str | None
     canonical_mirror_ok: bool
+    active_policy_override_json: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -82,6 +83,7 @@ class StoredTurn:
     canonical_runtime_result_json: dict[str, Any] | None
     verification_artifacts_json: dict[str, Any] | None
     canonical_session_state_json: dict[str, Any] | None
+    active_policy_override_json: dict[str, Any] | None = None
 
 
 class SessionRepository:
@@ -130,6 +132,7 @@ class SessionRepository:
                     case_completion_reason TEXT,
                     restart_required INTEGER NOT NULL DEFAULT 0,
                     active_constraint_spec_json TEXT,
+                    active_policy_override_json TEXT,
                     last_runtime_request_json TEXT,
                     refinement_revision_index INTEGER NOT NULL DEFAULT 0,
                     refinement_rounds_used INTEGER NOT NULL DEFAULT 0,
@@ -172,6 +175,7 @@ class SessionRepository:
                     parent_terminal_turn_id TEXT,
                     parent_refinement_revision_index INTEGER,
                     active_constraint_spec_json TEXT,
+                    active_policy_override_json TEXT,
                     constraint_feedback_delta_json TEXT,
                     refinement_rounds_used INTEGER NOT NULL DEFAULT 0,
                     refinement_round_limit INTEGER,
@@ -241,6 +245,7 @@ class SessionRepository:
                     case_completion_reason,
                     restart_required,
                     active_constraint_spec_json,
+                    active_policy_override_json,
                     last_runtime_request_json,
                     refinement_revision_index,
                     refinement_rounds_used,
@@ -250,7 +255,7 @@ class SessionRepository:
                     canonical_session_state_json,
                     canonical_state_source,
                     canonical_mirror_ok
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     session_id,
@@ -269,6 +274,7 @@ class SessionRepository:
                     0,
                     None,
                     0,
+                    None,
                     None,
                     None,
                     0,
@@ -335,10 +341,12 @@ class SessionRepository:
         parent_terminal_turn_id: str | None = None,
         parent_refinement_revision_index: int | None = None,
         active_constraint_spec_json: dict[str, Any] | None = None,
+        active_policy_override_json: dict[str, Any] | None = None,
         constraint_feedback_delta_json: dict[str, Any] | None = None,
         refinement_rounds_used: int = 0,
         refinement_round_limit: int | None = None,
         active_constraint_spec_session_json: Any = _UNSET,
+        active_policy_override_session_json: Any = _UNSET,
         last_runtime_request_json: Any = _UNSET,
         refinement_revision_index_session: Any = _UNSET,
         refinement_rounds_used_session: Any = _UNSET,
@@ -360,6 +368,8 @@ class SessionRepository:
             refinement_revision_index_session = current_session.refinement_revision_index
         if active_constraint_spec_session_json is _UNSET:
             active_constraint_spec_session_json = current_session.active_constraint_spec_json
+        if active_policy_override_session_json is _UNSET:
+            active_policy_override_session_json = current_session.active_policy_override_json
         if last_runtime_request_json is _UNSET:
             last_runtime_request_json = current_session.last_runtime_request_json
         if pending_refinement_clarification_json is _UNSET:
@@ -403,13 +413,14 @@ class SessionRepository:
                     parent_terminal_turn_id,
                     parent_refinement_revision_index,
                     active_constraint_spec_json,
+                    active_policy_override_json,
                     constraint_feedback_delta_json,
                     refinement_rounds_used,
                     refinement_round_limit,
                     canonical_runtime_result_json,
                     verification_artifacts_json,
                     canonical_session_state_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     turn_id,
@@ -439,6 +450,7 @@ class SessionRepository:
                     parent_terminal_turn_id,
                     parent_refinement_revision_index,
                     _json_dump(active_constraint_spec_json),
+                    _json_dump(active_policy_override_json),
                     _json_dump(constraint_feedback_delta_json),
                     int(refinement_rounds_used),
                     refinement_round_limit,
@@ -460,6 +472,7 @@ class SessionRepository:
                     case_completion_reason = ?,
                     restart_required = ?,
                     active_constraint_spec_json = ?,
+                    active_policy_override_json = ?,
                     last_runtime_request_json = ?,
                     refinement_revision_index = ?,
                     refinement_rounds_used = ?,
@@ -482,6 +495,7 @@ class SessionRepository:
                     case_completion_reason,
                     1 if restart_required else 0,
                     _json_dump(active_constraint_spec_session_json),
+                    _json_dump(active_policy_override_session_json),
                     _json_dump(last_runtime_request_json),
                     int(refinement_revision_index_session or 0),
                     int(refinement_rounds_used_session or 0),
@@ -565,6 +579,7 @@ class SessionRepository:
             case_completion_reason=row["case_completion_reason"],
             restart_required=bool(row["restart_required"]),
             active_constraint_spec_json=_json_load(row["active_constraint_spec_json"]),
+            active_policy_override_json=_json_load(row["active_policy_override_json"]),
             last_runtime_request_json=_json_load(row["last_runtime_request_json"]),
             refinement_revision_index=int(row["refinement_revision_index"] or 0),
             refinement_rounds_used=int(row["refinement_rounds_used"] or 0),
@@ -609,6 +624,7 @@ class SessionRepository:
             if row["parent_refinement_revision_index"] is None
             else int(row["parent_refinement_revision_index"]),
             active_constraint_spec_json=_json_load(row["active_constraint_spec_json"]),
+            active_policy_override_json=_json_load(row["active_policy_override_json"]),
             constraint_feedback_delta_json=_json_load(row["constraint_feedback_delta_json"]),
             refinement_rounds_used=int(row["refinement_rounds_used"] or 0),
             refinement_round_limit=None
@@ -648,6 +664,8 @@ class SessionRepository:
             )
         if "active_constraint_spec_json" not in columns:
             connection.execute("ALTER TABLE sessions ADD COLUMN active_constraint_spec_json TEXT")
+        if "active_policy_override_json" not in columns:
+            connection.execute("ALTER TABLE sessions ADD COLUMN active_policy_override_json TEXT")
         if "last_runtime_request_json" not in columns:
             connection.execute("ALTER TABLE sessions ADD COLUMN last_runtime_request_json TEXT")
         if "refinement_revision_index" not in columns:
@@ -708,6 +726,8 @@ class SessionRepository:
             connection.execute("ALTER TABLE turns ADD COLUMN parent_refinement_revision_index INTEGER")
         if "active_constraint_spec_json" not in columns:
             connection.execute("ALTER TABLE turns ADD COLUMN active_constraint_spec_json TEXT")
+        if "active_policy_override_json" not in columns:
+            connection.execute("ALTER TABLE turns ADD COLUMN active_policy_override_json TEXT")
         if "constraint_feedback_delta_json" not in columns:
             connection.execute("ALTER TABLE turns ADD COLUMN constraint_feedback_delta_json TEXT")
         if "refinement_rounds_used" not in columns:

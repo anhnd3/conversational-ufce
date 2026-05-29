@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
 
-DEFAULT_RESPONSE_SCHEMA_NAME = "ufce_bank_cf_parser_output_v2"
+DEFAULT_PARSER_SCHEMA_VERSION = "v3"
+DEFAULT_RESPONSE_SCHEMA_NAME = "ufce_bank_cf_parser_output_v3"
 DEFAULT_REFINEMENT_SCHEMA_NAME = "ufce_bank_refinement_feedback_output_v1"
+RESPONSE_SCHEMA_NAME_BY_VERSION = {
+    "v2": "ufce_bank_cf_parser_output_v2",
+    "v3": "ufce_bank_cf_parser_output_v3",
+}
 
 
 def load_system_prompt(path: Path) -> str:
@@ -17,10 +23,21 @@ def load_json_schema(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def normalize_parser_schema_version(value: str | None) -> str:
+    token = str(value or DEFAULT_PARSER_SCHEMA_VERSION).strip().lower()
+    return "v2" if token == "v2" else "v3"
+
+
+def response_schema_name_for_version(schema_version: str | None) -> str:
+    normalized = normalize_parser_schema_version(schema_version)
+    return RESPONSE_SCHEMA_NAME_BY_VERSION.get(normalized, DEFAULT_RESPONSE_SCHEMA_NAME)
+
+
 def build_schema_reference(
     benchmark,
     *,
     numeric_bound_fields: list[str] | tuple[str, ...] | None = None,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
 ) -> dict[str, object]:
     cf_field_schema: dict[str, str] = {}
     for field in benchmark.target_cf_fields:
@@ -32,7 +49,7 @@ def build_schema_reference(
             cf_field_schema[field.name] = "binary 0 or 1"
         else:
             cf_field_schema[field.name] = field.type
-    return {
+    reference: dict[str, object] = {
         "task": benchmark.output_contract.task,
         "status": list(benchmark.output_contract.status_enum),
         "cf_request": cf_field_schema,
@@ -47,6 +64,16 @@ def build_schema_reference(
         "conflicts": ["brief string"],
         "notes": ["brief string"],
     }
+    if normalize_parser_schema_version(schema_version) == "v3":
+        reference["field_evidence"] = {
+            "FieldName": {
+                "source_text": "short quoted span",
+                "evidence_kind": "explicit_numeric | explicit_boolean | unit_converted | taxonomy_mapped | conflict",
+                "normalized_from": "raw value text or empty string",
+                "language": "en | vi | mixed | unknown",
+            }
+        }
+    return reference
 
 
 def build_refinement_schema_reference(
@@ -89,13 +116,21 @@ def build_feature_dictionary(benchmark) -> dict[str, dict[str, str]]:
     return feature_dictionary
 
 
-def build_user_prompt(benchmark, case) -> str:
+def build_user_prompt(
+    benchmark,
+    case,
+    *,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
+) -> str:
     payload = {
         "case_id": case.case_id,
         "input": case.input_text,
     }
     instructions = {
-        "schema_reference": build_schema_reference(benchmark),
+        "schema_reference": build_schema_reference(
+            benchmark,
+            schema_version=schema_version,
+        ),
         "feature_dictionary": build_feature_dictionary(benchmark),
         "allowed_status_values": list(benchmark.output_contract.status_enum),
     }
@@ -118,20 +153,29 @@ def build_live_user_prompt(
     dataset_id: str = "bank",
     dataset_label: str = "bank profile",
     numeric_bound_fields: list[str] | tuple[str, ...] | None = None,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
 ) -> str:
     payload = {
         "input": user_text,
     }
     instructions = {
-        "schema_reference": build_schema_reference(benchmark, numeric_bound_fields=numeric_bound_fields),
+        "schema_reference": build_schema_reference(
+            benchmark,
+            numeric_bound_fields=numeric_bound_fields,
+            schema_version=schema_version,
+        ),
         "feature_dictionary": build_feature_dictionary(benchmark),
         "allowed_status_values": list(benchmark.output_contract.status_enum),
     }
-    exemplars = build_live_parser_exemplars(dataset_id=dataset_id)
+    exemplars = build_live_parser_exemplars(
+        dataset_id=dataset_id,
+        schema_version=schema_version,
+    )
     dataset_specific_hints = build_dataset_prompt_hints(
         dataset_id=dataset_id,
         dataset_label=dataset_label,
         numeric_bound_fields=numeric_bound_fields,
+        schema_version=schema_version,
     )
     return (
         "Return exactly one JSON object that matches the schema reference.\n"
@@ -206,9 +250,14 @@ def build_repair_user_prompt(
     dataset_id: str = "bank",
     dataset_label: str = "bank profile",
     numeric_bound_fields: list[str] | tuple[str, ...] | None = None,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
 ) -> str:
     instructions = {
-        "schema_reference": build_schema_reference(benchmark, numeric_bound_fields=numeric_bound_fields),
+        "schema_reference": build_schema_reference(
+            benchmark,
+            numeric_bound_fields=numeric_bound_fields,
+            schema_version=schema_version,
+        ),
         "feature_dictionary": build_feature_dictionary(benchmark),
         "allowed_status_values": list(benchmark.output_contract.status_enum),
     }
@@ -284,9 +333,14 @@ def build_refinement_repair_user_prompt(
     )
 
 
-def build_live_parser_exemplars(*, dataset_id: str = "bank") -> list[dict[str, Any]]:
+def build_live_parser_exemplars(
+    *,
+    dataset_id: str = "bank",
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
+) -> list[dict[str, Any]]:
+    include_field_evidence = normalize_parser_schema_version(schema_version) == "v3"
     if dataset_id == "grad":
-        return [
+        exemplars = [
             {
                 "label": "dense_complete_grad_profile",
                 "input": (
@@ -363,25 +417,27 @@ def build_live_parser_exemplars(*, dataset_id: str = "bank") -> list[dict[str, A
                 },
             },
         ]
-    return [
+        return _inject_parser_exemplar_field_evidence(exemplars) if include_field_evidence else exemplars
+    exemplars = [
         {
-            "label": "dense_complete_bank_profile",
+            "label": "prose_complete_bank_profile",
             "input": (
-                "Income 72, CCAvg 4.8, Family 1, Education 2, Mortgage 200, "
-                "CDAccount yes, Online no, SecuritiesAccount yes, CreditCard no."
+                "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, "
+                "and my education level is 2. My mortgage is 200. I have a securities account "
+                "and a CD account, I do not use online banking, and I do not own a bank credit card."
             ),
             "output": {
                 "task": "extract_cf_request",
                 "status": "complete",
                 "cf_request": {
                     "Income": 72,
-                    "CCAvg": 4.8,
                     "Family": 1,
+                    "CCAvg": 4.8,
                     "Education": 2,
                     "Mortgage": 200,
+                    "SecuritiesAccount": 1,
                     "CDAccount": 1,
                     "Online": 0,
-                    "SecuritiesAccount": 1,
                     "CreditCard": 0,
                 },
                 "constraint_spec": {
@@ -426,14 +482,14 @@ def build_live_parser_exemplars(*, dataset_id: str = "bank") -> list[dict[str, A
         },
         {
             "label": "underspecified_clarification_profile",
-            "input": "I want Income 40, CCAvg 1.5, Family 3, Education 2, and Mortgage 80.",
+            "input": "I earn 40, spend around 1.5 on cards, have a family of 3, education code 2, and a mortgage of 80.",
             "output": {
                 "task": "extract_cf_request",
                 "status": "partial",
                 "cf_request": {
                     "Income": 40,
-                    "CCAvg": 1.5,
                     "Family": 3,
+                    "CCAvg": 1.5,
                     "Education": 2,
                     "Mortgage": 80,
                 },
@@ -575,6 +631,58 @@ def build_live_parser_exemplars(*, dataset_id: str = "bank") -> list[dict[str, A
             },
         },
         {
+            "label": "unit_aware_english_profile",
+            "input": (
+                "My annual income is $70,000, family of 2, I spend about $1.5k per month on credit cards, "
+                "graduate education, and my mortgage is $250k. I use online banking and I do not have "
+                "a CD account or securities account, but I own a credit card."
+            ),
+            "output": {
+                "task": "extract_cf_request",
+                "status": "complete",
+                "cf_request": {
+                    "Income": 70,
+                    "Family": 2,
+                    "CCAvg": 1.5,
+                    "Education": 2,
+                    "Mortgage": 250,
+                    "SecuritiesAccount": 0,
+                    "CDAccount": 0,
+                    "Online": 1,
+                    "CreditCard": 1,
+                },
+                "missing_fields": [],
+                "conflicts": [],
+                "notes": [],
+            },
+        },
+        {
+            "label": "unit_aware_vietnamese_profile",
+            "input": (
+                "Thu nhap nam cua toi la 1.75 ty VND, gia dinh 2 nguoi, chi tieu the trung binh "
+                "37.5 trieu VND/thang, hoc van thac si, the chap 6.25 ty VND. "
+                "Toi dung online banking, co the tin dung, khong co tai khoan chung khoan va khong co CD account."
+            ),
+            "output": {
+                "task": "extract_cf_request",
+                "status": "complete",
+                "cf_request": {
+                    "Income": 70,
+                    "Family": 2,
+                    "CCAvg": 1.5,
+                    "Education": 2,
+                    "Mortgage": 250,
+                    "SecuritiesAccount": 0,
+                    "CDAccount": 0,
+                    "Online": 1,
+                    "CreditCard": 1,
+                },
+                "missing_fields": [],
+                "conflicts": [],
+                "notes": [],
+            },
+        },
+        {
             "label": "correction_style_answer",
             "input": (
                 "Income 72, CCAvg 4.8, Family 1, Education 2, Mortgage 200, "
@@ -601,6 +709,58 @@ def build_live_parser_exemplars(*, dataset_id: str = "bank") -> list[dict[str, A
             },
         },
     ]
+    return _inject_parser_exemplar_field_evidence(exemplars) if include_field_evidence else exemplars
+
+
+def _inject_parser_exemplar_field_evidence(exemplars: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    enriched: list[dict[str, Any]] = []
+    for exemplar in exemplars:
+        output = dict(exemplar.get("output") or {})
+        cf_request = output.get("cf_request")
+        if not isinstance(cf_request, dict):
+            enriched.append(dict(exemplar))
+            continue
+        language = _detect_prompt_language(str(exemplar.get("input", "")))
+        field_evidence = {}
+        for field_name, value in cf_request.items():
+            if isinstance(value, bool):
+                continue
+            evidence_kind = "explicit_boolean" if field_name in {
+                "SecuritiesAccount",
+                "CDAccount",
+                "Online",
+                "CreditCard",
+            } else "explicit_numeric"
+            field_evidence[str(field_name)] = {
+                "source_text": str(field_name),
+                "evidence_kind": evidence_kind,
+                "normalized_from": "" if evidence_kind == "conflict" else str(value),
+                "language": language,
+            }
+        patched = dict(exemplar)
+        patched["output"] = dict(output)
+        patched["output"]["field_evidence"] = field_evidence
+        enriched.append(patched)
+    return enriched
+
+
+def _detect_prompt_language(text: str) -> str:
+    lowered = text.lower()
+    has_vi_signal = bool(
+        re.search(
+            r"[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]"
+            r"|\b(?:thu\s*nhap|thang|nam|gia\s*dinh|the\s*chap|hoc\s*van|khong|co)\b",
+            lowered,
+        )
+    )
+    has_en_signal = bool(re.search(r"\b(?:income|family|mortgage|education|credit|card|online|account)\b", lowered))
+    if has_vi_signal and has_en_signal:
+        return "mixed"
+    if has_vi_signal:
+        return "vi"
+    if has_en_signal:
+        return "en"
+    return "unknown"
 
 
 def build_live_refinement_exemplars(
@@ -783,7 +943,9 @@ def build_live_response_schema(
     benchmark,
     *,
     numeric_bound_fields: list[str] | tuple[str, ...] | None = None,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
 ) -> dict[str, Any]:
+    normalized_schema_version = normalize_parser_schema_version(schema_version)
     properties: dict[str, Any] = {
         "task": {"type": "string", "const": benchmark.output_contract.task},
         "status": {"type": "string", "enum": list(benchmark.output_contract.status_enum)},
@@ -799,6 +961,34 @@ def build_live_response_schema(
         "conflicts": {"type": "array", "items": {"type": "string"}},
         "notes": {"type": "array", "items": {"type": "string"}},
     }
+    if normalized_schema_version == "v3":
+        properties["field_evidence"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                field.name: {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["source_text", "evidence_kind", "normalized_from", "language"],
+                    "properties": {
+                        "source_text": {"type": "string"},
+                        "evidence_kind": {
+                            "type": "string",
+                            "enum": [
+                                "explicit_numeric",
+                                "explicit_boolean",
+                                "unit_converted",
+                                "taxonomy_mapped",
+                                "conflict",
+                            ],
+                        },
+                        "normalized_from": {"type": "string"},
+                        "language": {"type": "string", "enum": ["en", "vi", "mixed", "unknown"]},
+                    },
+                }
+                for field in benchmark.target_cf_fields
+            },
+        }
     numeric_bounds_properties = {
         field_name: {
             "type": "object",
@@ -828,7 +1018,19 @@ def build_live_response_schema(
     return {
         "type": "object",
         "additionalProperties": False,
-        "required": ["task", "status", "cf_request", "missing_fields", "conflicts", "notes"],
+        "required": [
+            "task",
+            "status",
+            "cf_request",
+            *(
+                ["field_evidence"]
+                if normalized_schema_version == "v3"
+                else []
+            ),
+            "missing_fields",
+            "conflicts",
+            "notes",
+        ],
         "properties": properties,
     }
 
@@ -902,20 +1104,32 @@ def build_dataset_prompt_hints(
     dataset_id: str,
     dataset_label: str,
     numeric_bound_fields: list[str] | tuple[str, ...] | None,
+    schema_version: str = DEFAULT_PARSER_SCHEMA_VERSION,
 ) -> str:
     numeric_bound_text = ", ".join(_normalize_numeric_bound_fields(numeric_bound_fields)) or "supported numeric fields"
+    evidence_hint = ""
+    if normalize_parser_schema_version(schema_version) == "v3":
+        evidence_hint = (
+            "\nFor every field emitted in cf_request, provide field_evidence with source_text, evidence_kind, "
+            "normalized_from, and language."
+        )
     if dataset_id == "grad":
         return (
             f"For dense labeled {dataset_label}s, do not omit explicitly labeled fields, decimals, or binary research values.\n"
             "If the user states hard constraints or soft preferences explicitly, emit them in constraint_spec instead of dropping them.\n"
             f"Use numeric_bounds only for these fields: {numeric_bound_text}.\n"
             "Preserve labeled scores, rating scales, and GPA-style decimals exactly."
+            f"{evidence_hint}"
         )
     return (
         f"For dense labeled {dataset_label}s, do not omit explicitly labeled fields, including decimals and negative boolean values such as no or 0.\n"
+        "For prose bank requests, extract explicit semantic values in English or Vietnamese.\n"
+        "Allow controlled normalization for explicit units (USD, k-style, and VND heuristic) when timeframe semantics are explicit.\n"
+        "Do not infer numeric values from qualitative phrases or out-of-taxonomy education labels.\n"
         "If the user states hard constraints or soft preferences explicitly, emit them in constraint_spec instead of dropping them.\n"
         f"Use disallowed_changes, numeric_bounds, or max_changed_features for hard constraints, and use prefer_fewer_changes only for soft preferences. Numeric bounds are supported for: {numeric_bound_text}.\n"
         "Preserve labeled booleans, zeros, and decimals exactly."
+        f"{evidence_hint}"
     )
 
 

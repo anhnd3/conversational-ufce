@@ -58,6 +58,10 @@ def build_active_constraint_spec(
         }
         if not active["numeric_bounds"]:
             active.pop("numeric_bounds", None)
+    for passthrough_key in ("numeric_bounds_delta", "allowed_changed_features"):
+        value = constraint_spec.get(passthrough_key)
+        if value:
+            active[passthrough_key] = value
     max_changed_features = constraint_spec.get("max_changed_features")
     if isinstance(max_changed_features, int) and not isinstance(max_changed_features, bool):
         active["max_changed_features"] = int(max_changed_features)

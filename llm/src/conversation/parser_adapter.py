@@ -8,7 +8,6 @@ from llm.src.adapters.lmstudio_client import call_lm_studio, extract_response_da
 from llm.src.conversation.types import ParserAdapterResult
 from llm.src.parser.prompt_builder import (
     DEFAULT_REFINEMENT_SCHEMA_NAME,
-    DEFAULT_RESPONSE_SCHEMA_NAME,
     build_live_refinement_response_schema,
     build_live_response_schema,
     build_live_user_prompt,
@@ -18,16 +17,18 @@ from llm.src.parser.prompt_builder import (
     build_request_payload,
     load_json_schema,
     load_system_prompt,
+    normalize_parser_schema_version,
+    response_schema_name_for_version,
 )
 from llm_eval.config import load_benchmark
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_BENCHMARK_PATH = ROOT / "llm_eval" / "benchmarks" / "ufce_bank_cf_parser_benchmark_v1.yaml"
+DEFAULT_BENCHMARK_PATH = ROOT / "llm_eval" / "benchmarks" / "ufce_bank_cf_parser_benchmark_v3_en.yaml"
 DEFAULT_SYSTEM_PROMPT_PATH = ROOT / "llm" / "prompts" / "parser_system_prompt_v1.txt"
-DEFAULT_SCHEMA_PATH = ROOT / "llm" / "config" / "parser_schema_v2.json"
+DEFAULT_SCHEMA_PATH = ROOT / "llm" / "config" / "parser_schema_v3.json"
 DEFAULT_REFINEMENT_SCHEMA_PATH = ROOT / "llm" / "config" / "refinement_parser_schema_v1.json"
-DEFAULT_MODEL_ALIAS = "qwen/qwen3-14b"
+DEFAULT_MODEL_ALIAS = "qwen3-14b"
 DEFAULT_API_BASE = "http://localhost:1234"
 DEFAULT_TIMEOUT_S = 600.0
 DEFAULT_PARSE_MAX_TOKENS = 512
@@ -61,6 +62,7 @@ class LiveLmStudioParserAdapter:
         self.system_prompt = load_system_prompt(self.system_prompt_path)
         self.response_schema = load_json_schema(self.schema_path)
         self.refinement_response_schema = load_json_schema(self.refinement_schema_path)
+        self.parser_schema_version = normalize_parser_schema_version(self.schema_path.stem)
         self.parse_max_tokens = int(parse_max_tokens)
         self.repair_max_tokens = int(repair_max_tokens)
         self.structured_output_mode = DEFAULT_STRUCTURED_OUTPUT_MODE
@@ -71,19 +73,25 @@ class LiveLmStudioParserAdapter:
     def parse(self, *, user_text: str, benchmark=None, dataset_package=None) -> ParserAdapterResult:
         active_benchmark = benchmark or self.load_benchmark()
         dataset_id = _dataset_id(dataset_package)
+        schema_version = self._schema_version_for_benchmark(active_benchmark, dataset_id=dataset_id)
         user_prompt = build_live_user_prompt(
             active_benchmark,
             user_text,
             dataset_id=dataset_id,
             dataset_label=_primary_subject_label(dataset_package),
             numeric_bound_fields=_numeric_bound_fields(dataset_package),
+            schema_version=schema_version,
         )
         return self._invoke(
             user_prompt=user_prompt,
             task_type="parse",
             max_tokens=self.parse_max_tokens,
-            response_schema=self._response_schema_for_parse(active_benchmark, dataset_package=dataset_package),
-            schema_name=_primary_schema_name(dataset_package),
+            response_schema=self._response_schema_for_parse(
+                active_benchmark,
+                dataset_package=dataset_package,
+                schema_version=schema_version,
+            ),
+            schema_name=_primary_schema_name(dataset_package, schema_version=schema_version),
             dataset_package=dataset_package,
         )
 
@@ -96,6 +104,10 @@ class LiveLmStudioParserAdapter:
         dataset_package=None,
     ) -> ParserAdapterResult:
         active_benchmark = benchmark or self.load_benchmark()
+        schema_version = self._schema_version_for_benchmark(
+            active_benchmark,
+            dataset_id=_dataset_id(dataset_package),
+        )
         user_prompt = build_repair_user_prompt(
             active_benchmark,
             invalid_output=invalid_output,
@@ -103,13 +115,18 @@ class LiveLmStudioParserAdapter:
             dataset_id=_dataset_id(dataset_package),
             dataset_label=_primary_subject_label(dataset_package),
             numeric_bound_fields=_numeric_bound_fields(dataset_package),
+            schema_version=schema_version,
         )
         return self._invoke(
             user_prompt=user_prompt,
             task_type="repair",
             max_tokens=self.repair_max_tokens,
-            response_schema=self._response_schema_for_parse(active_benchmark, dataset_package=dataset_package),
-            schema_name=_primary_schema_name(dataset_package),
+            response_schema=self._response_schema_for_parse(
+                active_benchmark,
+                dataset_package=dataset_package,
+                schema_version=schema_version,
+            ),
+            schema_name=_primary_schema_name(dataset_package, schema_version=schema_version),
             dataset_package=dataset_package,
         )
 
@@ -298,12 +315,25 @@ class LiveLmStudioParserAdapter:
             },
         }
 
-    def _response_schema_for_parse(self, benchmark, *, dataset_package=None) -> dict[str, Any]:
+    def _response_schema_for_parse(
+        self,
+        benchmark,
+        *,
+        dataset_package=None,
+        schema_version: str | None = None,
+    ) -> dict[str, Any]:
+        active_schema_version = normalize_parser_schema_version(schema_version or self.parser_schema_version)
         if dataset_package is None:
-            return self.response_schema
+            if active_schema_version == self.parser_schema_version:
+                return self.response_schema
+            return build_live_response_schema(
+                benchmark,
+                schema_version=active_schema_version,
+            )
         return build_live_response_schema(
             benchmark,
             numeric_bound_fields=_numeric_bound_fields(dataset_package),
+            schema_version=active_schema_version,
         )
 
     def _response_schema_for_refinement(self, *, dataset_package=None) -> dict[str, Any]:
@@ -322,6 +352,18 @@ class LiveLmStudioParserAdapter:
             f"You are a structured extraction assistant for {subject_label} counterfactual requests.\n\n"
             + self.system_prompt.replace("for bank counterfactual requests", f"for {dataset_name} counterfactual requests")
         )
+
+    def _schema_version_for_benchmark(self, benchmark, *, dataset_id: str = "bank") -> str:
+        if dataset_id != "bank":
+            return "v2"
+        benchmark_name = str(getattr(benchmark, "benchmark_name", "") or "").lower()
+        if "v2" in benchmark_name:
+            return "v2"
+        if "v3" in benchmark_name:
+            return "v3"
+        if "_v2" in str(self.benchmark_path).lower():
+            return "v2"
+        return self.parser_schema_version
 
 
 def classify_parser_failure_cause(*, api_error: str | None, message_text: str) -> str | None:
@@ -368,11 +410,11 @@ def _primary_subject_label(dataset_package) -> str:
     return "bank profile"
 
 
-def _primary_schema_name(dataset_package) -> str:
+def _primary_schema_name(dataset_package, *, schema_version: str | None = None) -> str:
     schema_name = getattr(dataset_package, "primary_response_schema_name", None)
     if callable(schema_name):
         return str(schema_name())
-    return DEFAULT_RESPONSE_SCHEMA_NAME
+    return response_schema_name_for_version(schema_version)
 
 
 def _refinement_schema_name(dataset_package) -> str:

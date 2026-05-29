@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from llm.src.conversation.orchestrator import BankConversationOrchestrator
+from llm.src.refinement.orchestrator import ConstraintRefinementOrchestrator
+from llm.src.runtime.orchestrator import RuntimeOrchestrator
 
 
 @dataclass(frozen=True)
@@ -771,6 +773,159 @@ def test_conversation_runtime_path_recovers_constraint_spec_and_emits_parser_qua
     assert result.parser_quality_metadata["flags"]["canonical_pass_after_quality"] is True
     assert "constraint_spec_recovered" in result.parser_quality_metadata["reason_codes"]
     assert result.builder_result.provenance["parser_quality"] == result.parser_quality_metadata
+
+
+def test_conversation_runtime_path_derives_policy_override_from_constraint_spec(sample_benchmark, tmp_path):
+    class RecordingRuntimeOrchestrator(StubRuntimeOrchestrator):
+        def __init__(self, payload: dict) -> None:
+            super().__init__(payload)
+            self.requests: list[dict] = []
+
+        def handle(self, request, include_debug_trace: bool = False):
+            self.requests.append(dict(request))
+            return super().handle(request, include_debug_trace=include_debug_trace)
+
+    adapter = StubParserAdapter(
+        parse_result=StubResult(
+            message_text=(
+                '{"task":"extract_cf_request","status":"complete","cf_request":'
+                '{"Income":72,"Family":1,"CCAvg":4.8,"Education":2,"Mortgage":200,'
+                '"SecuritiesAccount":1,"CDAccount":1,"Online":0,"CreditCard":0},'
+                '"constraint_spec":{"disallowed_changes":["Income"],"numeric_bounds":{"CCAvg":{"max":4.85}}},'
+                '"missing_fields":[],"conflicts":[],"notes":[]}'
+            )
+        )
+    )
+    runtime_orchestrator = RecordingRuntimeOrchestrator(
+        {
+            "dataset": "bank",
+            "controller_state": "TERMINAL_SUCCESS",
+            "prediction": {"predicted_label": 1, "predicted_proba": 0.95},
+            "counterfactual": None,
+            "reason_codes": ["NO_RECOURSE_NEEDED"],
+        }
+    )
+    orchestrator = BankConversationOrchestrator(
+        parser_adapter=adapter,
+        runtime_orchestrator=runtime_orchestrator,
+        benchmark=sample_benchmark,
+        output_root=tmp_path,
+    )
+
+    result = orchestrator.run_turn(
+        user_input=(
+            "Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, "
+            "SecuritiesAccount yes, CDAccount yes, Online no, CreditCard no. "
+            "Do not change Income and keep average card spending at most 4.85."
+        ),
+        save_artifacts=False,
+    )
+
+    assert result.stage == "RUNTIME_SUCCESS"
+    assert len(runtime_orchestrator.requests) == 1
+    runtime_request = runtime_orchestrator.requests[0]
+    assert runtime_request["constraint_spec"] == {
+        "disallowed_changes": ["Income"],
+        "numeric_bounds": {"CCAvg": {"max": 4.85}},
+    }
+    assert runtime_request["policy_override"]["f2change"] == ["CCAvg", "Mortgage", "CDAccount", "Online"]
+    assert abs(runtime_request["policy_override"]["uf"]["CCAvg"] - 0.05) < 1e-9
+    assert abs(runtime_request["policy_override"]["step"]["CCAvg"] - 0.05) < 1e-9
+    assert result.builder_result is not None
+    assert result.builder_result.runtime_request["policy_override"] == runtime_request["policy_override"]
+
+
+def test_refinement_runtime_path_derives_policy_override_from_feedback_delta(sample_benchmark, tmp_path):
+    class RecordingRefinementRuntime:
+        def __init__(self) -> None:
+            base = RuntimeOrchestrator(runtime_mode="stable_demo")
+            self.dataset_registry = base.dataset_registry
+            self.requests: list[dict] = []
+
+        def handle(self, request, include_debug_trace: bool = False):
+            del include_debug_trace
+            self.requests.append(dict(request))
+            return StubRuntimeResponse(
+                {
+                    "dataset": "bank",
+                    "controller_state": "TERMINAL_SUCCESS",
+                    "prediction": {"predicted_label": 1, "predicted_proba": 0.95},
+                    "counterfactual": None,
+                    "reason_codes": ["NO_RECOURSE_NEEDED"],
+                    "runtime_mode": "stable_demo",
+                    "invariant_validation": {
+                        "status": "skipped_no_counterfactual",
+                        "public_safe": True,
+                        "reason_codes": [],
+                        "validated_summary_type": "no_recourse_needed",
+                        "validated_changed_fields": [],
+                        "details": {"reason": "no_counterfactual_required"},
+                    },
+                    "debug_trace": {
+                        "runtime_mode": "stable_demo",
+                        "state_trace": ["READY_FOR_PREDICTION", "TERMINAL_SUCCESS"],
+                        "service_errors": [],
+                        "ufce_methods": [],
+                    },
+                }
+            )
+
+    parser = StubParserAdapter(
+        parse_result=StubResult(
+            message_text='{"task":"extract_cf_request","status":"partial","cf_request":{},"missing_fields":[],"conflicts":[],"notes":[]}'
+        ),
+        refinement_parse_result=StubResult(
+            message_text=(
+                '{"task":"extract_constraint_feedback","status":"apply",'
+                '"constraint_feedback_delta":{"add_blocked_fields":["Income"]},'
+                '"ambiguities":[],"unsupported_feedback":[],"notes":[]}'
+            )
+        ),
+    )
+    runtime = RecordingRefinementRuntime()
+    orchestrator = ConstraintRefinementOrchestrator(
+        parser_adapter=parser,
+        runtime_orchestrator=runtime,
+        benchmark=sample_benchmark,
+        output_root=tmp_path,
+        model_alias="stub-model",
+    )
+
+    _turn, payload = orchestrator.run_turn(
+        user_feedback="Do not change Income.",
+        dataset_id="bank",
+        active_constraint_spec={},
+        last_runtime_request={
+            "dataset": "bank",
+            "profile": {
+                "Income": 72,
+                "Family": 1,
+                "CCAvg": 4.8,
+                "Education": 2,
+                "Mortgage": 200,
+                "SecuritiesAccount": 1,
+                "CDAccount": 1,
+                "Online": 0,
+                "CreditCard": 0,
+            },
+        },
+        parent_terminal_turn_id="turn-parent",
+        parent_refinement_revision_index=None,
+        refinement_revision_index=1,
+        refinement_rounds_used=1,
+        refinement_round_limit=3,
+        parent_public_state="RUNTIME_SUCCESS",
+        parent_case_completion_reason="runtime_success",
+        pending_refinement_clarification=None,
+        save_artifacts=False,
+    )
+
+    assert len(runtime.requests) == 1
+    assert runtime.requests[0]["constraint_spec"] == {"disallowed_changes": ["Income"]}
+    assert runtime.requests[0]["policy_override"] == {
+        "f2change": ["CCAvg", "Mortgage", "CDAccount", "Online"],
+    }
+    assert payload["last_runtime_request"]["policy_override"] == runtime.requests[0]["policy_override"]
 
 
 def test_conversation_bank_session_keeps_complete_profile_with_graduate_wording(sample_benchmark, tmp_path):

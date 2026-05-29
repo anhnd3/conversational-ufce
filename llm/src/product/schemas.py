@@ -51,6 +51,7 @@ class SessionSummary(ProductBaseModel):
     case_completion_reason: Optional[str]
     restart_required: bool
     active_constraint_spec: Optional[Dict[str, Any]]
+    active_policy_override: Optional[Dict[str, Any]] = None
     refinement_revision_index: int
     refinement_rounds_used: int
     refinement_round_limit: int
@@ -192,6 +193,7 @@ class TurnResponse(ProductBaseModel):
     parent_terminal_turn_id: Optional[str]
     parent_refinement_revision_index: Optional[int]
     active_constraint_spec: Optional[Dict[str, Any]]
+    active_policy_override: Optional[Dict[str, Any]] = None
     constraint_feedback_delta: Optional[Dict[str, Any]]
     refinement_rounds_used: Optional[int]
     refinement_round_limit: Optional[int]
@@ -236,6 +238,8 @@ class VersionResponse(ProductBaseModel):
 
 class MessageCreateRequest(ProductBaseModel):
     user_input: str
+    constraint_spec: Optional[Dict[str, Any]] = None
+    policy_override: Optional[Dict[str, Any]] = None
 
 
 class SessionCreateRequest(ProductBaseModel):

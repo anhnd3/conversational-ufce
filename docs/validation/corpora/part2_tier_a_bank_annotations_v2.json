@@ -1,0 +1,379 @@
+{
+  "annotation_schema_version": "part2_tier_a_annotation_schema_v1",
+  "case_count": 20,
+  "cases": [
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, and my education level is 2. I have a mortgage of 200. I have a securities account, I have a CD account, I do not use online banking, and I do not own a bank credit card. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, and my education level is 2. I have a mortgage of 200. I have a securities account, I have a CD account, I do not use online banking, and I do not own a bank credit card. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, and my education level is 2. I have a mortgage of 200. I have a securities account, I have a CD account, I do not use online banking, and I do not own a bank credit card. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, and my education level is 2. I have a mortgage of 200. I have a securities account, I have a CD account, I do not use online banking, and I do not own a bank credit card. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-01-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 72, live in a family of 1, spend about 4.8 on my credit card each month, and my education level is 2. I have a mortgage of 200. I have a securities account, I have a CD account, I do not use online banking, and I do not own a bank credit card. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-01-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-01",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 68, live in a family of 2, spend about 3.5 on my credit card each month, and my education level is 1. I have a mortgage of 90. I do not have a securities account, I do not have a CD account, I use online banking, and I own a bank credit card. Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-02",
+      "expected_constraint_spec": {
+        "disallowed_changes": [
+          "Mortgage"
+        ]
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 68, live in a family of 2, spend about 3.5 on my credit card each month, and my education level is 1. I have a mortgage of 90. I do not have a securities account, I do not have a CD account, I use online banking, and I own a bank credit card. Do not change Mortgage.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-03",
+      "expected_constraint_spec": {
+        "numeric_bounds": {
+          "Mortgage": {
+            "max": 120
+          }
+        }
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 68, live in a family of 2, spend about 3.5 on my credit card each month, and my education level is 1. I have a mortgage of 90. I do not have a securities account, I do not have a CD account, I use online banking, and I own a bank credit card. Keep Mortgage at or below 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-04",
+      "expected_constraint_spec": {
+        "max_changed_features": 1
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 68, live in a family of 2, spend about 3.5 on my credit card each month, and my education level is 1. I have a mortgage of 90. I do not have a securities account, I do not have a CD account, I use online banking, and I own a bank credit card. Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": null,
+      "annotation_type": "initial_constraint_spec",
+      "case_id": "TIERA-INIT-02-05",
+      "expected_constraint_spec": {
+        "prefer_fewer_changes": true
+      },
+      "expected_delta": null,
+      "group": "M6",
+      "input_text": "I earn 68, live in a family of 2, spend about 3.5 on my credit card each month, and my education level is 1. I have a mortgage of 90. I do not have a securities account, I do not have a CD account, I use online banking, and I own a bank credit card. Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "initial_constraint_spec",
+        "explicit_semantic_nl"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-01",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "add_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Do not change Income.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {
+        "disallowed_changes": [
+          "Income"
+        ]
+      },
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-02",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "remove_blocked_fields": [
+          "Income"
+        ]
+      },
+      "group": "M36",
+      "input_text": "Income can change again.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-03",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_max_changed_features": 1
+      },
+      "group": "M36",
+      "input_text": "Change at most one thing.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-04",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_prefer_fewer_changes": true
+      },
+      "group": "M36",
+      "input_text": "Prefer smaller edits.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    },
+    {
+      "active_constraint_spec": {},
+      "annotation_type": "refinement_delta",
+      "case_id": "TIERA-REF-02-05",
+      "expected_constraint_spec": null,
+      "expected_delta": {
+        "set_numeric_bounds": {
+          "Mortgage": {
+            "max": 120
+          }
+        }
+      },
+      "group": "M36",
+      "input_text": "Mortgage must stay under 120.",
+      "pending_refinement_clarification": null,
+      "tags": [
+        "bank",
+        "refinement_delta"
+      ]
+    }
+  ],
+  "corpus_sha256": "3049687af124c27c67388393fcfdfcbeb5bc25bb35bdde0e295a6a8c2367c8ac",
+  "corpus_version": "part2_tier_a_bank_annotations_v2",
+  "scorer_output_schema_version": "part2_tier_a_scorer_output_schema_v1"
+}

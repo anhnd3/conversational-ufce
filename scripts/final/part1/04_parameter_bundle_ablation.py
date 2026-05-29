@@ -37,6 +37,10 @@ from scripts.archieve.reproduce_full_table7_result import (
     mad_inverse_inplace,
     mad_transform,
 )
+from scripts.final.part1._movie_proximity import (
+    mean_sem,
+    pairwise_normalized_l2_0_100_values,
+)
 from ufce import UFCE
 from ufce.core.cfmethods import sfexp, dfexp, tfexp
 from ufce.core.data_processing import classify_dataset_getModel
@@ -1067,17 +1071,6 @@ def _dummy_frame(features: Sequence[str]) -> pd.DataFrame:
     return pd.DataFrame(columns=list(features))
 
 
-def _movie_contprox_frame(frame: pd.DataFrame, context: DatasetContext) -> pd.DataFrame:
-    if not isinstance(frame, pd.DataFrame) or frame.empty:
-        return frame
-    if context.dataset != "movie" or context.movie_distance_scaler is None:
-        return frame
-    if not all(feature in frame.columns for feature in context.features):
-        return frame
-    projected = frame.loc[:, context.features].copy()
-    return apply_distance_scaler(projected, context.movie_distance_scaler)
-
-
 def evaluate_ufce_only(
     *,
     context: DatasetContext,
@@ -1108,30 +1101,32 @@ def evaluate_ufce_only(
     if len(context.catf) == 0:
         cat_means = [np.nan] * 6
 
-    cont_inputs = {
-        "onecfs": _movie_contprox_frame(onecfs, context),
-        "onetest": _movie_contprox_frame(onetest, context),
-        "twocfs": _movie_contprox_frame(twocfs, context),
-        "twotest": _movie_contprox_frame(twotest, context),
-        "threecfs": _movie_contprox_frame(threecfs, context),
-        "threetest": _movie_contprox_frame(threetest, context),
-        "dummy": _movie_contprox_frame(dummy, context),
-        "xtest": _movie_contprox_frame(context.Xtest, context),
-    }
-    cont_means, _cont_stds = Contproximity(
-        cont_inputs["onecfs"],
-        cont_inputs["onetest"],
-        cont_inputs["twocfs"],
-        cont_inputs["twotest"],
-        cont_inputs["threecfs"],
-        cont_inputs["threetest"],
-        cont_inputs["dummy"],
-        cont_inputs["dummy"],
-        cont_inputs["dummy"],
-        cont_inputs["dummy"],
-        cont_inputs["xtest"],
-        context.numf,
-    )
+    if context.dataset == "movie" and context.movie_distance_scaler is not None:
+        cont_means = []
+        for factual_df, candidate_df in [(onetest, onecfs), (twotest, twocfs), (threetest, threecfs)]:
+            values = pairwise_normalized_l2_0_100_values(
+                factual_df,
+                candidate_df,
+                context.numf,
+                context.movie_distance_scaler,
+            )
+            mean_value, _std_value = mean_sem(values)
+            cont_means.append(mean_value)
+    else:
+        cont_means, _cont_stds = Contproximity(
+            onecfs,
+            onetest,
+            twocfs,
+            twotest,
+            threecfs,
+            threetest,
+            dummy,
+            dummy,
+            dummy,
+            dummy,
+            context.Xtest,
+            context.numf,
+        )
     spar_means, _spar_stds = Sparsity(
         onecfs,
         onetest,

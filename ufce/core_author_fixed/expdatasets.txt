@@ -1,0 +1,738 @@
+==============Bank==========
+============================
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.69 &       0.00 &       0.00 &      0.75 &    0.70 &      0.06 &      0.00 &      0.00 &     0.07 &   0.05 \\
+1 &       0.74 &       0.00 &       0.00 &      0.76 &    0.63 &      0.07 &      0.00 &      0.00 &     0.07 &   0.06 \\
+2 &       0.61 &       0.00 &       0.02 &      0.88 &    0.73 &      0.06 &      0.00 &      0.02 &     0.04 &   0.05 \\
+3 &       0.65 &       0.00 &       0.01 &      0.78 &    0.62 &      0.07 &      0.00 &      0.01 &     0.07 &   0.06 \\
+4 &       0.63 &       0.00 &       0.00 &      0.70 &    0.65 &      0.08 &      0.00 &      0.00 &     0.08 &   0.05 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.00 &      25.45 &      33.70 &    164.30 &  126.42 &      0.00 &      1.42 &      2.55 &    24.33 &  13.93 \\
+1 &       0.00 &      25.31 &      38.76 &    150.15 &  139.65 &      0.00 &      1.52 &      2.51 &    23.04 &  15.03 \\
+2 &       0.00 &      26.07 &      37.04 &    123.85 &  122.96 &      0.00 &      1.80 &      2.78 &    19.76 &  12.04 \\
+3 &       0.00 &      25.18 &      37.26 &    140.53 &  133.04 &      0.00 &      1.66 &      3.06 &    21.32 &  11.75 \\
+4 &       0.09 &      22.30 &      33.22 &    135.67 &  134.62 &      0.08 &      1.42 &      2.46 &    18.89 &  12.75 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.00 &       1.90 &       2.24 &      6.22 &    5.50 &      0.00 &      0.30 &      0.56 &     1.44 &   1.20 \\
+1 &       1.00 &       1.79 &       2.27 &      6.10 &    5.38 &      0.00 &      0.41 &      0.68 &     1.23 &   1.23 \\
+2 &       1.00 &       1.73 &       2.25 &      6.55 &    5.44 &      0.00 &      0.45 &      0.61 &     0.86 &   1.36 \\
+3 &       1.00 &       1.86 &       2.26 &      6.63 &    5.44 &      0.00 &      0.35 &      0.61 &     0.98 &   1.15 \\
+4 &       1.00 &       1.86 &       2.20 &      6.05 &    5.54 &      0.00 &      0.35 &      0.59 &     1.43 &   1.37 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        19 &        40 &        45 &       23 &     19 &        0 &        0 &        0 &       0 &     0 \\
+1 &        14 &        33 &        45 &       21 &     23 &        0 &        0 &        0 &       0 &     0 \\
+2 &        18 &        33 &        44 &       20 &     26 &        0 &        0 &        0 &       0 &     0 \\
+3 &        14 &        35 &        43 &       19 &     20 &        0 &        0 &        0 &       0 &     0 \\
+4 &        15 &        35 &        44 &       22 &     19 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        16 &        40 &        45 &       19 &     49 &        0 &        0 &        0 &       0 &     0 \\
+1 &         9 &        33 &        45 &       14 &     49 &        0 &        0 &        0 &       0 &     0 \\
+2 &        13 &        33 &        44 &       16 &     49 &        0 &        0 &        0 &       0 &     0 \\
+3 &         8 &        35 &        43 &        8 &     49 &        0 &        0 &        0 &       0 &     0 \\
+4 &        14 &        35 &        44 &       19 &     49 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        16 &        40 &        45 &       19 &     19 &        0 &        0 &        0 &       0 &     0 \\
+1 &         9 &        33 &        45 &       14 &     22 &        0 &        0 &        0 &       0 &     0 \\
+2 &        13 &        33 &        44 &       16 &     25 &        0 &        0 &        0 &       0 &     0 \\
+3 &         8 &        35 &        43 &        8 &     19 &        0 &        0 &        0 &       0 &     0 \\
+4 &        14 &        35 &        44 &       19 &     18 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+==================BUPA=========================
+================================
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &       nan &    0.00 &      0.00 &      0.00 &      0.00 &      nan &   0.00 \\
+1 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+2 &       0.00 &       0.00 &       0.00 &       nan &    0.00 &      0.00 &      0.00 &      0.00 &      nan &   0.00 \\
+3 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+4 &       0.00 &       0.00 &       0.00 &       nan &    0.00 &      0.00 &      0.00 &      0.00 &      nan &   0.00 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       6.57 &       5.95 &       8.62 &       nan &   47.42 &      1.14 &      0.69 &      1.54 &      nan &  11.50 \\
+1 &       8.94 &       6.58 &       9.03 &     23.31 &   49.62 &      1.58 &      0.63 &      0.79 &     5.78 &   9.76 \\
+2 &      10.35 &       6.92 &       9.47 &       nan &   46.36 &      1.82 &      0.47 &      0.98 &      nan &   7.58 \\
+3 &       8.05 &       6.50 &       7.13 &     54.62 &   61.04 &      1.43 &      0.88 &      0.81 &     0.00 &  11.61 \\
+4 &      11.09 &       5.84 &       7.33 &       nan &   50.18 &      2.12 &      0.51 &      0.59 &      nan &  14.11 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.00 &       1.93 &       2.75 &       nan &    5.79 &      0.00 &      0.26 &      0.43 &      nan &   0.41 \\
+1 &       0.94 &       1.82 &       2.62 &      5.50 &    5.50 &      0.23 &      0.38 &      0.49 &     0.50 &   0.69 \\
+2 &       1.00 &       1.84 &       2.62 &       nan &    5.70 &      0.00 &      0.36 &      0.49 &      nan &   0.46 \\
+3 &       1.00 &       1.76 &       2.33 &      6.00 &    5.74 &      0.00 &      0.42 &      0.62 &     0.00 &   0.44 \\
+4 &       1.00 &       1.91 &       2.38 &       nan &    5.45 &      0.00 &      0.29 &      0.70 &      nan &   1.16 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        14 &        14 &         8 &        0 &     11 &        0 &        0 &        0 &       0 &     0 \\
+1 &        18 &        17 &        13 &        2 &     11 &        0 &        0 &        0 &       0 &     0 \\
+2 &        20 &        19 &        13 &        0 &     11 &        0 &        0 &        0 &       0 &     0 \\
+3 &        19 &        17 &        12 &        1 &     12 &        0 &        0 &        0 &       0 &     0 \\
+4 &        11 &        11 &         8 &        0 &      4 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        13 &        13 &         7 &        0 &     13 &        0 &        0 &        0 &       0 &     0 \\
+1 &        16 &        16 &        12 &        2 &     17 &        0 &        0 &        0 &       0 &     0 \\
+2 &        19 &        18 &        13 &        0 &     19 &        0 &        0 &        0 &       0 &     0 \\
+3 &        16 &        15 &        11 &        1 &     16 &        0 &        0 &        0 &       0 &     0 \\
+4 &        10 &         9 &         7 &        0 &     10 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        13 &        13 &         7 &        0 &     10 &        0 &        0 &        0 &       0 &     0 \\
+1 &        16 &        16 &        12 &        2 &     10 &        0 &        0 &        0 &       0 &     0 \\
+2 &        19 &        18 &        13 &        0 &     11 &        0 &        0 &        0 &       0 &     0 \\
+3 &        16 &        15 &        11 &        1 &     11 &        0 &        0 &        0 &       0 &     0 \\
+4 &        10 &         9 &         7 &        0 &      4 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+========================Wine=========================
+==============================
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+1 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+2 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+3 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+4 &       0.00 &       0.00 &       0.00 &      0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &   0.00 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       9.89 &       0.51 &       2.20 &     44.95 &   44.63 &      4.44 &      0.04 &      0.25 &     4.30 &   4.25 \\
+1 &      16.57 &       0.58 &       2.55 &     42.41 &   41.52 &      6.09 &      0.11 &      0.33 &     4.81 &   4.72 \\
+2 &       5.15 &       0.44 &       2.36 &     37.54 &   38.05 &      3.02 &      0.03 &      0.26 &     3.94 &   4.02 \\
+3 &      19.31 &       0.59 &       2.50 &     43.91 &   45.06 &      6.20 &      0.04 &      0.30 &     4.30 &   4.26 \\
+4 &      25.34 &       0.49 &       1.83 &     50.26 &   50.33 &      6.95 &      0.04 &      0.26 &     4.85 &   4.84 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.00 &       1.94 &       2.92 &     10.86 &   10.84 &      0.00 &      0.24 &      0.27 &     0.35 &   0.42 \\
+1 &       1.00 &       1.86 &       2.84 &     10.73 &   10.71 &      0.00 &      0.40 &      0.37 &     0.49 &   0.49 \\
+2 &       1.00 &       1.76 &       2.74 &     10.82 &   10.84 &      0.00 &      0.51 &      0.48 &     0.38 &   0.37 \\
+3 &       1.00 &       1.98 &       2.84 &     10.86 &   10.88 &      0.00 &      0.14 &      0.37 &     0.35 &   0.32 \\
+4 &       1.00 &       1.88 &       2.66 &     10.82 &   10.84 &      0.00 &      0.43 &      0.59 &     0.48 &   0.42 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        41 &        50 &        50 &       50 &      8 &        0 &        0 &        0 &       0 &     0 \\
+1 &        46 &        50 &        50 &       49 &     12 &        0 &        0 &        0 &       0 &     0 \\
+2 &        44 &        50 &        50 &       50 &     16 &        0 &        0 &        0 &       0 &     0 \\
+3 &        45 &        50 &        50 &       50 &      6 &        0 &        0 &        0 &       0 &     0 \\
+4 &        43 &        50 &        50 &       50 &     11 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        24 &        42 &        43 &       37 &     44 &        0 &        0 &        0 &       0 &     0 \\
+1 &        29 &        42 &        42 &       40 &     41 &        0 &        0 &        0 &       0 &     0 \\
+2 &        24 &        42 &        40 &       44 &     45 &        0 &        0 &        0 &       0 &     0 \\
+3 &        31 &        43 &        36 &       36 &     44 &        0 &        0 &        0 &       0 &     0 \\
+4 &        32 &        46 &        41 &       42 &     46 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        24 &        42 &        43 &       37 &      8 &        0 &        0 &        0 &       0 &     0 \\
+1 &        29 &        42 &        42 &       40 &     12 &        0 &        0 &        0 &       0 &     0 \\
+2 &        24 &        42 &        40 &       44 &     15 &        0 &        0 &        0 &       0 &     0 \\
+3 &        31 &        43 &        36 &       36 &      6 &        0 &        0 &        0 &       0 &     0 \\
+4 &        32 &        46 &        41 &       42 &     11 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+=================================Movie=========================
+=================================
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.50 &    0.25 &      0.00 &      0.00 &      0.00 &     0.10 &   0.11 \\
+1 &       0.00 &       0.00 &       0.00 &      0.44 &    0.48 &      0.00 &      0.00 &      0.00 &     0.10 &   0.11 \\
+2 &       0.00 &       0.00 &       0.00 &      0.50 &    0.48 &      0.00 &      0.00 &      0.00 &     0.10 &   0.11 \\
+3 &       0.00 &       0.00 &       0.00 &      0.46 &    0.67 &      0.00 &      0.00 &      0.00 &     0.10 &   0.10 \\
+4 &       0.00 &       0.00 &       0.00 &      0.41 &    0.38 &      0.00 &      0.00 &      0.00 &     0.09 &   0.10 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &    armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &    arstd \\
+\midrule
+0 &   34740.74 &       0.39 &       4.21 &  66001.13 &  87065.96 &    410.47 &      0.06 &      1.24 &  9953.94 & 15666.56 \\
+1 &   34444.28 &       0.53 &       4.95 &  83873.13 & 100954.53 &    479.09 &      0.07 &      1.29 &  9246.26 & 11970.36 \\
+2 &   34199.25 &       0.67 &       4.25 &  72094.87 &  65678.72 &    349.35 &      0.08 &      1.19 &  9427.05 &  8454.61 \\
+3 &   34337.89 &       0.47 &       5.12 &  69800.09 &  82598.45 &    532.45 &      0.06 &      1.27 & 11249.47 & 11517.83 \\
+4 &   34196.03 &       0.47 &       5.71 &  75672.08 &  70062.64 &    365.84 &      0.07 &      1.08 & 10103.11 & 12012.38 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.00 &       1.92 &       3.00 &     17.17 &   16.94 &      0.00 &      0.27 &      0.00 &     0.75 &   0.66 \\
+1 &       1.00 &       2.00 &       3.00 &     16.88 &   16.71 &      0.00 &      0.00 &      0.00 &     0.95 &   1.16 \\
+2 &       1.00 &       2.00 &       3.00 &     17.25 &   17.19 &      0.00 &      0.00 &      0.00 &     0.60 &   0.59 \\
+3 &       1.00 &       2.00 &       3.00 &     16.96 &   17.14 &      0.00 &      0.00 &      0.00 &     0.84 &   0.99 \\
+4 &       1.00 &       2.00 &       3.00 &     16.90 &   16.88 &      0.00 &      0.00 &      0.00 &     0.66 &   0.83 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        19 &        13 &        17 &       24 &      8 &        0 &        0 &        0 &       0 &     0 \\
+1 &        19 &        10 &        17 &       25 &      8 &        0 &        0 &        0 &       0 &     0 \\
+2 &        20 &        12 &        19 &       24 &     10 &        0 &        0 &        0 &       0 &     0 \\
+3 &        17 &        10 &        15 &       24 &      8 &        0 &        0 &        0 &       0 &     0 \\
+4 &        23 &        14 &        22 &       29 &     12 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &         0 &        13 &        17 &       24 &     16 &        0 &        0 &        0 &       0 &     0 \\
+1 &         0 &        10 &        17 &       25 &     21 &        0 &        0 &        0 &       0 &     0 \\
+2 &         0 &        12 &        19 &       23 &     20 &        0 &        0 &        0 &       0 &     0 \\
+3 &         0 &        10 &        15 &       24 &     21 &        0 &        0 &        0 &       0 &     0 \\
+4 &         0 &        14 &        20 &       28 &     23 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &         0 &        13 &        17 &       24 &      8 &        0 &        0 &        0 &       0 &     0 \\
+1 &         0 &        10 &        17 &       25 &      8 &        0 &        0 &        0 &       0 &     0 \\
+2 &         0 &        12 &        19 &       23 &     10 &        0 &        0 &        0 &       0 &     0 \\
+3 &         0 &        10 &        15 &       24 &      8 &        0 &        0 &        0 &       0 &     0 \\
+4 &         0 &        14 &        20 &       28 &     12 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+=========================================Grad========================
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.39 &    0.39 &      0.00 &      0.00 &      0.00 &     0.11 &   0.11 \\
+1 &       0.00 &       0.00 &       0.00 &      0.62 &    0.38 &      0.00 &      0.00 &      0.00 &     0.13 &   0.13 \\
+2 &       0.00 &       0.00 &       0.00 &      0.33 &    0.22 &      0.00 &      0.00 &      0.00 &     0.16 &   0.14 \\
+3 &       0.00 &       0.00 &       0.00 &      0.33 &    0.33 &      0.00 &      0.00 &      0.00 &     0.16 &   0.16 \\
+4 &       0.00 &       0.00 &       0.00 &      0.86 &    0.71 &      0.00 &      0.00 &      0.00 &     0.13 &   0.17 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.37 &       0.52 &       5.31 &     24.38 &   21.88 &      0.06 &      0.08 &      0.91 &     2.51 &   2.53 \\
+1 &       1.24 &       0.53 &       4.25 &     21.04 &   19.13 &      0.05 &      0.07 &      0.99 &     3.64 &   3.00 \\
+2 &       1.49 &       0.42 &       2.37 &     22.16 &   21.57 &      0.06 &      0.09 &      0.98 &     4.24 &   4.16 \\
+3 &       1.36 &       0.63 &       2.86 &     20.82 &   20.10 &      0.07 &      0.09 &      0.88 &     3.82 &   4.04 \\
+4 &       1.38 &       0.11 &       1.83 &     18.40 &   18.36 &      0.16 &      0.07 &      0.55 &     2.76 &   2.78 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  arstd \\
+\midrule
+0 &       1.00 &       1.06 &       2.22 &      6.11 &    6.17 &      0.00 &      0.70 &      0.71 &     0.66 &   0.60 \\
+1 &       1.00 &       1.08 &       2.38 &      6.38 &    6.23 &      0.00 &      0.62 &      0.74 &     0.74 &   0.70 \\
+2 &       1.00 &       1.11 &       2.00 &      5.56 &    5.22 &      0.00 &      0.74 &      0.67 &     1.17 &   1.23 \\
+3 &       1.00 &       1.33 &       2.11 &      5.67 &    5.67 &      0.00 &      0.67 &      0.57 &     1.41 &   1.15 \\
+4 &       1.00 &       0.29 &       1.57 &      6.71 &    6.71 &      0.00 &      0.45 &      0.73 &     0.45 &   0.45 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       18 &     18 &        0 &        0 &        0 &       0 &     0 \\
+1 &        13 &        13 &        13 &       13 &     13 &        0 &        0 &        0 &       0 &     0 \\
+2 &         9 &         9 &         9 &        9 &      9 &        0 &        0 &        0 &       0 &     0 \\
+3 &         9 &         9 &         9 &        9 &      9 &        0 &        0 &        0 &       0 &     0 \\
+4 &         7 &         7 &         7 &        7 &      7 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & armean & ufce1std & ufce2std & ufce3std & dicestd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       16 &     18 &        0 &        0 &        0 &       0 &     0 \\
+1 &        13 &        13 &        13 &       10 &     13 &        0 &        0 &        0 &       0 &     0 \\
+2 &         9 &         9 &         9 &        7 &      9 &        0 &        0 &        0 &       0 &     0 \\
+3 &         9 &         9 &         9 &        6 &      9 &        0 &        0 &        0 &       0 &     0 \\
+4 &         7 &         7 &         7 &        6 &      7 &        0 &        0 &        0 &       0 &     0 \\
+\bottomrule
+\end{tabular}
+
+
+
+=====================
+==============
+=====================
+=====================
+==============
+=================
+=======================================Grad====================
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.44 &        0.06 &    0.39 &      0.00 &      0.00 &      0.00 &     0.12 &       0.05 &   0.11 \\
+1 &       0.00 &       0.00 &       0.00 &      0.38 &        0.08 &    0.38 &      0.00 &      0.00 &      0.00 &     0.13 &       0.07 &   0.13 \\
+2 &       0.00 &       0.00 &       0.00 &      0.22 &        0.22 &    0.22 &      0.00 &      0.00 &      0.00 &     0.14 &       0.14 &   0.14 \\
+3 &       0.00 &       0.00 &       0.00 &      0.22 &        0.22 &    0.33 &      0.00 &      0.00 &      0.00 &     0.14 &       0.14 &   0.16 \\
+4 &       0.00 &       0.00 &       0.00 &      0.71 &        0.00 &    0.71 &      0.00 &      0.00 &      0.00 &     0.17 &       0.00 &   0.17 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.37 &       0.52 &       3.10 &     24.31 &        2.01 &   21.88 &      0.06 &      0.08 &      0.94 &     2.50 &       0.21 &   2.53 \\
+1 &       1.24 &       0.47 &       3.74 &     21.17 &        1.94 &   19.13 &      0.05 &      0.08 &      1.08 &     3.66 &       0.30 &   3.00 \\
+2 &       1.49 &       0.39 &       2.99 &     21.99 &        1.71 &   21.57 &      0.06 &      0.08 &      1.21 &     4.31 &       0.34 &   4.16 \\
+3 &       1.36 &       0.61 &       1.92 &     20.95 &        1.94 &   20.10 &      0.07 &      0.09 &      0.57 &     3.87 &       0.29 &   4.04 \\
+4 &       1.38 &       0.11 &       2.05 &     18.37 &        1.56 &   18.36 &      0.16 &      0.07 &      0.70 &     2.77 &       0.39 &   2.78 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.00 &       1.06 &       2.00 &      6.17 &        1.67 &    6.17 &      0.00 &      0.70 &      0.67 &     0.69 &       0.47 &   0.60 \\
+1 &       1.00 &       1.00 &       2.08 &      6.15 &        1.46 &    6.23 &      0.00 &      0.55 &      0.62 &     0.77 &       0.50 &   0.70 \\
+2 &       1.00 &       1.11 &       2.22 &      5.11 &        1.44 &    5.22 &      0.00 &      0.74 &      0.63 &     1.37 &       0.50 &   1.23 \\
+3 &       1.00 &       1.22 &       2.44 &      5.33 &        1.67 &    5.67 &      0.00 &      0.63 &      0.68 &     1.63 &       0.47 &   1.15 \\
+4 &       1.00 &       0.29 &       1.43 &      6.57 &        1.43 &    6.71 &      0.00 &      0.45 &      0.49 &     0.49 &       0.49 &   0.45 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       17 &         18 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       12 &         13 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        9 &          9 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        8 &          9 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          7 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       18 &         15 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       13 &          8 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        9 &          8 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        9 &          8 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          6 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       17 &         15 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       12 &          8 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        9 &          8 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        8 &          8 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          6 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+==========================
+==========
+
+BANK ======================
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.69 &       0.00 &       0.00 &      0.71 &        0.68 &    0.70 &      0.06 &      0.00 &      0.00 &     0.05 &       0.05 &   0.05 \\
+1 &       0.74 &       0.00 &       0.00 &      0.71 &        0.67 &    0.63 &      0.07 &      0.00 &      0.00 &     0.05 &       0.04 &   0.06 \\
+2 &       0.61 &       0.00 &       0.02 &      0.77 &        0.72 &    0.73 &      0.06 &      0.00 &      0.02 &     0.04 &       0.04 &   0.05 \\
+3 &       0.65 &       0.00 &       0.00 &      0.65 &        0.55 &    0.62 &      0.07 &      0.00 &      0.00 &     0.05 &       0.04 &   0.06 \\
+4 &       0.63 &       0.00 &       0.00 &      0.66 &        0.63 &    0.65 &      0.08 &      0.00 &      0.00 &     0.05 &       0.05 &   0.05 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.00 &      22.14 &      42.98 &    128.51 &       15.38 &  126.42 &      0.00 &      2.78 &      2.73 &    14.09 &       2.04 &  13.93 \\
+1 &       0.00 &      23.87 &      43.56 &    146.39 &       14.91 &  139.65 &      0.00 &      3.26 &      2.94 &    14.62 &       2.28 &  15.03 \\
+2 &       0.00 &      24.74 &      40.75 &    127.55 &       14.56 &  122.96 &      0.00 &      3.31 &      3.17 &    12.75 &       2.23 &  12.04 \\
+3 &       0.00 &      23.74 &      44.37 &    138.89 &       15.03 &  133.04 &      0.00 &      3.21 &      3.19 &    11.74 &       2.13 &  11.75 \\
+4 &       0.09 &      26.51 &      37.01 &    139.88 &       23.96 &  134.62 &      0.08 &      3.33 &      3.28 &    12.79 &       8.25 &  12.75 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.00 &       1.95 &       2.21 &      5.82 &        2.10 &    5.50 &      0.00 &      0.22 &      0.67 &     1.21 &       0.55 &   1.20 \\
+1 &       1.00 &       1.87 &       2.18 &      5.74 &        2.17 &    5.38 &      0.00 &      0.33 &      0.65 &     1.43 &       0.56 &   1.23 \\
+2 &       1.00 &       1.79 &       2.04 &      5.90 &        2.34 &    5.44 &      0.00 &      0.46 &      0.59 &     1.19 &       0.70 &   1.36 \\
+3 &       1.00 &       1.93 &       2.33 &      5.84 &        2.26 &    5.44 &      0.00 &      0.25 &      0.55 &     1.14 &       0.81 &   1.15 \\
+4 &       1.00 &       1.84 &       2.13 &      5.76 &        2.23 &    5.54 &      0.00 &      0.37 &      0.54 &     1.29 &       0.95 &   1.37 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        19 &        38 &        42 &       18 &         39 &     19 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        14 &        39 &        44 &       20 &         35 &     23 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        18 &        43 &        46 &       22 &         38 &     26 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        14 &        44 &        46 &       19 &         35 &     20 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        15 &        44 &        46 &       15 &         39 &     19 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        16 &        38 &        42 &       45 &         28 &     49 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &         9 &        39 &        44 &       42 &         20 &     49 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        13 &        43 &        46 &       40 &         25 &     49 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         8 &        44 &        46 &       41 &         20 &     49 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        14 &        44 &        46 &       42 &         29 &     49 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        16 &        38 &        42 &       17 &         28 &     19 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &         9 &        39 &        44 &       15 &         20 &     22 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        13 &        43 &        46 &       16 &         25 &     25 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         8 &        44 &        46 &       14 &         20 &     19 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        14 &        44 &        46 &       12 &         29 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+========================
+=========================WINE================
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+1 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+2 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+3 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+4 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       9.89 &       0.56 &       3.76 &     46.04 &       21.30 &   44.63 &      4.44 &      0.04 &      0.40 &     4.23 &       4.18 &   4.25 \\
+1 &      16.57 &       0.54 &       3.91 &     38.15 &       16.45 &   41.52 &      6.09 &      0.04 &      0.40 &     4.75 &       4.31 &   4.72 \\
+2 &       5.15 &       0.54 &       4.12 &     38.72 &       12.94 &   38.05 &      3.02 &      0.04 &      0.41 &     3.87 &       3.09 &   4.02 \\
+3 &      19.31 &       0.67 &       4.20 &     43.98 &       20.63 &   45.06 &      6.20 &      0.04 &      0.42 &     4.30 &       4.79 &   4.26 \\
+4 &      25.34 &       0.54 &       3.91 &     50.64 &       28.01 &   50.33 &      6.95 &      0.04 &      0.36 &     4.87 &       4.60 &   4.84 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.00 &       1.92 &       2.90 &     10.84 &        1.78 &   10.84 &      0.00 &      0.27 &      0.30 &     0.37 &       0.64 &   0.42 \\
+1 &       1.00 &       1.86 &       2.84 &     10.76 &        2.12 &   10.71 &      0.00 &      0.35 &      0.37 &     0.47 &       1.38 &   0.49 \\
+2 &       1.00 &       1.72 &       2.70 &     10.78 &        1.90 &   10.84 &      0.00 &      0.53 &      0.54 &     0.41 &       0.50 &   0.37 \\
+3 &       1.00 &       1.96 &       2.90 &     10.86 &        1.88 &   10.88 &      0.00 &      0.20 &      0.30 &     0.35 &       0.47 &   0.32 \\
+4 &       1.00 &       1.86 &       2.74 &     10.84 &        1.98 &   10.84 &      0.00 &      0.45 &      0.59 &     0.42 &       0.42 &   0.42 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        41 &        50 &        49 &       11 &         50 &      8 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        46 &        49 &        50 &       11 &         50 &     12 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        44 &        50 &        50 &        8 &         50 &     16 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        45 &        50 &        49 &        7 &         50 &      6 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        43 &        50 &        50 &        8 &         50 &     11 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        24 &        42 &        44 &       35 &         26 &     44 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        29 &        40 &        41 &       29 &         23 &     41 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        24 &        42 &        43 &       37 &         24 &     45 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        31 &        39 &        39 &       28 &         24 &     44 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        32 &        43 &        45 &       34 &         25 &     46 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        24 &        42 &        44 &        8 &         26 &      8 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        29 &        40 &        41 &        8 &         23 &     12 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        24 &        42 &        43 &        7 &         24 &     15 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        31 &        39 &        39 &        5 &         24 &      6 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        32 &        43 &        45 &        6 &         25 &     11 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+==============
+==================BUPA===============
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.00 &         nan &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &        nan &   0.00 \\
+1 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+2 &       0.00 &       0.00 &       0.00 &      0.00 &         nan &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &        nan &   0.00 \\
+3 &       0.00 &       0.00 &       0.00 &      0.00 &        0.00 &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &       0.00 &   0.00 \\
+4 &       0.00 &       0.00 &       0.00 &      0.00 &         nan &    0.00 &      0.00 &      0.00 &      0.00 &     0.00 &        nan &   0.00 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       6.57 &       4.70 &       8.05 &     50.93 &         nan &   47.42 &      1.14 &      0.73 &      0.88 &    12.02 &        nan &  11.50 \\
+1 &       8.94 &       2.35 &       6.95 &     59.49 &        4.10 &   49.62 &      1.58 &      0.69 &      0.94 &     9.50 &       1.77 &   9.76 \\
+2 &      10.35 &       5.37 &       7.93 &     53.74 &         nan &   46.36 &      1.82 &      0.75 &      1.00 &     8.85 &        nan &   7.58 \\
+3 &       8.05 &       5.68 &       8.58 &     71.77 &        3.30 &   61.04 &      1.43 &      0.89 &      0.91 &    10.39 &       0.00 &  11.61 \\
+4 &      11.09 &       6.16 &       8.23 &     60.03 &         nan &   50.18 &      2.12 &      0.98 &      1.18 &    14.79 &        nan &  14.11 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.00 &       1.50 &       2.31 &      5.86 &         nan &    5.79 &      0.00 &      0.50 &      0.61 &     0.35 &        nan &   0.41 \\
+1 &       0.94 &       1.00 &       1.81 &      5.67 &        1.00 &    5.50 &      0.23 &      0.69 &      0.81 &     0.58 &       0.00 &   0.69 \\
+2 &       1.00 &       1.45 &       2.24 &      5.65 &         nan &    5.70 &      0.00 &      0.67 &      0.64 &     0.48 &        nan &   0.46 \\
+3 &       1.00 &       1.53 &       2.38 &      5.68 &        1.00 &    5.74 &      0.00 &      0.60 &      0.62 &     0.46 &       0.00 &   0.44 \\
+4 &       1.00 &       1.73 &       2.56 &      5.27 &         nan &    5.45 &      0.00 &      0.62 &      0.68 &     1.48 &        nan &   1.16 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        14 &        14 &        13 &        7 &          0 &     10 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        18 &        17 &        16 &        6 &          2 &      8 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        20 &        20 &        17 &        6 &          0 &     10 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        19 &        19 &        13 &        4 &          1 &     12 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        11 &        11 &         9 &        2 &          0 &      4 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        13 &        13 &        12 &       12 &          0 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        16 &        16 &        15 &       12 &          2 &     17 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        19 &        19 &        17 &       17 &          0 &     19 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        16 &        16 &        11 &       10 &          1 &     16 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        10 &        10 &         7 &        9 &          0 &     10 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        13 &        13 &        12 &        6 &          0 &     10 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        16 &        16 &        15 &        6 &          2 &     10 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &        19 &        19 &        17 &        6 &          0 &     11 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &        16 &        16 &        11 &        4 &          1 &     11 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &        10 &        10 &         7 &        3 &          0 &      4 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+======================
+==================Grad============
+Mean and St.dev of Cat-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       0.00 &       0.00 &       0.00 &      0.44 &         nan &    0.39 &      0.00 &      0.00 &      0.00 &     0.12 &        nan &   0.11 \\
+1 &       0.00 &       0.00 &       0.00 &      0.38 &        1.00 &    0.38 &      0.00 &      0.00 &      0.00 &     0.13 &       0.00 &   0.13 \\
+2 &       0.00 &       0.00 &       0.00 &      0.11 &        0.00 &    0.22 &      0.00 &      0.00 &      0.00 &     0.10 &       0.00 &   0.14 \\
+3 &       0.00 &       0.00 &       0.00 &      0.33 &         nan &    0.33 &      0.00 &      0.00 &      0.00 &     0.16 &        nan &   0.16 \\
+4 &       0.00 &       0.00 &       0.00 &      0.71 &        0.00 &    0.71 &      0.00 &      0.00 &      0.00 &     0.17 &       0.00 &   0.17 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Cont-Proximity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.37 &       2.26 &       6.10 &     24.37 &         nan &   21.88 &      0.06 &      0.37 &      0.74 &     2.52 &        nan &   2.53 \\
+1 &       1.24 &       1.41 &       3.93 &     20.99 &        0.41 &   19.13 &      0.05 &      0.41 &      0.70 &     3.67 &       0.00 &   3.00 \\
+2 &       1.49 &       1.90 &       5.24 &     22.15 &        0.10 &   21.57 &      0.06 &      0.52 &      0.85 &     4.23 &       0.00 &   4.16 \\
+3 &       1.36 &       3.25 &       4.99 &     20.97 &         nan &   20.10 &      0.07 &      0.42 &      0.99 &     3.89 &        nan &   4.04 \\
+4 &       1.38 &       1.24 &       2.96 &     18.39 &        0.68 &   18.36 &      0.16 &      0.50 &      0.72 &     2.77 &       0.41 &   2.78 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Sparsity: \begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+{} &  ufce1mean &  ufce2mean &  ufce3mean &  dicemean &  diceInmean &  armean &  ufce1std &  ufce2std &  ufce3std &  dicestd &  diceInstd &  arstd \\
+\midrule
+0 &       1.00 &       1.61 &       2.72 &      6.22 &         nan &    6.17 &      0.00 &      0.59 &      0.65 &     0.53 &        nan &   0.60 \\
+1 &       1.00 &       1.62 &       2.46 &      6.23 &        3.00 &    6.23 &      0.00 &      0.62 &      0.63 &     0.70 &       0.00 &   0.70 \\
+2 &       1.00 &       1.67 &       2.44 &      5.11 &        1.00 &    5.22 &      0.00 &      0.47 &      0.50 &     1.10 &       0.00 &   1.23 \\
+3 &       1.00 &       1.89 &       2.56 &      5.33 &         nan &    5.67 &      0.00 &      0.31 &      0.50 &     1.70 &        nan &   1.15 \\
+4 &       1.00 &       1.14 &       2.14 &      6.71 &        1.50 &    6.71 &      0.00 &      0.35 &      0.83 &     0.45 &       0.50 &   0.45 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Actionability: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       18 &          0 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       13 &          1 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        8 &          1 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        8 &          0 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          2 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Plausibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       18 &          0 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       13 &          1 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        9 &          1 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        9 &          0 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          2 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}
+
+Mean and St.dev of Feasibility: \begin{tabular}{lllllllllllll}
+\toprule
+{} & ufce1mean & ufce2mean & ufce3mean & dicemean & diceInmean & armean & ufce1std & ufce2std & ufce3std & dicestd & diceInstd & arstd \\
+\midrule
+0 &        18 &        18 &        18 &       18 &          0 &     18 &        0 &        0 &        0 &       0 &         0 &     0 \\
+1 &        13 &        13 &        13 &       13 &          1 &     13 &        0 &        0 &        0 &       0 &         0 &     0 \\
+2 &         9 &         9 &         9 &        8 &          1 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+3 &         9 &         9 &         9 &        8 &          0 &      9 &        0 &        0 &        0 &       0 &         0 &     0 \\
+4 &         7 &         7 &         7 &        7 &          2 &      7 &        0 &        0 &        0 &       0 &         0 &     0 \\
+\bottomrule
+\end{tabular}

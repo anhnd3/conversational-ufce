@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 import math
 import random
 from typing import Any, Callable, List, Tuple
@@ -8,7 +9,13 @@ import numpy as np
 import pandas as pd
 
 from llm.src.runtime.reproducibility import deterministic_seed, sort_counterfactual_candidates
-from llm.src.runtime.reason_codes import NO_FEASIBLE_CF_FOUND, UFCE_EXECUTION_ERROR
+from llm.src.runtime.reason_codes import (
+    GENERATION_ERROR,
+    NO_CANDIDATE_GENERATED,
+    NO_FEASIBLE_CF_FOUND,
+    NO_VALID_FLIP,
+    UFCE_EXECUTION_ERROR,
+)
 from llm.src.runtime.types import (
     CounterfactualCandidate,
     CounterfactualResult,
@@ -21,8 +28,17 @@ from ufce.core.cfmethods import dfexp, initUFCE, sfexp, tfexp
 Runner = Callable[..., Tuple[pd.DataFrame, float, List[int]]]
 
 
+@dataclass(frozen=True)
+class UFCECoreConfig:
+    desired_outcome: int | None = None
+    force_flip: bool = True
+    allow_legacy_non_flipping_output: bool = False
+    collect_raw_candidate_trace: bool = True
+
+
 class CounterfactualService:
-    def __init__(self) -> None:
+    def __init__(self, config: UFCECoreConfig | None = None) -> None:
+        self.config = config or UFCECoreConfig()
         initUFCE()
 
     def generate(
@@ -30,10 +46,18 @@ class CounterfactualService:
         request: UFCERequest,
         debug_trace: RuntimeDebugTrace | None = None,
         deterministic_seed_value: int | None = None,
+        config: UFCECoreConfig | None = None,
     ) -> CounterfactualResult:
+        active_config = config or self.config
         factual_row = request.query_row.loc[:, request.bundle.feature_order].iloc[0]
         candidates: list[CounterfactualCandidate] = []
         had_exception = False
+        trace_summary = {
+            "force_flip": bool(active_config.force_flip),
+            "raw_outputs_seen": 0,
+            "non_flipping_rejected": 0,
+            "flip_valid_outputs": 0,
+        }
 
         for index, (method_name, runner) in enumerate(self._ordered_runners()):
             try:
@@ -51,6 +75,13 @@ class CounterfactualService:
                 continue
 
             normalized = self._normalize_candidates(method_name, output_df, factual_row, request)
+            trace_summary["raw_outputs_seen"] += len(normalized)
+            normalized = self._apply_force_flip(
+                normalized,
+                request=request,
+                config=active_config,
+                trace_summary=trace_summary,
+            )
             candidates.extend(normalized)
             if debug_trace is not None:
                 status = "success" if normalized else "empty"
@@ -62,6 +93,8 @@ class CounterfactualService:
                 feature_order=list(request.bundle.feature_order),
             )
             if debug_trace is not None:
+                debug_trace.core_status = "valid_counterfactual_found"
+                debug_trace.trace_summary = dict(trace_summary)
                 winner = ordered_candidates[0]
                 debug_trace.winning_path = {
                     "method": winner.method,
@@ -75,14 +108,21 @@ class CounterfactualService:
             )
         if had_exception:
             if debug_trace is not None:
-                debug_trace.reject_path = {"reason_codes": [UFCE_EXECUTION_ERROR]}
+                debug_trace.core_status = "generation_error"
+                debug_trace.trace_summary = dict(trace_summary)
+                debug_trace.reject_path = {"reason_codes": [GENERATION_ERROR, UFCE_EXECUTION_ERROR]}
             return CounterfactualResult(
                 feasible=False,
                 candidates=[],
                 reason_codes=[UFCE_EXECUTION_ERROR],
             )
         if debug_trace is not None:
-            debug_trace.reject_path = {"reason_codes": [NO_FEASIBLE_CF_FOUND]}
+            debug_trace.core_status = "no_valid_counterfactual"
+            debug_trace.trace_summary = dict(trace_summary)
+            if trace_summary["raw_outputs_seen"] == 0:
+                debug_trace.reject_path = {"reason_codes": [NO_CANDIDATE_GENERATED]}
+            else:
+                debug_trace.reject_path = {"reason_codes": [NO_VALID_FLIP]}
         return CounterfactualResult(
             feasible=False,
             candidates=[],
@@ -172,6 +212,30 @@ class CounterfactualService:
                 )
             )
         return candidates
+
+    def _apply_force_flip(
+        self,
+        candidates: list[CounterfactualCandidate],
+        *,
+        request: UFCERequest,
+        config: UFCECoreConfig,
+        trace_summary: dict[str, Any],
+    ) -> list[CounterfactualCandidate]:
+        if not config.force_flip:
+            if config.allow_legacy_non_flipping_output:
+                return candidates
+            return candidates
+        desired_outcome = request.policy.desired_outcome if config.desired_outcome is None else config.desired_outcome
+        kept: list[CounterfactualCandidate] = []
+        for candidate in candidates:
+            frame = pd.DataFrame([candidate.profile], columns=request.bundle.feature_order)
+            prediction = int(request.bundle.lr.predict(frame)[0])
+            if prediction == int(desired_outcome):
+                trace_summary["flip_valid_outputs"] += 1
+                kept.append(candidate)
+            else:
+                trace_summary["non_flipping_rejected"] += 1
+        return kept
 
     def _serialize_profile_row(self, row: pd.Series, request: UFCERequest) -> dict[str, Any]:
         profile: dict[str, Any] = {}

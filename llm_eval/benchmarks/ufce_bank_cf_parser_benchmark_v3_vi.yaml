@@ -1,0 +1,276 @@
+benchmark_name: ufce_bank_cf_parser_v3_vi
+description: Bank benchmark v3 (Vietnamese) for bilingual unit-aware and evidence-driven parsing.
+target_cf_fields:
+- name: Income
+  type: float
+  description: Thu nhap nam muc tieu ($000)
+- name: CCAvg
+  type: float
+  description: Chi tieu the hang thang ($000)
+- name: Family
+  type: int
+  description: Quy mo gia dinh
+- name: Education
+  type: int
+  description: Ma trinh do hoc van (1/2/3)
+- name: Mortgage
+  type: float
+  description: Gia tri the chap ($000)
+- name: CDAccount
+  type: binary
+  description: 1=co, 0=khong
+- name: Online
+  type: binary
+  description: 1=co, 0=khong
+- name: SecuritiesAccount
+  type: binary
+  description: 1=co, 0=khong
+- name: CreditCard
+  type: binary
+  description: 1=co, 0=khong
+output_contract:
+  task: extract_cf_request
+  status_enum:
+  - complete
+  - partial
+  - needs_clarification
+  - conflict
+  rules:
+  - Chi trich xuat cac truong co bang chung ro rang trong cau.
+  - Khong duoc tu suy dien gia tri con thieu.
+  - Dung dung ten truong canonical.
+  - Binary bat buoc la 0 hoac 1.
+  - Education semantic labels chi hop le khi map vao taxonomy 1/2/3.
+  - Moi truong trong cf_request phai co field_evidence hop le.
+cases:
+- case_id: VI01
+  group: NL_VI
+  description: Ho so day du bang tieng Viet voi phoi hop boolean
+  input: Toi earn 90, chi tieu the 5.5 moi thang, gia dinh 5 nguoi, hoc van muc 3, the chap 250. Toi dung online banking va co the tin dung, khong co CD account va khong co tai khoan chung khoan.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 90
+      Family: 5
+      CCAvg: 5.5
+      Education: 3
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "earn 90", evidence_kind: explicit_numeric, normalized_from: "90", language: mixed}
+      Family: {source_text: "gia dinh 5 nguoi", evidence_kind: explicit_numeric, normalized_from: "5", language: vi}
+      CCAvg: {source_text: "chi tieu the 5.5 moi thang", evidence_kind: explicit_numeric, normalized_from: "5.5", language: vi}
+      Education: {source_text: "hoc van muc 3", evidence_kind: explicit_numeric, normalized_from: "3", language: vi}
+      Mortgage: {source_text: "the chap 250", evidence_kind: explicit_numeric, normalized_from: "250", language: vi}
+      CDAccount: {source_text: "khong co CD account", evidence_kind: explicit_boolean, normalized_from: "khong", language: mixed}
+      Online: {source_text: "dung online banking", evidence_kind: explicit_boolean, normalized_from: "dung", language: mixed}
+      SecuritiesAccount: {source_text: "khong co tai khoan chung khoan", evidence_kind: explicit_boolean, normalized_from: "khong", language: vi}
+      CreditCard: {source_text: "co the tin dung", evidence_kind: explicit_boolean, normalized_from: "co", language: vi}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: VI02
+  group: NL_VI
+  description: Quy doi VND co timeframe ro rang
+  input: Thu nhap nam cua toi la 1.75 ty VND, gia dinh 2 nguoi, chi tieu the trung binh 37.5 trieu VND/thang, hoc van thac si, the chap 6.25 ty VND. Toi co online banking va the tin dung, khong co tai khoan chung khoan va khong co CD account.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 70
+      Family: 2
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "1.75 ty VND", evidence_kind: unit_converted, normalized_from: "1.75 ty VND", language: vi}
+      Family: {source_text: "gia dinh 2 nguoi", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      CCAvg: {source_text: "37.5 trieu VND/thang", evidence_kind: unit_converted, normalized_from: "37.5 trieu VND/thang", language: vi}
+      Education: {source_text: "thac si", evidence_kind: taxonomy_mapped, normalized_from: "graduate", language: vi}
+      Mortgage: {source_text: "6.25 ty VND", evidence_kind: unit_converted, normalized_from: "6.25 ty VND", language: vi}
+      CDAccount: {source_text: "khong co CD account", evidence_kind: explicit_boolean, normalized_from: "khong", language: mixed}
+      Online: {source_text: "co online banking", evidence_kind: explicit_boolean, normalized_from: "co", language: mixed}
+      SecuritiesAccount: {source_text: "khong co tai khoan chung khoan", evidence_kind: explicit_boolean, normalized_from: "khong", language: vi}
+      CreditCard: {source_text: "the tin dung", evidence_kind: explicit_boolean, normalized_from: "co", language: vi}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: VI03
+  group: NL_VI
+  description: Don vi co nhung thieu timeframe phai can clarification
+  input: Thu nhap cua toi la 70k, chi tieu the la 1.5k, gia dinh 2, hoc van 2, khong co the chap, co online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Family: 2
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    field_evidence:
+      Family: {source_text: "gia dinh 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      Education: {source_text: "hoc van 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      Mortgage: {source_text: "khong co the chap", evidence_kind: explicit_numeric, normalized_from: "khong co the chap", language: vi}
+      Online: {source_text: "co online banking", evidence_kind: explicit_boolean, normalized_from: "co", language: mixed}
+    missing_fields:
+    - Income
+    - CCAvg
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Unit-based numeric mention needs explicit annual (Income) or monthly (CCAvg) context before normalization
+- case_id: VI04
+  group: NL_VI
+  description: Mapping education cu nhan vao code 1
+  input: Toi earn 48, gia dinh 2 nguoi, CCAvg 1.2, cu nhan, mortgage 35, khong co tai khoan chung khoan, khong co CD account, online yes, credit card yes.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 48
+      Family: 2
+      CCAvg: 1.2
+      Education: 1
+      Mortgage: 35
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "earn 48", evidence_kind: explicit_numeric, normalized_from: "48", language: mixed}
+      Family: {source_text: "gia dinh 2 nguoi", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      CCAvg: {source_text: "CCAvg 1.2", evidence_kind: explicit_numeric, normalized_from: "1.2", language: en}
+      Education: {source_text: "cu nhan", evidence_kind: taxonomy_mapped, normalized_from: "undergraduate", language: vi}
+      Mortgage: {source_text: "mortgage 35", evidence_kind: explicit_numeric, normalized_from: "35", language: en}
+      SecuritiesAccount: {source_text: "khong co tai khoan chung khoan", evidence_kind: explicit_boolean, normalized_from: "khong", language: vi}
+      CDAccount: {source_text: "khong co CD account", evidence_kind: explicit_boolean, normalized_from: "khong", language: mixed}
+      Online: {source_text: "online yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      CreditCard: {source_text: "credit card yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: VI05
+  group: NL_VI
+  description: Label giao duc ngoai taxonomy can clarification
+  input: Toi earn 48, gia dinh 2, chi tieu the 1.2 moi thang, hoc het THPT, mortgage 35, co online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 48
+      Family: 2
+      CCAvg: 1.2
+      Mortgage: 35
+      Online: 1
+    field_evidence:
+      Income: {source_text: "earn 48", evidence_kind: explicit_numeric, normalized_from: "48", language: mixed}
+      Family: {source_text: "gia dinh 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      CCAvg: {source_text: "chi tieu the 1.2 moi thang", evidence_kind: explicit_numeric, normalized_from: "1.2", language: vi}
+      Mortgage: {source_text: "mortgage 35", evidence_kind: explicit_numeric, normalized_from: "35", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "co", language: mixed}
+    missing_fields:
+    - Education
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Education labels are mapped only for Undergrad(1), Graduate(2), or Advanced/Professional(3); other school-level labels need clarification
+- case_id: VI06
+  group: NL_VI
+  description: Mau thuan so cho Income
+  input: Toi earn 68, sau do earn 75, gia dinh 1, chi tieu the 1.5 moi thang, hoc van 2, the chap 0, online yes.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Family: 1
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    field_evidence:
+      Income: {source_text: "Income", evidence_kind: conflict, normalized_from: "", language: unknown}
+      Family: {source_text: "gia dinh 1", evidence_kind: explicit_numeric, normalized_from: "1", language: vi}
+      CCAvg: {source_text: "chi tieu the 1.5 moi thang", evidence_kind: explicit_numeric, normalized_from: "1.5", language: vi}
+      Education: {source_text: "hoc van 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      Mortgage: {source_text: "the chap 0", evidence_kind: explicit_numeric, normalized_from: "0", language: vi}
+      Online: {source_text: "online yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+    missing_fields:
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts:
+    - Explicit field 'Income' has conflicting values in the same turn.
+    notes: []
+- case_id: VI07
+  group: NL_VI
+  description: Mau thuan boolean cho Online
+  input: Toi co online banking, nhung cung no online banking. Thu nhap 70, gia dinh 2, chi tieu the 2.0 moi thang, hoc van 2, the chap 0.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Income: 70
+      Family: 2
+      CCAvg: 2.0
+      Education: 2
+      Mortgage: 0
+    field_evidence:
+      Online: {source_text: "Online", evidence_kind: conflict, normalized_from: "", language: unknown}
+      Income: {source_text: "Thu nhap 70", evidence_kind: explicit_numeric, normalized_from: "70", language: vi}
+      Family: {source_text: "gia dinh 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      CCAvg: {source_text: "chi tieu the 2.0 moi thang", evidence_kind: explicit_numeric, normalized_from: "2.0", language: vi}
+      Education: {source_text: "hoc van 2", evidence_kind: explicit_numeric, normalized_from: "2", language: vi}
+      Mortgage: {source_text: "the chap 0", evidence_kind: explicit_numeric, normalized_from: "0", language: vi}
+    missing_fields:
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts:
+    - Explicit field 'Online' has conflicting values in the same turn.
+    notes: []
+- case_id: VI08
+  group: NL_VI
+  description: Rang buoc cung va uu tien mem trong van tu nhien
+  input: Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, CDAccount yes, Online no, SecuritiesAccount yes, CreditCard no. Khong thay doi Income. Uu tien it thay doi.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 72
+      Family: 1
+      CCAvg: 4.8
+      Education: 2
+      Mortgage: 200
+      CDAccount: 1
+      Online: 0
+      SecuritiesAccount: 1
+      CreditCard: 0
+    field_evidence:
+      Income: {source_text: "Income 72", evidence_kind: explicit_numeric, normalized_from: "72", language: en}
+      Family: {source_text: "Family 1", evidence_kind: explicit_numeric, normalized_from: "1", language: en}
+      CCAvg: {source_text: "CCAvg 4.8", evidence_kind: explicit_numeric, normalized_from: "4.8", language: en}
+      Education: {source_text: "Education 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      Mortgage: {source_text: "Mortgage 200", evidence_kind: explicit_numeric, normalized_from: "200", language: en}
+      CDAccount: {source_text: "CDAccount yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      Online: {source_text: "Online no", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      SecuritiesAccount: {source_text: "SecuritiesAccount yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      CreditCard: {source_text: "CreditCard no", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+    constraint_spec:
+      disallowed_changes:
+      - Income
+      prefer_fewer_changes: true
+    missing_fields: []
+    conflicts: []
+    notes: []

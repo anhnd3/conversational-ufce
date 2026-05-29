@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
+import pytest
+
+from llm_eval.config import benchmark_from_dict
 from llm.src.validation.schema_validator import validate_prediction
 
 
@@ -66,3 +71,56 @@ def test_validate_prediction_validates_constraint_spec_shape(sample_benchmark):
     assert result.is_valid is False
     assert "constraint_spec.numeric_bounds contains unsupported fields: Online" in result.errors
     assert "constraint_spec.max_changed_features must be one of 1, 2, 3." in result.errors
+
+
+@pytest.fixture
+def sample_benchmark_v3(sample_benchmark_payload):
+    payload = deepcopy(sample_benchmark_payload)
+    payload["benchmark_name"] = "ufce_bank_cf_parser_v3_en"
+    return benchmark_from_dict(payload)
+
+
+def test_validate_prediction_requires_field_evidence_for_v3(sample_benchmark_v3):
+    candidate = {
+        "task": "extract_cf_request",
+        "status": "partial",
+        "cf_request": {"Income": 40, "Online": 1},
+        "missing_fields": ["CCAvg", "Family", "Education", "Mortgage", "SecuritiesAccount", "CDAccount", "CreditCard"],
+        "conflicts": [],
+        "notes": [],
+    }
+
+    result = validate_prediction(candidate, sample_benchmark_v3)
+
+    assert result.is_valid is False
+    assert "Missing top-level keys: field_evidence" in result.errors
+
+
+def test_validate_prediction_rejects_invalid_field_evidence_shape(sample_benchmark_v3):
+    candidate = {
+        "task": "extract_cf_request",
+        "status": "partial",
+        "cf_request": {"Income": 40, "Online": 1},
+        "field_evidence": {
+            "Income": {
+                "source_text": "Income 40",
+                "evidence_kind": "explicit_numeric",
+                "normalized_from": "40",
+                "language": "en",
+            },
+            "Online": {
+                "source_text": "Online yes",
+                "evidence_kind": "bad_kind",
+                "normalized_from": "yes",
+                "language": "en",
+            },
+        },
+        "missing_fields": ["CCAvg", "Family", "Education", "Mortgage", "SecuritiesAccount", "CDAccount", "CreditCard"],
+        "conflicts": [],
+        "notes": [],
+    }
+
+    result = validate_prediction(candidate, sample_benchmark_v3)
+
+    assert result.is_valid is False
+    assert any("field_evidence.Online.evidence_kind" in error for error in result.errors)

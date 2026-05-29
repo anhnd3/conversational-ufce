@@ -30,29 +30,43 @@ FIELD_ALIAS_PATTERNS: dict[str, tuple[str, ...]] = {
         "security account",
         "securitiesaccount",
         "investment account",
+        "tai khoan chung khoan",
+        "tài khoản chứng khoán",
     ),
     "CDAccount": (
         "cd account",
         "cdaccount",
         "certificate of deposit",
+        "tai khoan tien gui co ky han",
+        "tài khoản tiền gửi có kỳ hạn",
+        "so tiet kiem co ky han",
+        "sổ tiết kiệm có kỳ hạn",
     ),
     "Online": (
         "online",
         "online banking",
+        "ngan hang truc tuyen",
+        "ngân hàng trực tuyến",
+        "internet banking",
     ),
     "CreditCard": (
         "credit card",
         "creditcard",
         "bank credit card",
+        "the tin dung",
+        "thẻ tín dụng",
     ),
 }
 
-POSITIVE_VALUE_PATTERN = r"(?:yes|true|1)"
-NEGATIVE_VALUE_PATTERN = r"(?:no|false|0)"
-NEGATIVE_VERB_PATTERN = r"(?:do\s+not|don't|dont|not)"
-POSITIVE_VERB_PATTERN = r"(?:want|use|have|need|own)"
-ARTICLE_PATTERN = r"(?:(?:a|an)\s+)?"
-SEGMENT_BOUNDARY_PATTERN = re.compile(r"[,;.!?]|\bbut\b|\bhowever\b|\bthough\b|\bexcept\b", re.IGNORECASE)
+POSITIVE_VALUE_PATTERN = r"(?:yes|true|1|co|có)"
+NEGATIVE_VALUE_PATTERN = r"(?:no|false|0|khong|không)"
+NEGATIVE_VERB_PATTERN = r"(?:do\s+not|don't|dont|not|khong|không|chua|chưa)"
+POSITIVE_VERB_PATTERN = r"(?:want|use|have|need|own|dung|dùng|co|có|so\s+huu|sở\s+hữu)"
+ARTICLE_PATTERN = r"(?:(?:a|an|mot|một)\s+)?"
+SEGMENT_BOUNDARY_PATTERN = re.compile(
+    r"[,;.!?]|\bbut\b|\bhowever\b|\bthough\b|\bexcept\b|\bnhung\b|\bnhưng\b|\btuy\s*nhien\b|\btuy\s*nhiên\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -208,8 +222,31 @@ def collect_explicit_bank_boolean_matches(
                     continue
                 add_match(field_name, 1, match.start(), match.end())
 
+    for positive_phrase in re.finditer(rf"\b{POSITIVE_VERB_PATTERN}\b", text, flags=re.IGNORECASE):
+        if _is_immediately_negated(text, positive_phrase.start()):
+            continue
+        segment_start = positive_phrase.end()
+        segment_end = _find_segment_end(text, segment_start)
+        segment_text = text[segment_start:segment_end]
+        for field_name in active_fields:
+            for alias in active_aliases[field_name]:
+                alias_pattern = build_alias_pattern(alias)
+                for alias_match in re.finditer(
+                    rf"{ARTICLE_PATTERN}\b{alias_pattern}\b",
+                    segment_text,
+                    flags=re.IGNORECASE,
+                ):
+                    if _is_alias_negated_in_segment(segment_text, alias_match.start()):
+                        continue
+                    add_match(
+                        field_name,
+                        1,
+                        segment_start + alias_match.start(),
+                        segment_start + alias_match.end(),
+                    )
+
     for negative_phrase in re.finditer(
-        rf"\b{NEGATIVE_VERB_PATTERN}\b\s+{POSITIVE_VERB_PATTERN}\b",
+        rf"\b(?:{NEGATIVE_VERB_PATTERN}\b\s+{POSITIVE_VERB_PATTERN}|no)\b",
         text,
         flags=re.IGNORECASE,
     ):
@@ -230,6 +267,22 @@ def collect_explicit_bank_boolean_matches(
                         segment_start + alias_match.start(),
                         segment_start + alias_match.end(),
                     )
+
+    if _looks_like_profile_list_context(text):
+        for field_name in active_fields:
+            for alias in active_aliases[field_name]:
+                alias_pattern = build_alias_pattern(alias)
+                for alias_match in re.finditer(
+                    rf"(?:^|[,;]\s*|\band\s+){ARTICLE_PATTERN}\b{alias_pattern}\b(?=\s*(?:[,;.]|\band\b|$))",
+                    text,
+                    flags=re.IGNORECASE,
+                ):
+                    alias_start = alias_match.start()
+                    if _is_constraint_alias_context(text, alias_start):
+                        continue
+                    if _is_alias_negated_in_segment(text, alias_start):
+                        continue
+                    add_match(field_name, 1, alias_match.start(), alias_match.end())
 
     return sorted(matches, key=lambda item: (item.start, item.end, item.field_name, item.value))
 
@@ -273,3 +326,39 @@ def _find_segment_end(text: str, segment_start: int) -> int:
 def _is_immediately_negated(text: str, start: int) -> bool:
     prefix = text[max(0, start - 24):start]
     return re.search(rf"(?:{NEGATIVE_VERB_PATTERN})\s+$", prefix, flags=re.IGNORECASE) is not None
+
+
+def _is_alias_negated_in_segment(segment_text: str, alias_start: int) -> bool:
+    prefix = segment_text[max(0, alias_start - 32):alias_start]
+    return re.search(
+        rf"(?:\bno\s+|\bwithout\s+{ARTICLE_PATTERN}|\bnot\s+{ARTICLE_PATTERN})$",
+        prefix,
+        flags=re.IGNORECASE,
+    ) is not None
+
+
+def _is_constraint_alias_context(text: str, alias_start: int) -> bool:
+    prefix = text[max(0, alias_start - 36):alias_start]
+    return re.search(
+        r"\b(?:do\s+not|don't|dont)\s+change\s+(?:my\s+|the\s+|this\s+)?$|\bkeep\s+(?:my\s+|the\s+|this\s+)?$",
+        prefix,
+        flags=re.IGNORECASE,
+    ) is not None
+
+
+def _looks_like_profile_list_context(text: str) -> bool:
+    return bool(
+        re.search(
+            r"[,;]\s*(?:and\s+|va\s+|và\s+)?(?:a\s+|an\s+|mot\s+|một\s+)?"
+            r"(?:online|credit\s+card|cd\s+account|securities\s+account|the\s+tin\s+dung|thẻ\s+tín\s+dụng|"
+            r"tai\s+khoan\s+chung\s+khoan|tài\s+khoản\s+chứng\s+khoán)",
+            text,
+            re.IGNORECASE,
+        )
+        and re.search(
+            r"\b(?:income|earn|make|family|household|education|mortgage|spend|spending|card|thu\s*nhap|thu\s*nhập|"
+            r"gia\s*dinh|gia\s*đình|hoc\s*van|học\s*vấn|the\s*chap|thế\s*chấp|chi\s*tieu|chi\s*tiêu)\b",
+            text,
+            re.IGNORECASE,
+        )
+    )

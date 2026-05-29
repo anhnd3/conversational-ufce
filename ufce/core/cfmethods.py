@@ -98,6 +98,15 @@ def find_best_row(df, test_instance, continuous_features, distance_scaler=None):
 
 
 def _filter_flipping_candidates(candidates, model, desired_outcome, order, apply_filter=True):
+    """
+    UFCE-FF verification gate.
+
+    When enabled, this is applied before the final nearest-row selector in
+    sfexp/dfexp/tfexp. It filters the generated candidate pool to rows whose
+    predicted label equals desired_outcome. Hard/actionability constraints are
+    still enforced by the candidate-generation intervals and later metric
+    evaluation; there is no separate C_hard post-prediction gate here.
+    """
     if not isinstance(candidates, pd.DataFrame) or candidates.empty:
         return pd.DataFrame()
     if not apply_filter:
@@ -173,6 +182,20 @@ def _trace_frame(frame, order):
     if not all(col in frame.columns for col in order):
         return pd.DataFrame(columns=list(order))
     return frame.loc[:, list(order)].copy().reset_index(drop=True)
+
+
+def _concat_candidate_frames(frames, order):
+    valid_frames = []
+    for frame in frames:
+        normalized = _trace_frame(frame, order)
+        if not normalized.empty:
+            valid_frames.append(normalized)
+    if not valid_frames:
+        return pd.DataFrame(columns=list(order))
+    out = pd.concat(valid_frames, ignore_index=True, axis=0)
+    out = out.drop_duplicates().reset_index(drop=True)
+    return out
+
 
 def changes_per_cf(x, cf):
     features = (list(x.columns))
@@ -645,8 +668,7 @@ def dfexp(
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1])
             cc2, cfsexp2 = ufc.Double_F(X, X_test[t:t+1], protectedf, F[:], catf, numf, intervals, features, bb, desired_outcome, order, k)
-            raw_generated_df = cfsexp2 if isinstance(cfsexp2, pd.DataFrame) and cfsexp2.empty != True else cc2
-            instance_generated = _trace_frame(raw_generated_df, order)
+            instance_generated = _concat_candidate_frames([cc2, cfsexp2], order)
             raw_primary = len(cc2) if isinstance(cc2, pd.DataFrame) else 0
             raw_explore = len(cfsexp2) if isinstance(cfsexp2, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_primary + raw_explore)
@@ -665,7 +687,7 @@ def dfexp(
                 order,
                 apply_filter=flip_filter_enabled,
             )
-            instance_flip_candidates = _trace_frame(selected_rows, order)
+            instance_flip_candidates = _concat_candidate_frames([cc2, selected_rows], order)
             flip_primary = len(cc2) if isinstance(cc2, pd.DataFrame) else 0
             flip_explore = len(selected_rows) if isinstance(selected_rows, pd.DataFrame) else 0
             method_stats["n_candidates_flip_total"] += int(flip_primary + flip_explore)
@@ -805,8 +827,7 @@ def tfexp(
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1]) 
             cc3, cfsexp2 = ufc.Triple_F(X, X_test[t:t+1], protectdf, F[:], catf, numf, intervals, feature2change, bb, desired_outcome, order, k) 
-            raw_generated_df = cfsexp2 if isinstance(cfsexp2, pd.DataFrame) and cfsexp2.empty != True else cc3
-            instance_generated = _trace_frame(raw_generated_df, order)
+            instance_generated = _concat_candidate_frames([cc3, cfsexp2], order)
             raw_primary = len(cc3) if isinstance(cc3, pd.DataFrame) else 0
             raw_explore = len(cfsexp2) if isinstance(cfsexp2, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_primary + raw_explore)
@@ -819,7 +840,7 @@ def tfexp(
                 order,
                 apply_filter=flip_filter_enabled,
             )
-            instance_flip_candidates = _trace_frame(selected_rows, order)
+            instance_flip_candidates = _concat_candidate_frames([cc3, selected_rows], order)
             flip_primary = len(cc3) if isinstance(cc3, pd.DataFrame) else 0
             flip_explore = len(selected_rows) if isinstance(selected_rows, pd.DataFrame) else 0
             method_stats["n_candidates_flip_total"] += int(flip_primary + flip_explore)

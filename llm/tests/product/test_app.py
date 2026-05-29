@@ -882,7 +882,7 @@ def test_app_clarification_turn_exposes_ui_review_and_clarification_cards(sample
     assert fields["Family"]["missing"] is True
     assert fields["Online"]["display_value"] == "Not provided"
     assert payload["render_hints"]["primary_chat_text"] == (
-        "Reply with only the missing fields: Family, Education, Mortgage, "
+        "Reply with only the missing facts: Family, Education, Mortgage, "
         "SecuritiesAccount, CDAccount, Online, and CreditCard. "
         "I'll keep the values already provided for Income and CCAvg."
     )
@@ -914,7 +914,7 @@ def test_app_clarification_turn_exposes_ui_review_and_clarification_cards(sample
     assert "Family" in html_response.text
     assert "CreditCard" in html_response.text
     assert (
-        "Reply with only the missing fields: Family, Education, Mortgage, "
+        "Reply with only the missing facts: Family, Education, Mortgage, "
         "SecuritiesAccount, CDAccount, Online, and CreditCard. "
         "I'll keep the values already provided for Income and CCAvg."
     ) in unescape(html_response.text)
@@ -2533,14 +2533,14 @@ def test_session_page_context_clarification_emits_marker_and_detail_toggle(tmp_p
         "turn_kind": "message",
         "user_input": "Income 40.",
         "assistant_text": (
-            "Reply with only the missing fields: Family, Education, and Mortgage. "
+            "Reply with only the missing facts: Family, Education, and Mortgage. "
             "I'll keep the values already provided for Income."
         ),
         "clarification_payload": {
             "clarification_type": "missing_information",
             "missing_fields": ["Family", "Education", "Mortgage"],
             "conflicts": [],
-            "next_required_input": "Reply with only the missing fields: Family, Education, and Mortgage. I'll keep the values already provided for Income.",
+            "next_required_input": "Reply with only the missing facts: Family, Education, and Mortgage. I'll keep the values already provided for Income.",
             "remaining_rounds": 2,
             "restart_required": False,
             "reply_strategy": "missing_fields_only",
@@ -2588,7 +2588,7 @@ def test_session_page_context_clarification_emits_marker_and_detail_toggle(tmp_p
     ]
     assert context["transcript_items"][1]["label"] == "Need more information"
     assert context["transcript_items"][2]["text"] == (
-        "Reply with only the missing fields: Family, Education, and Mortgage. "
+        "Reply with only the missing facts: Family, Education, and Mortgage. "
         "I'll keep the values already provided for Income."
     )
     assert context["transcript_items"][3]["facts"] == ["Family", "Education", "Mortgage"]

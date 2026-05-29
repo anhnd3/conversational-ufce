@@ -57,6 +57,11 @@ from ufce.core.data_processing import (
     get_bupa_user_constraints,
     get_movie_user_constraints,
 )
+from scripts.final.part1._movie_proximity import (
+    MOVIE_PROX_EUC_CONTRACT,
+    apply_affine_distance_scaler,
+    pairwise_normalized_l2_0_100_values,
+)
 
 ufc = UFCE()
 
@@ -212,6 +217,15 @@ FINAL_RUNTIME_CONFIG: Dict[str, Dict[str, int]] = {
     "movie": {"radius": 80, "n_neighbors": 50, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 0},
 }
 
+# Incrementally populated runtime profile for newly retuned per-dataset winners.
+NEW_BEST_PARAMS: Dict[str, Dict[str, int]] = {
+    "bank": {"radius": 90, "n_neighbors": 150, "min_act": 1, "min_feas": 0, "ufce_flip_filter": 1},
+    "bupa": {"radius": 70, "n_neighbors": 200, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 1},
+    "grad": {"radius": 16, "n_neighbors": 400, "min_act": 0, "min_feas": 0, "ufce_flip_filter": 1},
+    "movie": {"radius": 160, "n_neighbors": 50, "min_act": 1, "min_feas": 1, "ufce_flip_filter": 1},
+    "wine": {"radius": 15, "n_neighbors": 1000, "min_act": 0, "min_feas": 0, "ufce_flip_filter": 1},
+}
+
 FINAL_BLINDSPOT_BUNDLE = {
     "bank": {
         "uf_mode": "scaled_up_150",
@@ -240,6 +254,9 @@ FINAL_BLINDSPOT_BUNDLE = {
     },
 }
 
+DOMAIN_ACTIONABLE = "domain_actionable"
+DOMAIN_ACTIONABLE_DATASETS = ["bank", "grad", "bupa", "wine", "movie"]
+
 ALL_DATASETS = ["bank", "bupa", "grad", "wine", "movie"]
 
 TABLE7_AUTHOR_PUBLIC_BUNDLE = {
@@ -249,6 +266,15 @@ TABLE7_AUTHOR_PUBLIC_BUNDLE = {
         "f2change_mode": "author_public",
     }
     for dataset in ALL_DATASETS
+}
+
+DOMAIN_ACTIONABLE_BUNDLE = {
+    dataset: {
+        "uf_mode": DOMAIN_ACTIONABLE,
+        "step_mode": DOMAIN_ACTIONABLE,
+        "f2change_mode": DOMAIN_ACTIONABLE,
+    }
+    for dataset in DOMAIN_ACTIONABLE_DATASETS
 }
 
 AUTHOR_PUBLIC_STEP_CONFIG: Dict[str, Dict[str, float]] = {
@@ -385,6 +411,7 @@ class FoldResult:
     means: Dict[str, Dict[str, float]]
     times: Dict[str, float]
     diagnostics: Optional[Dict[str, List[Dict[str, object]]]] = None
+    trace_payload: Optional[Dict[str, List[Dict[str, Any]]]] = None
 
 
 @dataclass
@@ -525,6 +552,61 @@ def apply_f2change_mode(author_f2change: List[str], mode: str) -> List[str]:
     raise ValueError(f"Unsupported f2change_mode for final reproduction: {mode}")
 
 
+def resolve_domain_actionable_constraints(
+    *,
+    dataset: str,
+    author_uf: Dict[str, Any],
+    author_f2change: Sequence[str],
+) -> Tuple[Dict[str, Any], List[str], Dict[str, float]]:
+    uf = copy.deepcopy(author_uf)
+    step = get_author_public_step_config(dataset)
+
+    if dataset == "bank":
+        f2change = ["Income", "CCAvg", "Mortgage", "CDAccount", "Online", "CreditCard", "SecuritiesAccount"]
+    elif dataset == "grad":
+        f2change = list(author_f2change)
+    elif dataset == "bupa":
+        f2change = ["Sgpt", "Sgot", "Gammagt", "Drinks"]
+    elif dataset == "wine":
+        f2change = [
+            "fixed acidity",
+            "free sulfur dioxide",
+            "total sulfur dioxide",
+            "pH",
+            "alcohol",
+            "density",
+            "volatile acidity",
+            "citric acid",
+            "residual sugar",
+        ]
+    elif dataset == "movie":
+        f2change = [
+            "Production_expense",
+            "Multiplex_coverage",
+            "Num_multiplex",
+            "Movie_length",
+            "Lead_Actor_Rating",
+            "Lead_Actress_rating",
+            "Director_rating",
+            "Producer_rating",
+            "Genre",
+            "Collection",
+            "Budget",
+        ]
+    else:
+        raise ValueError(f"domain_actionable is only supported for: {', '.join(DOMAIN_ACTIONABLE_DATASETS)}")
+
+    missing_uf = [feature for feature in f2change if feature not in uf]
+    missing_step = [feature for feature in f2change if feature not in step]
+    if missing_uf:
+        raise ValueError(f"Missing domain_actionable uf config for {dataset}: {missing_uf}")
+    if missing_step:
+        raise ValueError(f"Missing domain_actionable step config for {dataset}: {missing_step}")
+    if not set(author_f2change).issubset(set(f2change)):
+        raise ValueError(f"domain_actionable must extend author f2change for {dataset}.")
+    return uf, f2change, {feature: step[feature] for feature in f2change}
+
+
 def get_author_public_step_config(dataset: str) -> Dict[str, float]:
     if dataset not in AUTHOR_PUBLIC_STEP_CONFIG:
         raise ValueError(f"Author/public step is unavailable for dataset={dataset}.")
@@ -566,6 +648,10 @@ def _canonical_bundle_mode(bundle_mode: str) -> str:
     return str(bundle_mode)
 
 
+def _is_not_main_table7_bundle(effective_bundle_mode: str) -> bool:
+    return effective_bundle_mode in {"final_blindspot_best", DOMAIN_ACTIONABLE}
+
+
 def validate_main_table7_bundle(dataset: str, effective_bundle_mode: str, bundle_cfg: Dict[str, str]) -> None:
     if effective_bundle_mode == "final_blindspot_best":
         raise ValueError("Main Table 7 reproduction cannot use bundle_mode=final_blindspot_best.")
@@ -589,26 +675,44 @@ def resolve_bundle_config(
         bundle_cfg = copy.deepcopy(TABLE7_AUTHOR_PUBLIC_BUNDLE[dataset])
     elif effective_bundle_mode == "final_blindspot_best":
         bundle_cfg = copy.deepcopy(FINAL_BLINDSPOT_BUNDLE[dataset])
+    elif effective_bundle_mode == DOMAIN_ACTIONABLE:
+        if dataset not in DOMAIN_ACTIONABLE_BUNDLE:
+            raise ValueError(f"domain_actionable is only supported for: {', '.join(DOMAIN_ACTIONABLE_DATASETS)}")
+        bundle_cfg = copy.deepcopy(DOMAIN_ACTIONABLE_BUNDLE[dataset])
     else:
         raise ValueError(f"Unsupported bundle_mode: {requested_bundle_mode}")
 
-    not_main_table7 = bool(effective_bundle_mode == "final_blindspot_best")
+    not_main_table7 = _is_not_main_table7_bundle(effective_bundle_mode)
     if not not_main_table7:
         validate_main_table7_bundle(dataset, effective_bundle_mode, bundle_cfg)
 
-    uf = apply_uf_mode(author_uf, bundle_cfg["uf_mode"])
-    f2change = apply_f2change_mode(list(author_f2change), bundle_cfg["f2change_mode"])
-    step, step_source, fallback_used, fallback_reason = resolve_step_config(
-        dataset=dataset,
-        step_mode=bundle_cfg["step_mode"],
-        f2change=f2change,
-    )
+    if effective_bundle_mode == DOMAIN_ACTIONABLE:
+        uf, f2change, step = resolve_domain_actionable_constraints(
+            dataset=dataset,
+            author_uf=author_uf,
+            author_f2change=author_f2change,
+        )
+        step_source = f"domain_actionable:{dataset}:extended_author_public_step"
+        fallback_used = False
+        fallback_reason = ""
+    else:
+        uf = apply_uf_mode(author_uf, bundle_cfg["uf_mode"])
+        f2change = apply_f2change_mode(list(author_f2change), bundle_cfg["f2change_mode"])
+        step, step_source, fallback_used, fallback_reason = resolve_step_config(
+            dataset=dataset,
+            step_mode=bundle_cfg["step_mode"],
+            f2change=f2change,
+        )
 
-    if bundle_cfg["uf_mode"] == "author_public":
+    if effective_bundle_mode == DOMAIN_ACTIONABLE:
+        uf_source = f"domain_actionable:{dataset}:extended_author_public_uf"
+    elif bundle_cfg["uf_mode"] == "author_public":
         uf_source = AUTHOR_PUBLIC_UF_SOURCE.get(dataset, "author_public_uf_source_missing")
     else:
         uf_source = f"blindspot_diagnostic:{bundle_cfg['uf_mode']}"
-    if bundle_cfg["f2change_mode"] == "author_public":
+    if effective_bundle_mode == DOMAIN_ACTIONABLE:
+        f2change_source = f"domain_actionable:{dataset}:extended_author_public_f2change"
+    elif bundle_cfg["f2change_mode"] == "author_public":
         f2change_source = AUTHOR_PUBLIC_F2CHANGE_SOURCE.get(dataset, "author_public_f2change_source_missing")
     else:
         f2change_source = f"blindspot_diagnostic:{bundle_cfg['f2change_mode']}"
@@ -669,7 +773,16 @@ def print_feature_relations(X: pd.DataFrame, features: List[str], mi_pairs: List
 
 
 def resolve_effective_cfg(dataset: str, args) -> Dict[str, int]:
-    config_source = FINAL_RUNTIME_CONFIG if args.runtime_profile == "final_freeze" else TUNED_RUN2
+    config_sources: Dict[str, Dict[str, Dict[str, int]]] = {
+        "final_freeze": FINAL_RUNTIME_CONFIG,
+        "tuned_run2": TUNED_RUN2,
+        "new_best_params": NEW_BEST_PARAMS,
+    }
+    try:
+        config_source = config_sources[str(args.runtime_profile)]
+    except KeyError as exc:
+        allowed_profiles = ", ".join(sorted(config_sources.keys()))
+        raise ValueError(f"Unsupported runtime_profile '{args.runtime_profile}'. Allowed: {allowed_profiles}") from exc
 
     if dataset not in config_source:
         allowed = ", ".join(sorted(config_source.keys()))
@@ -725,7 +838,10 @@ def effective_config_record(
 
 
 def build_effective_manifest_config(args) -> Dict[str, Dict[str, object]]:
-    datasets = ALL_DATASETS if getattr(args, "dataset", "bank") == "all" else [str(args.dataset)]
+    if getattr(args, "dataset", "bank") == "all" and _canonical_bundle_mode(str(args.bundle_mode)) == DOMAIN_ACTIONABLE:
+        datasets = DOMAIN_ACTIONABLE_DATASETS
+    else:
+        datasets = ALL_DATASETS if getattr(args, "dataset", "bank") == "all" else [str(args.dataset)]
     out: Dict[str, Dict[str, object]] = {}
     effective_bundle_mode = _canonical_bundle_mode(str(args.bundle_mode))
     for dataset in datasets:
@@ -734,6 +850,10 @@ def build_effective_manifest_config(args) -> Dict[str, Dict[str, object]]:
             uf_source = f"blindspot_diagnostic:{FINAL_BLINDSPOT_BUNDLE[dataset]['uf_mode']}"
             f2change_source = f"blindspot_diagnostic:{FINAL_BLINDSPOT_BUNDLE[dataset]['f2change_mode']}"
             step_source = "blindspot_diagnostic:local_reproduction_step"
+        elif effective_bundle_mode == DOMAIN_ACTIONABLE:
+            uf_source = f"domain_actionable:{dataset}:extended_author_public_uf"
+            f2change_source = f"domain_actionable:{dataset}:extended_author_public_f2change"
+            step_source = f"domain_actionable:{dataset}:extended_author_public_step"
         else:
             uf_source = AUTHOR_PUBLIC_UF_SOURCE.get(dataset, "author_public_uf_source_missing")
             f2change_source = AUTHOR_PUBLIC_F2CHANGE_SOURCE.get(dataset, "author_public_f2change_source_missing")
@@ -742,7 +862,7 @@ def build_effective_manifest_config(args) -> Dict[str, Dict[str, object]]:
             {
                 "requested_bundle_mode": str(args.bundle_mode),
                 "effective_bundle_mode": effective_bundle_mode,
-                "not_main_table7": bool(effective_bundle_mode == "final_blindspot_best"),
+                "not_main_table7": _is_not_main_table7_bundle(effective_bundle_mode),
                 "effective_uf_source": uf_source,
                 "effective_f2change_source": f2change_source,
                 "effective_step_source": step_source,
@@ -1045,12 +1165,12 @@ def _feature_contributions(
     distance_scaler: Optional[Dict[str, object]],
 ) -> Tuple[Optional[float], Dict[str, Dict[str, object]], List[str], str]:
     if not isinstance(factual, pd.DataFrame) or factual.empty or not isinstance(candidate, pd.DataFrame) or candidate.empty:
-        return None, {}, [], "none"
+        return float("nan"), {}, [], "none"
     cols = [c for c in numf if c in factual.columns and c in candidate.columns]
     if not cols:
-        return None, {}, [], "none"
-    factual_dist = apply_distance_scaler(factual.loc[:, cols], distance_scaler) if distance_scaler is not None else factual.loc[:, cols]
-    candidate_dist = apply_distance_scaler(candidate.loc[:, cols], distance_scaler) if distance_scaler is not None else candidate.loc[:, cols]
+        return float("nan"), {}, [], "none"
+    factual_dist = apply_affine_distance_scaler(factual.loc[:, cols], distance_scaler) if distance_scaler is not None else factual.loc[:, cols]
+    candidate_dist = apply_affine_distance_scaler(candidate.loc[:, cols], distance_scaler) if distance_scaler is not None else candidate.loc[:, cols]
     contributions: Dict[str, Dict[str, object]] = {}
     total_sq = 0.0
     for col in cols:
@@ -1075,7 +1195,10 @@ def _feature_contributions(
             "squared_contribution": squared,
             "euc_contribution": contribution,
         }
-    return float(np.sqrt(total_sq)), contributions, cols, "movie_minmax_0_100" if distance_scaler is not None else "raw"
+    raw_l2 = float(np.sqrt(total_sq))
+    if distance_scaler is not None:
+        return raw_l2 / float(np.sqrt(len(cols))), contributions, cols, "movie_minmax_0_100_rms"
+    return raw_l2, contributions, cols, "raw"
 
 
 def _safe_actionability_pair(
@@ -1405,17 +1528,18 @@ def evaluate_ufce_only_metrics(
         # Prox-Euc
         vals = []
         n = min(len(cfdf), len(testdf))
-        cf_dist_df = apply_distance_scaler(cfdf, contprox_distance_scaler) if contprox_distance_scaler is not None else cfdf
-        test_dist_df = apply_distance_scaler(testdf, contprox_distance_scaler) if contprox_distance_scaler is not None else testdf
-        for i in range(n):
-            dist = active_ufc.continuous_distance(
-                test_dist_df[i : i + 1],
-                cf_dist_df[i : i + 1],
-                numf,
-                metric="euclidean",
-                agg=None,
-            )
-            vals.append(_scalar(dist))
+        if contprox_distance_scaler is not None:
+            vals = pairwise_normalized_l2_0_100_values(testdf, cfdf, numf, contprox_distance_scaler)
+        else:
+            for i in range(n):
+                dist = active_ufc.continuous_distance(
+                    testdf[i : i + 1],
+                    cfdf[i : i + 1],
+                    numf,
+                    metric="euclidean",
+                    agg=None,
+                )
+                vals.append(_scalar(dist))
         means[method]["Prox-Euc"] = _mean_or_nan(vals)
 
         # Sparsity
@@ -1475,6 +1599,7 @@ def build_fold_diagnostics(
     bundle_meta: Dict[str, object],
     step: Dict[str, float],
     no_cf: int,
+    flip_filter_enabled: bool,
     movie_distance_scaler: Optional[Dict[str, object]],
     method_payloads: Dict[str, Dict[str, Any]],
     top_k: int,
@@ -1782,7 +1907,7 @@ def build_fold_diagnostics(
                     "metric_candidate_selection_stage": "ufce_returned_output",
                     "has_selected_candidate": bool(has_selected),
                     "prox_euc_final_value": prox_euc,
-                    "prox_euc_contract": "euclidean over numf; movie uses movie_minmax_0_100 distance space",
+                    "prox_euc_contract": MOVIE_PROX_EUC_CONTRACT if dataset == "movie" else "euclidean over numf",
                     "prox_jac_value": prox_jac,
                     "sparsity_value": sparsity_value,
                     "changed_features_json": changed_features,
@@ -1794,7 +1919,9 @@ def build_fold_diagnostics(
                     "actionability_fail_reason": action_reason,
                     "plausibility_fail_reason": plaus_reason,
                     "feasibility_fail_reason": feas_reason,
-                    "metric_source_contract": "public_table7_reproduction",
+                    "metric_source_contract": (
+                        "force_flip_strict_reproduction" if bool(flip_filter_enabled) else "public_table7_reproduction"
+                    ),
                 }
             )
 
@@ -1808,7 +1935,7 @@ def build_fold_diagnostics(
                         "query_pos": int(query_pos),
                         "metric_candidate_id": metric_candidate_id,
                         "prox_euc_final_value": prox_euc,
-                        "prox_euc_contract": "euclidean",
+                        "prox_euc_contract": MOVIE_PROX_EUC_CONTRACT if dataset == "movie" else "euclidean",
                         "distance_feature_set": list(dist_cols),
                         "continuous_feature_set_used": list(dist_cols),
                         "raw_delta_by_feature_json": changed_details,
@@ -1920,6 +2047,7 @@ def run_one_fold(
     contract_debug_method: str,
     diagnostics_enabled: bool = False,
     diagnostics_top_k: int = 5,
+    mi_top_k: Optional[int] = 5,
     cfg: Optional[Dict[str, int]] = None,
     bundle_cfg: Optional[Dict[str, str]] = None,
     bundle_meta: Optional[Dict[str, object]] = None,
@@ -1958,6 +2086,11 @@ def run_one_fold(
         dists = np.linalg.norm(lab1 - x0, axis=1)
         print(f"[DBG] Scaled Distances: min={dists.min():.2f}, mean={dists.mean():.2f}, max={dists.max():.2f}")
 
+    if mi_top_k is None or int(mi_top_k) <= 0:
+        mi_pairs_for_fold = list(mi_fp)
+    else:
+        mi_pairs_for_fold = list(mi_fp[: int(mi_top_k)])
+
     if diagnostics_enabled:
         onecfs, t1, idx1, trace1 = cfmethods.sfexp(
             x_all,
@@ -1983,7 +2116,7 @@ def run_one_fold(
             data_lab1_ufce,
             fold_df_ufce[:],
             uf,
-            mi_fp[:5],
+            mi_pairs_for_fold,
             numf,
             catf,
             f2change,
@@ -2003,7 +2136,7 @@ def run_one_fold(
             data_lab1_ufce,
             fold_df_ufce[:],
             uf,
-            mi_fp[:5],
+            mi_pairs_for_fold,
             numf,
             catf,
             f2change,
@@ -2043,7 +2176,7 @@ def run_one_fold(
             data_lab1_ufce,
             fold_df_ufce[:],
             uf,
-            mi_fp[:5],
+            mi_pairs_for_fold,
             numf,
             catf,
             f2change,
@@ -2062,7 +2195,7 @@ def run_one_fold(
             data_lab1_ufce,
             fold_df_ufce[:],
             uf,
-            mi_fp[:5],
+            mi_pairs_for_fold,
             numf,
             catf,
             f2change,
@@ -2214,11 +2347,25 @@ def run_one_fold(
             bundle_meta=bundle_meta or {},
             step=step,
             no_cf=no_cf,
+            flip_filter_enabled=bool(flip_filter_enabled),
             movie_distance_scaler=movie_distance_scaler,
             method_payloads=method_payloads,
             top_k=diagnostics_top_k,
         )
-    return FoldResult(fold_name=fold_name, means=means, times=times, diagnostics=diagnostics)
+    trace_payload = None
+    if diagnostics_enabled:
+        trace_payload = {
+            "UFCE1": list(trace1),
+            "UFCE2": list(trace2),
+            "UFCE3": list(trace3),
+        }
+    return FoldResult(
+        fold_name=fold_name,
+        means=means,
+        times=times,
+        diagnostics=diagnostics,
+        trace_payload=trace_payload,
+    )
 
 
 def aggregate_results(folds: List[FoldResult]) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series]:
@@ -2541,7 +2688,7 @@ def write_run_manifest(args, run_id: str, out_dir: str, extra: Optional[Dict[str
         "runtime_profile": args.runtime_profile,
         "requested_bundle_mode": args.bundle_mode,
         "effective_bundle_mode": _canonical_bundle_mode(str(args.bundle_mode)),
-        "not_main_table7": bool(_canonical_bundle_mode(str(args.bundle_mode)) == "final_blindspot_best"),
+        "not_main_table7": _is_not_main_table7_bundle(_canonical_bundle_mode(str(args.bundle_mode))),
         "bundle_mode": args.bundle_mode,
         "no_cf": args.no_cf,
         "max_folds": args.max_folds,
@@ -2555,6 +2702,8 @@ def write_run_manifest(args, run_id: str, out_dir: str, extra: Optional[Dict[str
         "table7_author_public_bundle": TABLE7_AUTHOR_PUBLIC_BUNDLE,
         "final_blindspot_bundle": FINAL_BLINDSPOT_BUNDLE,
         "final_blindspot_bundle_usage": "separate blind-spot diagnostics only; not main Table 7 thesis reproduction",
+        "domain_actionable_bundle": DOMAIN_ACTIONABLE_BUNDLE,
+        "domain_actionable_bundle_usage": "separate domain-actionable diagnostic profile only; not main Table 7 thesis reproduction",
         "effective_config_by_dataset": build_effective_manifest_config(args),
         "environment": {
             "python": sys.version.split()[0],
@@ -2583,16 +2732,16 @@ def validate_diagnostic_args(args) -> None:
     if not bool(getattr(args, "diagnostics", False)):
         return
     explicit_runtime = _arg_present("--runtime_profile", "--runtime-profile")
-    explicit_flip = _arg_present("--ufce_flip_filter", "--ufce-flip-filter")
     if explicit_runtime and args.runtime_profile != "final_freeze":
         raise ValueError("--diagnostics requires runtime_profile=final_freeze.")
-    if explicit_flip and int(args.ufce_flip_filter) != 0:
-        raise ValueError("--diagnostics requires ufce_flip_filter=0 for raw Table 7 reproduction.")
+    if args.ufce_flip_filter is None:
+        args.ufce_flip_filter = 0
+    if int(args.ufce_flip_filter) not in (0, 1):
+        raise ValueError("--diagnostics supports ufce_flip_filter in {0,1}.")
     for name in ["radius", "n_neighbors", "min_act", "min_feas"]:
         if getattr(args, name) is not None:
             raise ValueError(f"--diagnostics cannot override locked config field --{name}.")
     args.runtime_profile = "final_freeze"
-    args.ufce_flip_filter = 0
     args.out_dir = _diagnostic_output_path(args, args.run_id)
 
 
@@ -2853,6 +3002,7 @@ def build_locked_config_manifest(results: Sequence[Dict[str, object]]) -> Dict[s
         "feature_order_by_dataset": feature_mappings,
         "locked_config_claim_boundary": LOCKED_CONFIG_CLAIM_BOUNDARY,
         "final_blindspot_bundle_usage": "separate blind-spot diagnostics only; not main Table 7 thesis reproduction",
+        "domain_actionable_bundle_usage": "separate domain-actionable diagnostic profile only; not main Table 7 thesis reproduction",
     }
 
 
@@ -2900,18 +3050,25 @@ def build_provenance(args, run_id: str, results: Sequence[Dict[str, object]], di
         "effective_f2change_source": _effective_field_map(results, "effective_f2change_source"),
         "effective_step_source": _effective_field_map(results, "effective_step_source"),
         "effective_bundle_mode": _effective_field_map(results, "effective_bundle_mode"),
+        "effective_ufce_flip_filter": _effective_field_map(results, "effective_ufce_flip_filter"),
         "fallback_used": _effective_field_map(results, "fallback_used"),
         "fallback_reason": _effective_field_map(results, "fallback_reason"),
         "not_main_table7": _effective_field_map(results, "not_main_table7"),
         "locked_config_claim_boundary": LOCKED_CONFIG_CLAIM_BOUNDARY,
         "final_blindspot_bundle_usage": "separate blind-spot diagnostics only; not main Table 7 thesis reproduction",
+        "domain_actionable_bundle_usage": "separate domain-actionable diagnostic profile only; not main Table 7 thesis reproduction",
         "dataset_versions": data_versions,
         "model_versions": model_versions,
         "split_seed": 42,
         "author_table_reference_source": "AUTHOR_TABLE7 constant in scripts/final/part1/01b_reproduce_ufce_only.py",
         "metric_definitions": {
             "metrics": list(METRICS),
-            "contract": "current UFCE-only Table 7 reproduction contract; APF metrics are fold-level counts over selected UFCE outputs",
+            "contract": (
+                "current UFCE-only reproduction contract; APF metrics are fold-level counts over selected UFCE outputs"
+            ),
+            "diagnostic_mode": (
+                "force_flip_strict" if int(getattr(args, "ufce_flip_filter", 0)) == 1 else "raw_table7"
+            ),
             "relative_delta_epsilon": RELATIVE_DELTA_EPSILON,
         },
         "feature_order_by_dataset": locked_manifest["feature_order_by_dataset"],
@@ -3114,7 +3271,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--runtime_profile",
         type=str,
         default="final_freeze",
-        choices=["tuned_run2", "final_freeze"],
+        choices=["tuned_run2", "final_freeze", "new_best_params"],
         help="Runtime config profile to use.",
     )
     parser.add_argument(
@@ -3123,7 +3280,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         dest="bundle_mode",
         type=str,
         default="table7_author_public",
-        choices=["author_public", "table7_author_public", "final_blindspot_best"],
+        choices=["author_public", "table7_author_public", "final_blindspot_best", DOMAIN_ACTIONABLE],
         help="UF/f2change/step bundle mode.",
     )
     parser.add_argument("--dataset", type=str, default="bank", choices=["bank", "grad", "wine", "bupa", "movie", "all"])
@@ -3144,9 +3301,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--ufce_flip_filter",
         type=int,
-        default=0,
+        default=None,
         choices=[0, 1],
-        help="Override tuned UFCE flipping filter (0/1) when provided",
+        help="Override tuned UFCE flipping filter (0/1) when provided; default uses the runtime profile.",
     )
     parser.add_argument("--debug", type=int, default=0, choices=[0, 1], help="Enable trust debug logs (0/1)")
     parser.add_argument(
@@ -3227,7 +3384,8 @@ def main() -> None:
     os.makedirs(args.out_dir, exist_ok=True)
     batch_records: List[Dict[str, object]] = []
     batch_t0 = time.time()
-    for dataset in ALL_DATASETS:
+    batch_datasets = DOMAIN_ACTIONABLE_DATASETS if _canonical_bundle_mode(str(args.bundle_mode)) == DOMAIN_ACTIONABLE else ALL_DATASETS
+    for dataset in batch_datasets:
         ds_t0 = time.time()
         print(f"\n==================== BATCH DATASET: {dataset} ====================")
         try:

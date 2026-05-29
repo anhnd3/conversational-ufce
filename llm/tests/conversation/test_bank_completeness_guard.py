@@ -92,6 +92,22 @@ def test_detect_explicit_bank_boolean_fields_handles_coordinated_negation_and_ow
     assert explicit == ["SecuritiesAccount", "CDAccount", "Online", "CreditCard"]
 
 
+def test_detect_explicit_bank_boolean_fields_handles_standalone_coordinated_no():
+    explicit = detect_explicit_bank_boolean_fields(
+        "No CD account or securities account, but I use online banking and own a bank credit card."
+    )
+
+    assert explicit == ["SecuritiesAccount", "CDAccount", "Online", "CreditCard"]
+
+
+def test_detect_explicit_bank_boolean_fields_handles_profile_list_services():
+    explicit = detect_explicit_bank_boolean_fields(
+        "I earn 83, mortgage 0, no securities account or CD account, online banking, and a credit card."
+    )
+
+    assert explicit == ["SecuritiesAccount", "CDAccount", "Online", "CreditCard"]
+
+
 def test_apply_bank_boolean_completeness_guard_keeps_coordinated_negation_and_own_language():
     guard_result = apply_bank_boolean_completeness_guard(
         user_text=(

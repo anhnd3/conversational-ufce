@@ -83,6 +83,7 @@ scripts/final/part1/03_force_flip_audit.py         # → scripts/run_ufce_trace_
 scripts/final/part1/03b_blackbox_regression_audit.py # → pytest ufce/tests (model bundle checks)
 scripts/final/part1/04_parameter_bundle_ablation.py # → scripts/ufce_hypothesis_ablation.py per dataset
 scripts/final/part1/05_trace_harness.py            # → scripts/run_ufce_trace_harness.py
+scripts/final/part1/06_public_forceflip_newbest.py # Direction-aware public force-flip vs new_best_params evidence pack
 scripts/final/part1/99_part1_closeout.py           # Orchestrates all Part I wrappers above
 scripts/final/part2/01_parser_metrics.py           # → llm_eval parser benchmark (LM Studio)
 scripts/final/part2/02_conversation_metrics.py     # → scripts/run_part2_thesis_metrics_report.py

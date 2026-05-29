@@ -1,35 +1,6 @@
 from __future__ import annotations
 
-from llm.src.part2_eval.annotation_scoring import (
-    score_initial_constraint_cases,
-    score_refinement_delta_cases,
-)
-from llm.src.part2_eval.corpora import (
-    BANK_BOUNDARY_PROFILES_CORPUS_PATH,
-    G5_AGENT_PORTABILITY_SYNTH300_CORPUS_PATH,
-    TIER_B_SYNTH300_CORPUS_PATH,
-    build_bank_boundary_profiles_corpus,
-    build_g5_agent_portability_synth300_corpus,
-    build_tier_a_annotation_corpus,
-    build_tier_b_bank_corpus,
-    build_tier_b_bank_synth300_corpus,
-    build_tier_c_bank_backend_corpus,
-    build_tier_d_bank_replay_corpus,
-    generate_bank_boundary_profiles_snapshot,
-    generate_g5_agent_portability_synth300_corpus,
-    generate_tier_a_annotation_corpus,
-    generate_tier_b_bank_corpus,
-    generate_tier_b_bank_synth300_corpus,
-    generate_tier_c_bank_backend_corpus,
-    generate_tier_d_bank_replay_corpus,
-    load_bank_boundary_profiles_corpus,
-    load_g5_agent_portability_synth300_corpus,
-    load_tier_a_annotation_corpus,
-    load_tier_b_bank_corpus,
-    load_tier_b_bank_synth300_corpus,
-    load_tier_c_bank_backend_corpus,
-    load_tier_d_bank_replay_corpus,
-)
+import importlib
 
 __all__ = [
     "BANK_BOUNDARY_PROFILES_CORPUS_PATH",
@@ -59,3 +30,15 @@ __all__ = [
     "score_initial_constraint_cases",
     "score_refinement_delta_cases",
 ]
+
+
+def __getattr__(name: str):
+    if name in {"score_initial_constraint_cases", "score_refinement_delta_cases"}:
+        annotation_scoring = importlib.import_module("llm.src.part2_eval.annotation_scoring")
+
+        return getattr(annotation_scoring, name)
+    if name in __all__:
+        corpora = importlib.import_module("llm.src.part2_eval.corpora")
+
+        return getattr(corpora, name)
+    raise AttributeError(name)

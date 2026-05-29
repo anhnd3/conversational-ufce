@@ -10,6 +10,8 @@ CONSTRAINT_SPEC_ALLOWED_KEYS = frozenset(
         "immutable",
         "disallowed_changes",
         "numeric_bounds",
+        "numeric_bounds_delta",
+        "allowed_changed_features",
         "max_changed_features",
         "prefer_fewer_changes",
     }
@@ -54,6 +56,16 @@ def validate_and_normalize_constraint_spec(
         if not value_errors:
             normalized["disallowed_changes"] = value
 
+    if "allowed_changed_features" in raw_spec:
+        value, value_errors = _normalize_feature_list(
+            raw_spec.get("allowed_changed_features"),
+            field_name="allowed_changed_features",
+            feature_order=feature_order,
+        )
+        errors.extend(value_errors)
+        if not value_errors:
+            normalized["allowed_changed_features"] = value
+
     if "numeric_bounds" in raw_spec:
         value, value_errors = _normalize_numeric_bounds(
             raw_spec.get("numeric_bounds"),
@@ -62,6 +74,15 @@ def validate_and_normalize_constraint_spec(
         errors.extend(value_errors)
         if not value_errors:
             normalized["numeric_bounds"] = value
+
+    if "numeric_bounds_delta" in raw_spec:
+        value, value_errors = _normalize_numeric_bounds_delta(
+            raw_spec.get("numeric_bounds_delta"),
+            numeric_bound_fields=_normalize_numeric_bound_fields(numeric_bound_fields),
+        )
+        errors.extend(value_errors)
+        if not value_errors:
+            normalized["numeric_bounds_delta"] = value
 
     if "max_changed_features" in raw_spec:
         value = raw_spec.get("max_changed_features")
@@ -106,12 +127,20 @@ def apply_constraint_spec_to_candidates(
     feature_order: list[str],
     sort_candidates,
     request_constraints_blocked_code: str,
+    factual_profile: dict[str, Any] | None = None,
 ) -> tuple[CounterfactualResult, dict[str, Any] | None]:
     if not isinstance(constraint_spec, dict) or not result.feasible or not result.candidates:
         return result, None
 
     blocked_fields = set(effective_blocked_fields(constraint_spec, feature_order=feature_order))
+    allowed_changed_features = constraint_spec.get("allowed_changed_features")
+    allowed_fields = set(allowed_changed_features) if isinstance(allowed_changed_features, list) else None
     numeric_bounds = constraint_spec.get("numeric_bounds") if isinstance(constraint_spec.get("numeric_bounds"), dict) else {}
+    numeric_bounds_delta = (
+        constraint_spec.get("numeric_bounds_delta")
+        if isinstance(constraint_spec.get("numeric_bounds_delta"), dict)
+        else {}
+    )
     max_changed_features = constraint_spec.get("max_changed_features")
     prefer_fewer_changes = bool(constraint_spec.get("prefer_fewer_changes"))
 
@@ -122,8 +151,11 @@ def apply_constraint_spec_to_candidates(
         reasons = _candidate_block_reasons(
             candidate=candidate,
             blocked_fields=blocked_fields,
+            allowed_fields=allowed_fields,
             numeric_bounds=numeric_bounds,
+            numeric_bounds_delta=numeric_bounds_delta,
             max_changed_features=max_changed_features,
+            factual_profile=factual_profile,
         )
         if reasons:
             for reason in reasons:
@@ -236,6 +268,63 @@ def _normalize_numeric_bounds_with_fields(
     return normalized, errors
 
 
+def _normalize_numeric_bounds_delta(
+    raw_value: Any,
+    *,
+    numeric_bound_fields: list[str],
+) -> tuple[dict[str, dict[str, float]], list[str]]:
+    if not isinstance(raw_value, dict):
+        return {}, ["constraint_spec.numeric_bounds_delta must be an object."]
+
+    errors: list[str] = []
+    normalized: dict[str, dict[str, float]] = {}
+    invalid_fields = sorted(key for key in raw_value if key not in numeric_bound_fields)
+    if invalid_fields:
+        errors.append(
+            "constraint_spec.numeric_bounds_delta contains unsupported fields: " + ", ".join(invalid_fields)
+        )
+
+    allowed_keys = {"max_increase", "max_decrease"}
+    for field_name in numeric_bound_fields:
+        if field_name not in raw_value:
+            continue
+        raw_bounds = raw_value.get(field_name)
+        if not isinstance(raw_bounds, dict):
+            errors.append(f"constraint_spec.numeric_bounds_delta.{field_name} must be an object.")
+            continue
+        unknown_bound_keys = sorted(key for key in raw_bounds if key not in allowed_keys)
+        if unknown_bound_keys:
+            errors.append(
+                f"constraint_spec.numeric_bounds_delta.{field_name} contains unknown keys: {', '.join(unknown_bound_keys)}"
+            )
+            continue
+        if not any(key in raw_bounds for key in allowed_keys):
+            errors.append(f"constraint_spec.numeric_bounds_delta.{field_name} must include max_increase or max_decrease.")
+            continue
+
+        normalized_bounds: dict[str, float] = {}
+        for bound_key in ("max_increase", "max_decrease"):
+            if bound_key not in raw_bounds:
+                continue
+            bound_value = raw_bounds[bound_key]
+            if isinstance(bound_value, bool) or not isinstance(bound_value, (int, float)):
+                errors.append(
+                    f"constraint_spec.numeric_bounds_delta.{field_name}.{bound_key} must be numeric."
+                )
+                continue
+            numeric_value = float(bound_value)
+            if numeric_value < 0:
+                errors.append(
+                    f"constraint_spec.numeric_bounds_delta.{field_name}.{bound_key} must be >= 0."
+                )
+                continue
+            normalized_bounds[bound_key] = numeric_value
+        if normalized_bounds:
+            normalized[field_name] = normalized_bounds
+
+    return normalized, errors
+
+
 def _normalize_numeric_bounds(
     raw_value: Any,
     *,
@@ -266,13 +355,18 @@ def _candidate_block_reasons(
     *,
     candidate: CounterfactualCandidate,
     blocked_fields: set[str],
+    allowed_fields: set[str] | None,
     numeric_bounds: dict[str, dict[str, float]],
+    numeric_bounds_delta: dict[str, dict[str, float]],
     max_changed_features: Any,
+    factual_profile: dict[str, Any] | None,
 ) -> list[str]:
     reasons: list[str] = []
     changed = list(candidate.changed_features)
     if blocked_fields and any(field in blocked_fields for field in changed):
         reasons.append("blocked_change_field")
+    if allowed_fields is not None and any(field not in allowed_fields for field in changed):
+        reasons.append("changed_field_not_allowed")
     if isinstance(max_changed_features, int) and len(changed) > max_changed_features:
         reasons.append("max_changed_features_exceeded")
     for field_name, bounds in numeric_bounds.items():
@@ -283,7 +377,30 @@ def _candidate_block_reasons(
             reasons.append(f"numeric_bounds:{field_name}")
         elif "max" in bounds and float(value) > float(bounds["max"]):
             reasons.append(f"numeric_bounds:{field_name}")
+    for field_name, bounds in numeric_bounds_delta.items():
+        if field_name not in candidate.profile:
+            continue
+        delta = _candidate_numeric_delta(candidate, field_name, factual_profile=factual_profile)
+        if delta is None:
+            continue
+        if "max_increase" in bounds and delta > float(bounds["max_increase"]):
+            reasons.append(f"numeric_bounds_delta:{field_name}")
+        elif "max_decrease" in bounds and -delta > float(bounds["max_decrease"]):
+            reasons.append(f"numeric_bounds_delta:{field_name}")
     return reasons
+
+
+def _candidate_numeric_delta(
+    candidate: CounterfactualCandidate,
+    field_name: str,
+    *,
+    factual_profile: dict[str, Any] | None,
+) -> float | None:
+    after = candidate.profile.get(field_name)
+    before = factual_profile.get(field_name) if isinstance(factual_profile, dict) else None
+    if before is None or after is None:
+        return None
+    return float(after) - float(before)
 
 
 def _ordered_feature_subset(fields: list[str], *, feature_order: list[str]) -> list[str]:

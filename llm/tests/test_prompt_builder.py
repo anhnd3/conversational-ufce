@@ -133,8 +133,8 @@ def test_build_request_payload_has_strict_json_schema_shape():
     assert "messages" not in payload
 
 
-def test_default_response_schema_name_is_v2():
-    assert DEFAULT_RESPONSE_SCHEMA_NAME == "ufce_bank_cf_parser_output_v2"
+def test_default_response_schema_name_is_v3():
+    assert DEFAULT_RESPONSE_SCHEMA_NAME == "ufce_bank_cf_parser_output_v3"
 
 
 def test_load_system_prompt_preserves_file_contents(tmp_path):

@@ -31,12 +31,14 @@ class UFCECanonicalBackend:
         *,
         deterministic_seed_value: int | None = None,
         debug_trace: RuntimeDebugTrace | None = None,
+        core_config=None,
     ) -> BackendExecutionResult:
         legacy_request = self.mapper.map(request, dataset, context)
         legacy_result = self.service.generate(
             legacy_request,
             debug_trace=debug_trace,
             deterministic_seed_value=deterministic_seed_value,
+            config=core_config,
         )
         candidates = self.normalizer.normalize(
             backend_id=self.backend_id,

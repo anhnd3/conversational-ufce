@@ -77,6 +77,15 @@ Validates that raw UFCE output does not produce strict valid recourse in force-f
 
 **Note:** The current trace harness may not expose `raw_candidate_count` and `flip_valid_candidate_count` directly; these fields will be `null` with a warning if the underlying script doesn't provide them. This is documented as a limitation.
 
+#### 3.4b Public Force-Flip vs New-Best Recovery
+
+```bash
+python scripts/final/part1/06_public_forceflip_newbest.py --dataset all
+```
+
+Builds a single evidence pack comparing published Table 7 values, public/final-freeze UFCE with `force_flip=1`, and the latest `new_best_params` profile in `01b_reproduce_ufce_only.py`.
+The final comparison table is metric-direction aware: `Prox-Jac`, `Prox-Euc`, and `Sparsity` are lower-is-better; `Actionability`, `Plausibility`, and `Feasibility` are higher-is-better.
+
 #### 3.5 Black-Box Regression Audit
 
 ```bash

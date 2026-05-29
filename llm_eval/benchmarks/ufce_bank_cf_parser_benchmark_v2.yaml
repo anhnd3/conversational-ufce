@@ -1,0 +1,298 @@
+benchmark_name: ufce_bank_cf_parser_v2
+description: Bank-only benchmark for evaluating explicit semantic natural-language extraction into the canonical counterfactual-request JSON structure.
+target_cf_fields:
+- name: Income
+  type: float
+  description: Target income value
+- name: CCAvg
+  type: float
+  description: Average credit card spending
+- name: Family
+  type: int
+  description: Family size
+- name: Education
+  type: int
+  description: Education category code
+- name: Mortgage
+  type: float
+  description: Mortgage value
+- name: CDAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: Online
+  type: binary
+  description: 1=yes, 0=no
+- name: SecuritiesAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: CreditCard
+  type: binary
+  description: 1=yes, 0=no
+output_contract:
+  task: extract_cf_request
+  status_enum:
+  - complete
+  - partial
+  - needs_clarification
+  - conflict
+  rules:
+  - Return only fields explicitly inferable from the input.
+  - Do not invent missing values.
+  - Use canonical field names exactly as defined.
+  - Binary fields must be 0 or 1.
+  - Education must be a numeric category code when provided.
+  - missing_fields must list canonical field names that are not specified but would be needed for a complete CF request.
+  - conflicts must describe contradictory or invalid instructions briefly.
+  - notes may contain short normalization notes if needed; otherwise return an empty list.
+cases:
+- case_id: NL01
+  group: NL
+  description: Complete prose profile with explicit semantic values
+  input: I earn 90, spend about 5.5 on my credit card each month, live in a family of 5, and my education category is 3. My mortgage target is 250. I want online banking and a credit card, but no CD account and no securities account.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 90
+      Family: 5
+      CCAvg: 5.5
+      Education: 3
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: NL02
+  group: NL
+  description: Complete prose profile with no mortgage and coordinated boolean negation
+  input: I make 65, have a household of 2, card spending around 1.5, education level 2, and no mortgage. I do not have a securities account or a CD account, but I use online banking and own a bank credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 65
+      Family: 2
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 0
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 1
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: NL03
+  group: NL
+  description: Partial prose profile with omitted service flags
+  input: I earn 40, spend around 1.5 on cards, have a family of 3, education code 2, and a mortgage of 80.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Income: 40
+      Family: 3
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 80
+    missing_fields:
+    - SecuritiesAccount
+    - CDAccount
+    - Online
+    - CreditCard
+    conflicts: []
+    notes: []
+- case_id: NL04
+  group: NL
+  description: Prose profile with hard constraint
+  input: I earn 72, family of 1, spend 4.8 on my credit card, education level 2, and mortgage 200. I have a securities account and a CD account, no online banking, and no credit card. Do not change my income.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 72
+      Family: 1
+      CCAvg: 4.8
+      Education: 2
+      Mortgage: 200
+      SecuritiesAccount: 1
+      CDAccount: 1
+      Online: 0
+      CreditCard: 0
+    constraint_spec:
+      disallowed_changes:
+      - Income
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: NL05
+  group: NL
+  description: Qualitative numeric phrases must not be converted
+  input: I need high income, low mortgage, and I use online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Online: 1
+    missing_fields:
+    - Income
+    - Family
+    - CCAvg
+    - Education
+    - Mortgage
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Qualitative profile terms are not converted to numeric Bank dataset values
+- case_id: NL06
+  group: NL
+  description: Education degree label must not be converted
+  input: I earn 48, card average spending 1.2, family of 2, and I studied at the undergraduate level. I want a credit card.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 48
+      Family: 2
+      CCAvg: 1.2
+      CreditCard: 1
+    missing_fields:
+    - Education
+    - Mortgage
+    - SecuritiesAccount
+    - CDAccount
+    - Online
+    conflicts: []
+    notes:
+    - Education is mentioned semantically, but the benchmark requires numeric category code only
+- case_id: NL07
+  group: NL
+  description: Explicit contradiction in prose value
+  input: I earn 68, actually I earn 75, family of 1, education 2, mortgage 0, and online banking.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Family: 1
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    missing_fields:
+    - CCAvg
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts:
+    - Explicit field 'Income' has conflicting values in the same turn.
+    notes: []
+- case_id: NL08
+  group: NL
+  description: Numeric bound and soft preference in prose profile
+  input: I earn 83, family of 1, spend 2.8 on cards, education level 2, mortgage 0, no securities account or CD account, online banking, and a credit card. Keep income at or above 80 and prefer smaller edits.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 83
+      Family: 1
+      CCAvg: 2.8
+      Education: 2
+      Mortgage: 0
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 1
+    constraint_spec:
+      numeric_bounds:
+        Income:
+          min: 80
+      prefer_fewer_changes: true
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: NL09
+  group: NL
+  description: Complete prose profile with synonym labels
+  input: My salary is 58, my household size is 4, credit card spending is 2.1, education category is 1, and mortgage is 35. I have no securities account, without a certificate of deposit, use online banking, and do not own a bank credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 58
+      Family: 4
+      CCAvg: 2.1
+      Education: 1
+      Mortgage: 35
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 0
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: NL10
+  group: NL
+  description: Dollar and k-style units are not converted into dataset units
+  input: I have an annual income of $65,000, a household of 2, spend about $1.5k on cards, education level 2, and no mortgage. I use online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Family: 2
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    missing_fields:
+    - Income
+    - CCAvg
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Currency and k-style amounts are not converted into Bank dataset units without an explicit dataset-scale value
+- case_id: NL11
+  group: NL
+  description: Boolean contradiction in prose must be surfaced as conflict
+  input: I use online banking, but also no online banking. I earn 70, family of 2, spend 2.0 on cards, education level 2, mortgage 0.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Income: 70
+      Family: 2
+      CCAvg: 2.0
+      Education: 2
+      Mortgage: 0
+    missing_fields:
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts:
+    - Explicit field 'Online' has conflicting values in the same turn.
+    notes: []
+- case_id: NL12
+  group: NL
+  description: Partial service-only prose profile with missing numeric facts
+  input: No mortgage, no CD account or securities account, but I use online banking and own a bank credit card.
+  expected_output:
+    task: extract_cf_request
+    status: partial
+    cf_request:
+      Mortgage: 0
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 1
+    missing_fields:
+    - Income
+    - Family
+    - CCAvg
+    - Education
+    conflicts: []
+    notes: []

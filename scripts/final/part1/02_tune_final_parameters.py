@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -52,6 +52,10 @@ from ufce.core.data_processing import (
     get_bupa_user_constraints,
     get_movie_user_constraints,
 )
+from scripts.final.part1._movie_proximity import (
+    mean_sem,
+    pairwise_normalized_l2_0_100_values,
+)
 from scripts.archieve.reproduce_results_v3 import AUTHOR_TABLE7
 
 
@@ -79,6 +83,10 @@ MOVIE_APF_DENOM_MODE_DEFAULT = "explained"
 MOVIE_N_EXPLAINED_TARGET_DEFAULT = 20
 PROX_SPACE_MODE_DEFAULT = "raw"
 FOLDS_SOURCE_DEFAULT = "auto"
+STRICT_EVAL_MODE = "strict_other"
+RELAXED_EVAL_MODE = "relaxed_ufc"
+AUTHOR_PUBLIC_CONSTRAINT_PROFILE = "author_public"
+DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE = "domain_actionable"
 
 EFFECTIVE_CONFIG_FIELDS = [
     "dataset",
@@ -100,6 +108,8 @@ EFFECTIVE_CONFIG_FIELDS = [
     "movie_apf_unit_mode",
     "movie_apf_denom_mode",
     "prox_space_mode",
+    "constraint_profile",
+    "eval_mode",
 ]
 RUN_SORT_FIELDS = ["run_started_at_utc", "run_id", "run_seq_in_file"]
 
@@ -195,6 +205,8 @@ def ensure_effective_config_fields_df(df: pd.DataFrame) -> pd.DataFrame:
         "movie_apf_unit_mode": MOVIE_APF_UNIT_MODE_DEFAULT,
         "movie_apf_denom_mode": MOVIE_APF_DENOM_MODE_DEFAULT,
         "prox_space_mode": PROX_SPACE_MODE_DEFAULT,
+        "constraint_profile": AUTHOR_PUBLIC_CONSTRAINT_PROFILE,
+        "eval_mode": STRICT_EVAL_MODE,
         "run_started_at_utc": "00000000T000000Z",
         "run_id": "00000000T000000Z_00000000",
         "run_seq_in_file": 0,
@@ -222,6 +234,10 @@ def ensure_effective_config_fields_df(df: pd.DataFrame) -> pd.DataFrame:
     out["movie_apf_unit_mode"] = out["movie_apf_unit_mode"].apply(lambda v: sanitize_mode_string(v, MOVIE_APF_UNIT_MODE_DEFAULT))
     out["movie_apf_denom_mode"] = out["movie_apf_denom_mode"].apply(lambda v: sanitize_mode_string(v, MOVIE_APF_DENOM_MODE_DEFAULT))
     out["prox_space_mode"] = out["prox_space_mode"].apply(lambda v: sanitize_mode_string(v, PROX_SPACE_MODE_DEFAULT))
+    out["constraint_profile"] = out["constraint_profile"].apply(
+        lambda v: sanitize_mode_string(v, AUTHOR_PUBLIC_CONSTRAINT_PROFILE)
+    )
+    out["eval_mode"] = out["eval_mode"].apply(lambda v: sanitize_mode_string(v, STRICT_EVAL_MODE))
     return out
 
 
@@ -238,6 +254,8 @@ def ensure_effective_config_fields_record(record) -> Dict[str, object]:
         "movie_apf_unit_mode": MOVIE_APF_UNIT_MODE_DEFAULT,
         "movie_apf_denom_mode": MOVIE_APF_DENOM_MODE_DEFAULT,
         "prox_space_mode": PROX_SPACE_MODE_DEFAULT,
+        "constraint_profile": AUTHOR_PUBLIC_CONSTRAINT_PROFILE,
+        "eval_mode": STRICT_EVAL_MODE,
     }
     out = dict(record)
     for col, default_value in defaults.items():
@@ -945,6 +963,77 @@ def get_step_config(dataset: str) -> Dict[str, float]:
     return {}
 
 
+def apply_constraint_profile(
+    *,
+    dataset: str,
+    uf: Dict[str, Any],
+    f2change: Sequence[str],
+    step: Dict[str, float],
+    profile: str,
+) -> Tuple[Dict[str, Any], List[str], Dict[str, float]]:
+    profile = str(profile)
+    if profile == AUTHOR_PUBLIC_CONSTRAINT_PROFILE:
+        selected_f2change = list(f2change)
+        return copy.deepcopy(uf), selected_f2change, {feature: step[feature] for feature in selected_f2change}
+    if profile != DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE:
+        raise ValueError(f"Unsupported constraint_profile: {profile}")
+
+    out_uf = copy.deepcopy(uf)
+    out_step = copy.deepcopy(step)
+    if dataset == "bank":
+        selected_f2change = ["Income", "CCAvg", "Mortgage", "CDAccount", "Online", "CreditCard", "SecuritiesAccount"]
+    elif dataset == "bupa":
+        selected_f2change = ["Sgpt", "Sgot", "Gammagt", "Drinks"]
+    elif dataset == "wine":
+        selected_f2change = [
+            "fixed acidity",
+            "free sulfur dioxide",
+            "total sulfur dioxide",
+            "pH",
+            "alcohol",
+            "density",
+            "volatile acidity",
+            "citric acid",
+            "residual sugar",
+        ]
+    elif dataset == "movie":
+        selected_f2change = [
+            "Production_expense",
+            "Multiplex_coverage",
+            "Num_multiplex",
+            "Movie_length",
+            "Lead_Actor_Rating",
+            "Lead_Actress_rating",
+            "Director_rating",
+            "Producer_rating",
+            "Genre",
+            "Collection",
+            "Budget",
+        ]
+    elif dataset == "grad":
+        selected_f2change = list(f2change)
+    else:
+        raise ValueError(f"Unsupported dataset for domain_actionable: {dataset}")
+
+    missing_uf = [feature for feature in selected_f2change if feature not in out_uf]
+    missing_step = [feature for feature in selected_f2change if feature not in out_step]
+    if missing_uf:
+        raise ValueError(f"Missing {profile} uf config for {dataset}: {missing_uf}")
+    if missing_step:
+        raise ValueError(f"Missing {profile} step config for {dataset}: {missing_step}")
+    if not set(f2change).issubset(set(selected_f2change)):
+        raise ValueError(f"{profile} must extend author f2change for {dataset}.")
+    return out_uf, selected_f2change, {feature: out_step[feature] for feature in selected_f2change}
+
+
+def eval_mode_to_ufce_method(eval_mode: str) -> str:
+    if eval_mode == STRICT_EVAL_MODE:
+        return "other"
+    if eval_mode == RELAXED_EVAL_MODE:
+        return "ufc"
+    raise ValueError(f"Unsupported eval_mode: {eval_mode}")
+
+
 def init_ufce_global(
     radius: int,
     n_neighbors: int,
@@ -963,6 +1052,62 @@ def init_ufce_global(
     )
     # Keep evaluation helpers aligned with generation parameters.
     eval_module.ufc = cfmethods.ufc
+
+
+def evaluate_actionability_counts(
+    *,
+    cf_frames: Sequence[pd.DataFrame],
+    test_frames: Sequence[pd.DataFrame],
+    features: List[str],
+    f2change: List[str],
+    uf: Dict[str, float],
+    eval_mode: str,
+) -> List[float]:
+    method_name = eval_mode_to_ufce_method(eval_mode)
+    counts: List[float] = []
+    for cf_df, test_df in zip(cf_frames, test_frames):
+        cfs, _flag, _ids, _temp = cfmethods.ufc.actionability(
+            cf_df.copy(deep=True),
+            test_df.copy(deep=True),
+            list(features),
+            list(f2change),
+            0,
+            copy.deepcopy(uf),
+            method=method_name,
+        )
+        counts.append(float(len(cfs)))
+    return counts
+
+
+def evaluate_feasibility_counts(
+    *,
+    cf_frames: Sequence[pd.DataFrame],
+    test_frames: Sequence[pd.DataFrame],
+    Xtrain: pd.DataFrame,
+    features: List[str],
+    f2change: List[str],
+    bb_model,
+    desired_outcome: float,
+    uf: Dict[str, float],
+    eval_mode: str,
+) -> List[float]:
+    method_name = eval_mode_to_ufce_method(eval_mode)
+    counts: List[float] = []
+    for cf_df, test_df in zip(cf_frames, test_frames):
+        feas, _temp = cfmethods.ufc.feasibility(
+            test_df.copy(deep=True),
+            cf_df.copy(deep=True),
+            Xtrain.copy(deep=True),
+            list(features),
+            list(f2change),
+            bb_model,
+            desired_outcome,
+            copy.deepcopy(uf),
+            0,
+            method=method_name,
+        )
+        counts.append(float(feas))
+    return counts
 
 
 def run_one_fold(
@@ -1000,6 +1145,7 @@ def run_one_fold(
     movie_lof_standardize_mode: str = MOVIE_LOF_STANDARDIZE_MODE_DEFAULT,
     movie_lof_contamination: str = MOVIE_LOF_CONTAMINATION_DEFAULT,
     prox_space_mode: str = PROX_SPACE_MODE_DEFAULT,
+    eval_mode: str = STRICT_EVAL_MODE,
 ) -> Tuple[Dict[str, Dict[str, float]], Dict[str, float], Dict[str, Dict[str, float]], Dict[str, object]]:
     use_movie_distance_space = bool(
         scaler is not None and str(scaler.get("kind", "")).lower() == "movie_minmax_0_100"
@@ -1152,50 +1298,33 @@ def run_one_fold(
 
     cat_means, _ = Catproximity(onecfs, onetest, twocfs, twotest, threecfs, threetest, dummy, dummy, dummy, dummy, Xtest, catf)
     if use_movie_distance_space:
-        onecfs_dist = apply_distance_scaler(onecfs, scaler)
-        twocfs_dist = apply_distance_scaler(twocfs, scaler)
-        threecfs_dist = apply_distance_scaler(threecfs, scaler)
-        onetest_dist = fold_df_dist.loc[idx1].reset_index(drop=True)
-        twotest_dist = fold_df_dist.loc[idx2].reset_index(drop=True)
-        threetest_dist = fold_df_dist.loc[idx3].reset_index(drop=True)
-        Xtest_dist = apply_distance_scaler(Xtest, scaler)
-        cont_means, _ = Contproximity(
-            onecfs_dist,
-            onetest_dist,
-            twocfs_dist,
-            twotest_dist,
-            threecfs_dist,
-            threetest_dist,
-            dummy,
-            dummy,
-            dummy,
-            dummy,
-            Xtest_dist,
-            numf,
-        )
+        cont_means = []
+        for factual_df, candidate_df in [(onetest, onecfs), (twotest, twocfs), (threetest, threecfs)]:
+            values = pairwise_normalized_l2_0_100_values(factual_df, candidate_df, numf, scaler)
+            mean_value, _std_value = mean_sem(values)
+            cont_means.append(mean_value)
     else:
         cont_means, _ = Contproximity(onecfs, onetest, twocfs, twotest, threecfs, threetest, dummy, dummy, dummy, dummy, Xtest, numf)
     spar_means, _ = Sparsity(onecfs, onetest, twocfs, twotest, threecfs, threetest, dummy, dummy, dummy, dummy, Xtest, numf)
-    act_means, _ = Actionability(onecfs, onetest, twocfs, twotest, threecfs, threetest, dummy, dummy, dummy, dummy, Xtest, features, f2change, uf)
+    act_means = evaluate_actionability_counts(
+        cf_frames=[onecfs, twocfs, threecfs],
+        test_frames=[onetest, twotest, threetest],
+        features=features,
+        f2change=f2change,
+        uf=uf,
+        eval_mode=eval_mode,
+    )
     plaus_means, _ = Plausibility(onecfs, onetest, twocfs, twotest, threecfs, threetest, dummy, dummy, dummy, dummy, Xtest, Xtrain)
-    feas_means, _ = Feasibility(
-        onecfs,
-        onetest,
-        twocfs,
-        twotest,
-        threecfs,
-        threetest,
-        dummy,
-        dummy,
-        dummy,
-        dummy,
-        Xtest,
-        Xtrain,
-        features,
-        f2change,
-        bb_model,
-        desired_outcome,
-        uf,
+    feas_means = evaluate_feasibility_counts(
+        cf_frames=[onecfs, twocfs, threecfs],
+        test_frames=[onetest, twotest, threetest],
+        Xtrain=Xtrain,
+        features=features,
+        f2change=f2change,
+        bb_model=bb_model,
+        desired_outcome=desired_outcome,
+        uf=uf,
+        eval_mode=eval_mode,
     )
 
     def take3(arr):
@@ -1246,6 +1375,7 @@ def run_one_fold(
             "min_feas": int(min_feas),
             "atol": float(atol),
         },
+        "eval_mode": str(eval_mode),
         "distance_scaler": copy.deepcopy(scaler) if isinstance(scaler, dict) else None,
         "use_movie_distance_space": bool(use_movie_distance_space),
         "movie_lof_space_mode": str(movie_lof_space_mode),
@@ -1367,6 +1497,7 @@ def run_movie_diag_sidecar(diag_inputs: Dict[str, object]) -> Dict[str, object]:
         return {"dataset": dataset, "diag_skipped": True}
 
     local_ufc = _build_local_ufce(diag_inputs.get("ufce_params", {}))
+    eval_method_name = eval_mode_to_ufce_method(str(diag_inputs.get("eval_mode", STRICT_EVAL_MODE)))
     method_data = copy.deepcopy(diag_inputs.get("method_data", {}))
     features = list(diag_inputs.get("features", []))
     numf = list(diag_inputs.get("numf", []))
@@ -1430,7 +1561,7 @@ def run_movie_diag_sidecar(diag_inputs: Dict[str, object]) -> Dict[str, object]:
             list(f2change),
             0,
             copy.deepcopy(uf),
-            method="other",
+            method=eval_method_name,
         )
         _ = act_cfs  # kept for parity/debug potential
         a_flags = _mapped_flags_from_local_idx([int(i) for i in act_local_idx], idx_map, n_explained)
@@ -1464,7 +1595,7 @@ def run_movie_diag_sidecar(diag_inputs: Dict[str, object]) -> Dict[str, object]:
             desired_outcome,
             copy.deepcopy(uf),
             0,
-            method="other",
+            method=eval_method_name,
             return_details=True,
             use_standard_scaler=True,
             lof_space_label="raw_lof",
@@ -1519,16 +1650,12 @@ def run_movie_diag_sidecar(diag_inputs: Dict[str, object]) -> Dict[str, object]:
                 except Exception:
                     continue
             if use_movie_distance_space and distance_scaler is not None:
-                t_dist = apply_distance_scaler(test_df.loc[:, method_cols], distance_scaler)
-                c_dist = apply_distance_scaler(cf_df.loc[:, method_cols], distance_scaler)
-                for i in range(len(t_dist)):
-                    prox_dist_vals.append(
-                        float(
-                            np.linalg.norm(
-                                c_dist.iloc[i].to_numpy(dtype=float) - t_dist.iloc[i].to_numpy(dtype=float)
-                            )
-                        )
-                    )
+                prox_dist_vals = pairwise_normalized_l2_0_100_values(
+                    test_df.loc[:, method_cols],
+                    cf_df.loc[:, method_cols],
+                    method_cols,
+                    distance_scaler,
+                )
         out["prox_dual"][method] = {
             "prox_euc_raw_diag": float(np.mean(prox_raw_vals)) if len(prox_raw_vals) > 0 else float("nan"),
             "prox_euc_distance_diag": float(np.mean(prox_dist_vals)) if len(prox_dist_vals) > 0 else float("nan"),
@@ -1991,6 +2118,11 @@ def rebuild_comparison_from_leaderboard(
                             cfg.get("prox_space_mode", PROX_SPACE_MODE_DEFAULT),
                             PROX_SPACE_MODE_DEFAULT,
                         ),
+                        "constraint_profile": sanitize_mode_string(
+                            cfg.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE),
+                            AUTHOR_PUBLIC_CONSTRAINT_PROFILE,
+                        ),
+                        "eval_mode": sanitize_mode_string(cfg.get("eval_mode", STRICT_EVAL_MODE), STRICT_EVAL_MODE),
                         "score_total": float(cfg.get("score_total", float("nan"))),
                         "score_ufce1": float(cfg.get("score_ufce1", float("nan"))),
                         "score_ufce2": float(cfg.get("score_ufce2", float("nan"))),
@@ -2190,6 +2322,8 @@ def print_topk_comparison_tables(
         movie_apf_unit_mode = str(row_rec.get("movie_apf_unit_mode", MOVIE_APF_UNIT_MODE_DEFAULT))
         movie_apf_denom_mode = str(row_rec.get("movie_apf_denom_mode", MOVIE_APF_DENOM_MODE_DEFAULT))
         prox_space_mode = str(row_rec.get("prox_space_mode", PROX_SPACE_MODE_DEFAULT))
+        constraint_profile = str(row_rec.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE))
+        eval_mode = str(row_rec.get("eval_mode", STRICT_EVAL_MODE))
         score_total = float(row.get("score_total", float("nan")))
         score_ufce1 = float(row.get("score_ufce1", float("nan")))
         score_ufce2 = float(row.get("score_ufce2", float("nan")))
@@ -2239,6 +2373,8 @@ def print_topk_comparison_tables(
             & (comp["movie_apf_unit_mode"].astype(str) == movie_apf_unit_mode)
             & (comp["movie_apf_denom_mode"].astype(str) == movie_apf_denom_mode)
             & (comp["prox_space_mode"].astype(str) == prox_space_mode)
+            & (comp["constraint_profile"].astype(str) == constraint_profile)
+            & (comp["eval_mode"].astype(str) == eval_mode)
         )
         cfg_comp = comp.loc[mask].copy()
         if cfg_comp.empty:
@@ -2249,6 +2385,7 @@ def print_topk_comparison_tables(
                 f"score_max_penalized={fmt_float(score_max_penalized)}, min_coverage={fmt_float(min_coverage)} | "
                 f"degenerate_all_methods={degenerate_all_methods}, invalid_reason_summary={invalid_reason_summary} | "
                 f"coverage_mode={coverage_mode}, "
+                f"constraint_profile={constraint_profile}, eval_mode={eval_mode}, "
                 f"radius={radius}, n_neighbors={n_neighbors}, min_act={min_act}, min_feas={min_feas}, "
                 f"ufce_flip_filter={ufce_flip_filter} ---"
             )
@@ -2268,7 +2405,7 @@ def print_topk_comparison_tables(
                 f"effective_key=({dataset},{seed},{radius},{n_neighbors},{min_act},{min_feas},"
                 f"{ufce_flip_filter},{folds_selected},{n_folds_selected},{folds_source},{n_explained_target},"
                 f"{movie_distance_scaler_mode},{movie_lof_space_mode},{movie_lof_standardize_mode},{movie_lof_contamination},"
-                f"{movie_apf_unit_mode},{movie_apf_denom_mode},{prox_space_mode})"
+                f"{movie_apf_unit_mode},{movie_apf_denom_mode},{prox_space_mode},{constraint_profile},{eval_mode})"
             )
             if not pair_counts.empty:
                 print("[WARN] duplicated method/metric pairs:")
@@ -2347,11 +2484,15 @@ def write_best_json(json_path: str, leaderboard_df: pd.DataFrame, run_stage: str
     if coverage_mode not in {"flip", "non_empty"}:
         coverage_mode = "flip" if best_ufce_flip_filter == 1 else "non_empty"
     valid_config = parse_bool(best.get("valid_config", True), default=True)
+    constraint_profile = sanitize_mode_string(best.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE), AUTHOR_PUBLIC_CONSTRAINT_PROFILE)
+    eval_mode = sanitize_mode_string(best.get("eval_mode", STRICT_EVAL_MODE), STRICT_EVAL_MODE)
     if run_stage == "run1":
         payload = {
             "min_act": int(best["min_act"]),
             "min_feas": int(best["min_feas"]),
             "ufce_flip_filter": int(best_ufce_flip_filter),
+            "constraint_profile": constraint_profile,
+            "eval_mode": eval_mode,
             "coverage_mode": coverage_mode,
             "score_max_penalized": score_max_penalized,
             "score_max": score_max,
@@ -2367,6 +2508,8 @@ def write_best_json(json_path: str, leaderboard_df: pd.DataFrame, run_stage: str
             "min_act": int(best["min_act"]),
             "min_feas": int(best["min_feas"]),
             "ufce_flip_filter": int(best_ufce_flip_filter),
+            "constraint_profile": constraint_profile,
+            "eval_mode": eval_mode,
             "coverage_mode": coverage_mode,
             "score_max_penalized": score_max_penalized,
             "score_max": score_max,
@@ -2402,6 +2545,8 @@ def config_key(dataset: str, seed: int, cfg: Dict[str, int | str]) -> Tuple:
         ),
         sanitize_mode_string(cfg.get("movie_apf_unit_mode", MOVIE_APF_UNIT_MODE_DEFAULT), MOVIE_APF_UNIT_MODE_DEFAULT),
         sanitize_mode_string(cfg.get("movie_apf_denom_mode", MOVIE_APF_DENOM_MODE_DEFAULT), MOVIE_APF_DENOM_MODE_DEFAULT),
+        sanitize_mode_string(cfg.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE), AUTHOR_PUBLIC_CONSTRAINT_PROFILE),
+        sanitize_mode_string(cfg.get("eval_mode", STRICT_EVAL_MODE), STRICT_EVAL_MODE),
     )
 
 
@@ -2443,6 +2588,8 @@ def load_existing_keys(csv_path: str) -> set:
                 ),
                 sanitize_mode_string(row.get("movie_apf_unit_mode", MOVIE_APF_UNIT_MODE_DEFAULT), MOVIE_APF_UNIT_MODE_DEFAULT),
                 sanitize_mode_string(row.get("movie_apf_denom_mode", MOVIE_APF_DENOM_MODE_DEFAULT), MOVIE_APF_DENOM_MODE_DEFAULT),
+                sanitize_mode_string(row.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE), AUTHOR_PUBLIC_CONSTRAINT_PROFILE),
+                sanitize_mode_string(row.get("eval_mode", STRICT_EVAL_MODE), STRICT_EVAL_MODE),
             )
         )
     return keys
@@ -2577,7 +2724,19 @@ def main():
 
     # Alias --stage to --run_stage for spec-compliant interface
     parser.add_argument("--stage", dest="run_stage", type=str, help=argparse.SUPPRESS)
-    parser.add_argument("--run_stage", type=str, default="auto", choices=["auto", "run1", "run2", "all"])
+    parser.add_argument("--run_stage", type=str, default="auto", choices=["auto", "run1", "run2", "full_grid", "all"])
+    parser.add_argument(
+        "--constraint_profile",
+        type=str,
+        default=AUTHOR_PUBLIC_CONSTRAINT_PROFILE,
+        choices=[AUTHOR_PUBLIC_CONSTRAINT_PROFILE, DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE],
+    )
+    parser.add_argument(
+        "--eval_mode",
+        type=str,
+        default=STRICT_EVAL_MODE,
+        choices=[STRICT_EVAL_MODE, RELAXED_EVAL_MODE],
+    )
     parser.add_argument("--contprox_metric", type=str, default="euclidean")
     parser.add_argument("--radius", type=int, default=500)
     parser.add_argument("--n_neighbors", type=int, default=1000)
@@ -2631,6 +2790,14 @@ def main():
                 ds_out,
                 "--run_stage",
                 args.run_stage,
+                "--constraint_profile",
+                args.constraint_profile,
+                "--eval_mode",
+                args.eval_mode,
+                "--ufce_flip_filter",
+                str(args.ufce_flip_filter),
+                "--max_folds",
+                str(args.max_folds),
             ]
             completed = subprocess.run(cmd, cwd=ROOT, check=False)
             if completed.returncode != 0:
@@ -2651,6 +2818,14 @@ def main():
                 args.out_dir,
                 "--run_stage",
                 stage,
+                "--constraint_profile",
+                args.constraint_profile,
+                "--eval_mode",
+                args.eval_mode,
+                "--ufce_flip_filter",
+                str(args.ufce_flip_filter),
+                "--max_folds",
+                str(args.max_folds),
             ]
             completed = subprocess.run(cmd, cwd=ROOT, check=False)
             if completed.returncode != 0:
@@ -2666,8 +2841,8 @@ def main():
     diag_enabled = bool(str(args.dataset).strip().lower() == "movie" and bool(DEBUG_MOVIE_DIAG))
     os.makedirs(args.out_dir, exist_ok=True)
 
-    leaderboard_name = "leaderboard_run1.csv" if run_stage == "run1" else "leaderboard_run2.csv"
-    best_name = "best_run1.json" if run_stage == "run1" else "best_run2.json"
+    leaderboard_name = f"leaderboard_{run_stage}.csv"
+    best_name = f"best_{run_stage}.json"
     leaderboard_primary = os.path.join(args.out_dir, leaderboard_name)
     best_json_primary = os.path.join(args.out_dir, best_name)
     comparison_primary = os.path.join(args.out_dir, f"comparison_{run_stage}_all_configs.csv")
@@ -2727,7 +2902,7 @@ def main():
                     "ufce_flip_filter": int(args.ufce_flip_filter),
                 }
             )
-    else:
+    elif run_stage == "run2":
         if args.min_act is None or args.min_feas is None:
             raise ValueError("Run 2 requires --min_act and --min_feas.")
         if args.radius_grid is None or args.n_neighbors_grid is None:
@@ -2745,6 +2920,27 @@ def main():
             }
             for radius, n_neighbors in itertools.product(radius_grid, n_neighbors_grid)
         ]
+    else:
+        if args.radius_grid is None or args.n_neighbors_grid is None:
+            raise ValueError("full_grid requires both --radius_grid and --n_neighbors_grid.")
+        radius_grid = parse_int_grid(args.radius_grid, default_values=[])
+        n_neighbors_grid = parse_int_grid(args.n_neighbors_grid, default_values=[])
+        min_act_grid = parse_int_grid(args.min_act_grid, default_values=[0, 1, 2, 3])
+        min_feas_grid = parse_int_grid(args.min_feas_grid, default_values=[0, 1, 2])
+        configs = []
+        for radius, n_neighbors, min_act, min_feas in itertools.product(radius_grid, n_neighbors_grid, min_act_grid, min_feas_grid):
+            if int(args.enforce_min_act_ge_min_feas) == 1 and min_act < min_feas:
+                continue
+            configs.append(
+                {
+                    "radius": radius,
+                    "n_neighbors": n_neighbors,
+                    "contprox_metric": args.contprox_metric,
+                    "min_act": min_act,
+                    "min_feas": min_feas,
+                    "ufce_flip_filter": int(args.ufce_flip_filter),
+                }
+            )
 
     if not configs:
         raise ValueError("No configurations to run after applying constraints.")
@@ -2785,6 +2981,13 @@ def main():
         data_lab1,
     ) = get_dataset_constraints(args.dataset, datasetdf)
     step = get_step_config(args.dataset)
+    uf, f2change, step = apply_constraint_profile(
+        dataset=args.dataset,
+        uf=uf,
+        f2change=f2change,
+        step=step,
+        profile=str(args.constraint_profile),
+    )
     mi_fp = UFCE().get_top_MI_features(X, features)
 
     # Movie-only distance geometry fix:
@@ -2817,6 +3020,9 @@ def main():
     # classify_dataset_getModel(...) to preserve prior behavior.
 
     print(f"Dataset: {args.dataset}")
+    print(f"Constraint profile: {args.constraint_profile}")
+    print(f"Evaluation mode: {args.eval_mode} ({eval_mode_to_ufce_method(str(args.eval_mode))})")
+    print(f"f2change: {', '.join(f2change)}")
     print(f"CV accuracy: {lr_mean:.6f} +/- {lr_std:.6f}")
 
     testfold_path = os.path.join(args.folds_dir, args.dataset, "totest")
@@ -2849,6 +3055,8 @@ def main():
         cfg["movie_apf_unit_mode"] = movie_apf_unit_mode
         cfg["movie_apf_denom_mode"] = movie_apf_denom_mode
         cfg["prox_space_mode"] = prox_space_mode
+        cfg["constraint_profile"] = str(args.constraint_profile)
+        cfg["eval_mode"] = str(args.eval_mode)
 
     existing = load_existing_keys(leaderboard_csv) if int(args.skip_existing) == 1 else set()
     if existing:
@@ -2912,6 +3120,7 @@ def main():
                 movie_lof_standardize_mode=str(cfg.get("movie_lof_standardize_mode", MOVIE_LOF_STANDARDIZE_MODE_DEFAULT)),
                 movie_lof_contamination=str(cfg.get("movie_lof_contamination", MOVIE_LOF_CONTAMINATION_DEFAULT)),
                 prox_space_mode=str(cfg.get("prox_space_mode", PROX_SPACE_MODE_DEFAULT)),
+                eval_mode=str(cfg.get("eval_mode", STRICT_EVAL_MODE)),
             )
             fold_results.append((fold_name, means, times, method_stats))
 
@@ -2947,6 +3156,7 @@ def main():
                     "bb_model": lr,
                     "desired_outcome": desired_outcome,
                     "ufce_params": fold_artifacts["ufce_params"],
+                    "eval_mode": fold_artifacts["eval_mode"],
                     "distance_scaler": fold_artifacts["distance_scaler"],
                     "use_movie_distance_space": fold_artifacts["use_movie_distance_space"],
                     "n_raw_test": fold_artifacts["n_raw_test"],
@@ -3053,6 +3263,8 @@ def main():
             "movie_apf_unit_mode": str(cfg.get("movie_apf_unit_mode", movie_apf_unit_mode)),
             "movie_apf_denom_mode": str(cfg.get("movie_apf_denom_mode", movie_apf_denom_mode)),
             "prox_space_mode": str(cfg.get("prox_space_mode", prox_space_mode)),
+            "constraint_profile": str(cfg.get("constraint_profile", AUTHOR_PUBLIC_CONSTRAINT_PROFILE)),
+            "eval_mode": str(cfg.get("eval_mode", STRICT_EVAL_MODE)),
             "score_total": float(score_total),
             "time_ufce1_mean_sec": float(time_mean["UFCE1"]),
             "time_ufce2_mean_sec": float(time_mean["UFCE2"]),
@@ -3151,6 +3363,8 @@ def main():
                 f"score_total={float(best.get('score_total', float('nan'))):.6f}, "
                 f"min_coverage={float(best.get('min_coverage', float('nan'))):.6f}, "
                 f"coverage_mode={str(best.get('coverage_mode', cfg_coverage_mode))}, "
+                f"constraint_profile={str(best.get('constraint_profile', AUTHOR_PUBLIC_CONSTRAINT_PROFILE))}, "
+                f"eval_mode={str(best.get('eval_mode', STRICT_EVAL_MODE))}, "
                 f"radius={int(best['radius'])}, "
                 f"n_neighbors={int(best['n_neighbors'])}, "
                 f"min_act={int(best['min_act'])}, "

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import pandas as pd
+if TYPE_CHECKING:
+    import pandas as pd
 
-from ufce.model_bundles import DatasetModelBundle
+    from ufce.model_bundles import DatasetModelBundle
 
 
 @dataclass(frozen=True)
@@ -13,6 +14,7 @@ class RuntimeRequest:
     dataset: str
     profile: dict[str, Any]
     constraint_spec: dict[str, Any] | None = None
+    policy_override: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         payload = {
@@ -21,6 +23,8 @@ class RuntimeRequest:
         }
         if self.constraint_spec is not None:
             payload["constraint_spec"] = dict(self.constraint_spec)
+        if self.policy_override is not None:
+            payload["policy_override"] = dict(self.policy_override)
         return payload
 
 
@@ -84,6 +88,13 @@ class RuntimeDebugTrace:
     reject_path: dict[str, Any] | None = None
     constraint_filter: dict[str, Any] | None = None
     generation_stats: dict[str, Any] | None = None
+    base_policy: dict[str, Any] | None = None
+    policy_override: dict[str, Any] | None = None
+    effective_policy: dict[str, Any] | None = None
+    effective_mi_feature_pairs: list[list[str]] = field(default_factory=list)
+    core_status: str | None = None
+    presentation_status: str | None = None
+    trace_summary: dict[str, Any] | None = None
 
     def add_service_error(self, service: str, error: str) -> None:
         self.service_errors.append(
@@ -117,6 +128,13 @@ class RuntimeDebugTrace:
             "reject_path": None if self.reject_path is None else dict(self.reject_path),
             "constraint_filter": None if self.constraint_filter is None else dict(self.constraint_filter),
             "generation_stats": None if self.generation_stats is None else dict(self.generation_stats),
+            "base_policy": None if self.base_policy is None else dict(self.base_policy),
+            "policy_override": None if self.policy_override is None else dict(self.policy_override),
+            "effective_policy": None if self.effective_policy is None else dict(self.effective_policy),
+            "effective_mi_feature_pairs": [list(pair) for pair in self.effective_mi_feature_pairs],
+            "core_status": self.core_status,
+            "presentation_status": self.presentation_status,
+            "trace_summary": None if self.trace_summary is None else dict(self.trace_summary),
         }
 
 

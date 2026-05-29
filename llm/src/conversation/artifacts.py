@@ -56,6 +56,30 @@ def save_conversation_artifacts(
     write_json(turn_dir / "runtime_result.json", turn_result.runtime_result)
     if turn_result.runtime_debug_trace is not None:
         write_json(turn_dir / "runtime_debug_trace.json", turn_result.runtime_debug_trace)
+        write_json(
+            turn_dir / "runtime_policy.json",
+            {
+                "base_policy": turn_result.runtime_debug_trace.get("base_policy"),
+                "policy_override": turn_result.runtime_debug_trace.get("policy_override"),
+                "effective_policy": turn_result.runtime_debug_trace.get("effective_policy"),
+                "constraint_spec": (
+                    turn_result.runtime_result.get("canonical_request", {}).get("hard_constraints")
+                    if isinstance(turn_result.runtime_result, dict)
+                    and isinstance(turn_result.runtime_result.get("canonical_request"), dict)
+                    else None
+                ),
+                "core_status": turn_result.runtime_debug_trace.get("core_status"),
+                "presentation_status": turn_result.runtime_debug_trace.get("presentation_status"),
+                "reason_code": (
+                    turn_result.runtime_result.get("reason_codes", [None])[0]
+                    if isinstance(turn_result.runtime_result, dict)
+                    and isinstance(turn_result.runtime_result.get("reason_codes"), list)
+                    and turn_result.runtime_result.get("reason_codes")
+                    else None
+                ),
+                "trace_summary": turn_result.runtime_debug_trace.get("trace_summary"),
+            },
+        )
     if turn_result.invariant_validation is not None:
         write_json(turn_dir / "invariant_validation.json", turn_result.invariant_validation)
     write_json(
@@ -172,6 +196,7 @@ def build_saved_file_list(
         files.append("invariant_validation.json")
     if turn_result.runtime_debug_trace is not None:
         files.append("runtime_debug_trace.json")
+        files.append("runtime_policy.json")
     if isinstance(turn_result.runtime_result, dict):
         if turn_result.runtime_result.get("canonical_request") is not None:
             files.append("canonical_request.json")

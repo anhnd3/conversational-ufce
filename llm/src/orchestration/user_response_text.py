@@ -87,7 +87,7 @@ def render_deterministic_user_response_text(
             lines.extend(
                 [
                     "",
-                    "You do not need to repeat values already provided. Reply only with the missing values, for example:",
+                    "You do not need to repeat values already provided. Reply naturally, but include only the missing values, for example:",
                     _example_assignment_line(missing_fields),
                 ]
             )

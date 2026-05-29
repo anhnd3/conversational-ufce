@@ -168,7 +168,12 @@ def create_app(
     )
     async def submit_message(session_id: str, payload: MessageCreateRequest):
         try:
-            turn = app.state.service.submit_message(session_id, payload.user_input)
+            turn = app.state.service.submit_message(
+                session_id,
+                payload.user_input,
+                constraint_spec=payload.constraint_spec,
+                policy_override=payload.policy_override,
+            )
         except KeyError as exc:
             raise HTTPException(status_code=404, detail=str(exc))
         except SessionArchivedError as exc:
@@ -371,6 +376,7 @@ def serialize_session_summary(session) -> SessionSummary:
         case_completion_reason=session.case_completion_reason,
         restart_required=session.restart_required,
         active_constraint_spec=session.active_constraint_spec_json,
+        active_policy_override=getattr(session, "active_policy_override_json", None),
         refinement_revision_index=session.refinement_revision_index,
         refinement_rounds_used=session.refinement_rounds_used,
         refinement_round_limit=session.refinement_round_limit,
@@ -447,6 +453,7 @@ def serialize_session_detail(
         case_completion_reason=session.case_completion_reason,
         restart_required=session.restart_required,
         active_constraint_spec=session.active_constraint_spec_json,
+        active_policy_override=getattr(session, "active_policy_override_json", None),
         refinement_revision_index=session.refinement_revision_index,
         refinement_rounds_used=session.refinement_rounds_used,
         refinement_round_limit=session.refinement_round_limit,
@@ -502,6 +509,7 @@ def serialize_turn_response(payload: dict) -> TurnResponse:
         parent_terminal_turn_id=payload["parent_terminal_turn_id"],
         parent_refinement_revision_index=payload["parent_refinement_revision_index"],
         active_constraint_spec=payload["active_constraint_spec"],
+        active_policy_override=payload.get("active_policy_override"),
         constraint_feedback_delta=payload["constraint_feedback_delta"],
         refinement_rounds_used=payload["refinement_rounds_used"],
         refinement_round_limit=payload["refinement_round_limit"],
@@ -1148,9 +1156,9 @@ def _build_missing_fields_primary_text(
     if not missing_fields:
         return "Reply with the missing fields so I can continue."
     if len(missing_fields) == 1:
-        primary_text = f"Reply with only the missing field: {missing_fields[0]}."
+        primary_text = f"Reply with only the missing fact: {missing_fields[0]}."
     else:
-        primary_text = "Reply with only the missing fields: {fields}.".format(fields=_format_field_list(missing_fields))
+        primary_text = "Reply with only the missing facts: {fields}.".format(fields=_format_field_list(missing_fields))
     if carried_forward_fields:
         return (
             f"{primary_text} "
@@ -2098,10 +2106,10 @@ def _build_session_level_clarification_payload(session) -> dict[str, Any] | None
             "missing_fields": _ordered_fields(payload.get("missing_fields")),
             "conflicts": [],
             "next_required_input": (
-                "Reply with only the missing fields. "
+                "Reply with only the missing facts. "
                 f"I'll keep the values already provided for {_format_field_list(carried_forward_fields)}."
                 if carried_forward_fields
-                else "Reply with only the missing fields."
+                else "Reply with only the missing facts."
             ),
             "remaining_rounds": max(3 - session.clarification_turns_used, 0),
             "restart_required": False,
@@ -2320,20 +2328,20 @@ def _build_clarification_message(
         missing_text = _format_field_list(missing_fields)
         if carried_forward_fields:
             return (
-                f"Reply with only the missing fields: {missing_text}. "
+                f"Reply with only the missing facts: {missing_text}. "
                 f"I'll keep the values already provided for {_format_field_list(carried_forward_fields)}."
             )
-        return f"Reply with only the missing fields: {missing_text}."
+        return f"Reply with only the missing facts: {missing_text}."
     if reply_strategy == "start_new_case":
         return next_required_input or "Start a new case and submit one corrected bank profile."
     if missing_fields:
         missing_text = _format_field_list(missing_fields)
         if carried_forward_fields:
             return (
-                f"Reply with only the missing fields: {missing_text}. "
+                f"Reply with only the missing facts: {missing_text}. "
                 f"I'll keep the values already provided for {_format_field_list(carried_forward_fields)}."
             )
-        return f"Reply with only the missing fields: {missing_text}."
+        return f"Reply with only the missing facts: {missing_text}."
     return next_required_input
 
 

@@ -91,7 +91,14 @@ class ProductSessionService:
     def get_session(self, session_id: str) -> StoredSession:
         return self.repository.get_session(session_id)
 
-    def submit_message(self, session_id: str, user_input: str):
+    def submit_message(
+        self,
+        session_id: str,
+        user_input: str,
+        *,
+        constraint_spec: dict[str, Any] | None = None,
+        policy_override: dict[str, Any] | None = None,
+    ):
         stored_session = self.repository.get_session(session_id)
         if stored_session.lifecycle_status == "archived":
             raise SessionArchivedError(f"Session {session_id} is archived and read-only.")
@@ -119,6 +126,8 @@ class ProductSessionService:
             debug_trace_enabled=False,
             command=f"POST /api/{self.config.api_version}/sessions/{session_id}/messages",
             dataset_id=stored_session.dataset_key,
+            constraint_spec=constraint_spec,
+            policy_override=policy_override or stored_session.active_policy_override_json,
         )
         public_state = _extract_public_state(result)
         debug_summary = build_debug_summary(result)
@@ -129,6 +138,17 @@ class ProductSessionService:
             result,
             stored_session,
         )
+        if constraint_spec is not None:
+            active_constraint_spec_session = dict(constraint_spec)
+        active_policy_override_session = _extract_active_policy_override_for_session_update(
+            updated_runtime_request,
+            result,
+            stored_session,
+            incoming_policy_override=policy_override,
+        )
+        if isinstance(updated_runtime_request, dict) and active_policy_override_session is not None:
+            updated_runtime_request = dict(updated_runtime_request)
+            updated_runtime_request["policy_override"] = dict(active_policy_override_session)
         canonical_session_state = _build_canonical_session_state_for_turn(
             result=result,
             stored_session=stored_session,
@@ -171,10 +191,12 @@ class ProductSessionService:
             parent_terminal_turn_id=result.parent_terminal_turn_id,
             parent_refinement_revision_index=result.parent_refinement_revision_index,
             active_constraint_spec_json=result.active_constraint_spec,
+            active_policy_override_json=active_policy_override_session,
             constraint_feedback_delta_json=result.constraint_feedback_delta,
             refinement_rounds_used=result.refinement_rounds_used or stored_session.refinement_rounds_used,
             refinement_round_limit=result.refinement_round_limit,
             active_constraint_spec_session_json=active_constraint_spec_session,
+            active_policy_override_session_json=active_policy_override_session,
             last_runtime_request_json=updated_runtime_request,
             refinement_revision_index_session=stored_session.refinement_revision_index,
             refinement_rounds_used_session=stored_session.refinement_rounds_used,
@@ -254,6 +276,10 @@ class ProductSessionService:
             active_constraint_spec=payload["active_constraint_spec"],
             default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
         )
+        active_policy_override = _extract_policy_override_from_runtime_request(
+            payload["last_runtime_request"] or stored_session.last_runtime_request_json,
+            fallback=stored_session.active_policy_override_json,
+        )
         stored_turn = self.repository.save_turn(
             session_id=session_id,
             turn_index=stored_session.last_turn_index + 1,
@@ -287,10 +313,12 @@ class ProductSessionService:
             parent_terminal_turn_id=result.parent_terminal_turn_id,
             parent_refinement_revision_index=result.parent_refinement_revision_index,
             active_constraint_spec_json=result.active_constraint_spec,
+            active_policy_override_json=active_policy_override,
             constraint_feedback_delta_json=result.constraint_feedback_delta,
             refinement_rounds_used=result.refinement_rounds_used or refinement_rounds_used,
             refinement_round_limit=result.refinement_round_limit,
             active_constraint_spec_session_json=payload["active_constraint_spec"],
+            active_policy_override_session_json=active_policy_override,
             last_runtime_request_json=payload["last_runtime_request"] or stored_session.last_runtime_request_json,
             refinement_revision_index_session=refinement_revision_index,
             refinement_rounds_used_session=refinement_rounds_used,
@@ -428,6 +456,7 @@ class ProductSessionService:
             "parent_terminal_turn_id": turn.parent_terminal_turn_id,
             "parent_refinement_revision_index": turn.parent_refinement_revision_index,
             "active_constraint_spec": turn.active_constraint_spec_json,
+            "active_policy_override": turn.active_policy_override_json,
             "constraint_feedback_delta": turn.constraint_feedback_delta_json,
             "refinement_rounds_used": turn.refinement_rounds_used,
             "refinement_round_limit": turn.refinement_round_limit,
@@ -697,6 +726,38 @@ def _extract_active_constraint_spec_for_session_update(
         runtime_request.get("constraint_spec"),
         feature_order=list(builder_result.canonical_field_order),
     )
+
+
+def _extract_active_policy_override_for_session_update(
+    runtime_request: dict[str, Any] | None,
+    result,
+    stored_session: StoredSession,
+    *,
+    incoming_policy_override: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if incoming_policy_override is not None:
+        return dict(incoming_policy_override)
+    if isinstance(runtime_request, dict) and isinstance(runtime_request.get("policy_override"), dict):
+        return dict(runtime_request["policy_override"])
+    builder_result = getattr(result, "builder_result", None)
+    builder_provenance = (
+        dict(getattr(builder_result, "provenance", {}) or {})
+        if builder_result is not None
+        else {}
+    )
+    if builder_provenance.get("reset_decision") == "fresh_request":
+        return None
+    return stored_session.active_policy_override_json
+
+
+def _extract_policy_override_from_runtime_request(
+    runtime_request: dict[str, Any] | None,
+    *,
+    fallback: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if isinstance(runtime_request, dict) and isinstance(runtime_request.get("policy_override"), dict):
+        return dict(runtime_request["policy_override"])
+    return None if fallback is None else dict(fallback)
 
 
 def _extract_latest_runtime_backed_turn_id(result, stored_session: StoredSession) -> str | None:

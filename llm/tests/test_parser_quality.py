@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from llm.src.conversation.canonical_validator import BankCanonicalValidator
 from llm.src.conversation.types import serialize_normalized_parse_payload
 from llm.src.orchestration.parse_then_validate import parse_then_validate
 from llm.src.parser.parser_quality import (
@@ -15,7 +14,11 @@ from llm.src.parser.parser_quality import (
     NUMERIC_STRING_COERCED,
     PREFERENCE_PHRASE_RECOVERED,
     PROFILE_FIELD_RECOVERED,
+    QUALITATIVE_PROFILE_VALUE_NOTE,
     run_parser_quality,
+    EDUCATION_LABEL_VALUE_NOTE,
+    UNIT_PROFILE_VALUE_NOTE,
+    UNSUPPORTED_PROFILE_VALUE_REMOVED,
 )
 
 
@@ -85,16 +88,13 @@ def test_parse_then_validate_uses_user_text_to_recover_missing_constraint_spec(s
         benchmark=sample_benchmark,
         user_text=FULL_PROFILE_TEXT + " Do not change Income.",
     )
-    canonical_validation = BankCanonicalValidator().validate(
-        candidate=normalized.parsed_json,
-        schema_validation=schema_validation,
-    )
 
     assert schema_validation.is_valid is True
+    assert normalized.parsed_json["status"] == "complete"
+    assert normalized.parsed_json["missing_fields"] == []
     assert normalized.parsed_json["constraint_spec"] == {
         "disallowed_changes": ["Income"]
     }
-    assert canonical_validation.ready_for_runtime is True
 
 
 def test_run_parser_quality_recovers_deterministic_constraint_phrase_families(sample_benchmark):
@@ -166,7 +166,7 @@ def test_run_parser_quality_does_not_silently_coerce_malformed_value_tokens(samp
     assert quality_result.normalized.parsed_json["cf_request"]["Online"] == "maybe"
 
 
-def test_run_parser_quality_emits_conflict_reason_without_overwriting_parser_value(sample_benchmark):
+def test_run_parser_quality_emits_conflict_reason_without_propagating_conflicted_value(sample_benchmark):
     quality_result = run_parser_quality(
         message_text=FULL_PROFILE_JSON,
         benchmark_spec=sample_benchmark,
@@ -177,7 +177,8 @@ def test_run_parser_quality_emits_conflict_reason_without_overwriting_parser_val
     )
 
     assert quality_result.schema_validation.is_valid is True
-    assert quality_result.normalized.parsed_json["cf_request"]["Income"] == 140
+    assert "Income" not in quality_result.normalized.parsed_json["cf_request"]
+    assert "Income" not in quality_result.normalized.parsed_json["missing_fields"]
     assert quality_result.field_provenance["Income"] == "conflict"
     assert CONFLICTING_EXPLICIT_FIELD in quality_result.metadata.reason_codes
 
@@ -213,7 +214,39 @@ def test_run_parser_quality_recovers_subthreshold_explicit_ccavg(sample_benchmar
     assert quality_result.metadata.deterministic_recovery_applied is True
 
 
-def test_run_parser_quality_does_not_overwrite_existing_parser_ccavg_with_subthreshold_fallback(sample_benchmark):
+def test_run_parser_quality_recovers_explicit_semantic_prose_fields(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"partial","cf_request":'
+            '{"Income":65,"Family":2,"Education":2},'
+            '"missing_fields":["CCAvg","Mortgage","SecuritiesAccount","CDAccount","Online","CreditCard"],'
+            '"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "I make 65, have a household of 2, card spending around 1.5, education level 2, "
+            "and no mortgage. No CD account or securities account, but I use online banking "
+            "and own a bank credit card."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["status"] == "complete"
+    assert quality_result.normalized.parsed_json["cf_request"] == {
+        "Income": 65,
+        "Family": 2,
+        "CCAvg": 1.5,
+        "Education": 2,
+        "Mortgage": 0.0,
+        "SecuritiesAccount": 0,
+        "CDAccount": 0,
+        "Online": 1,
+        "CreditCard": 1,
+    }
+    assert PROFILE_FIELD_RECOVERED in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_prefers_deterministic_ccavg_when_parser_disagrees(sample_benchmark):
     quality_result = run_parser_quality(
         message_text=(
             '{"task":"extract_cf_request","status":"partial","cf_request":'
@@ -226,9 +259,194 @@ def test_run_parser_quality_does_not_overwrite_existing_parser_ccavg_with_subthr
     )
 
     assert quality_result.schema_validation.is_valid is True
-    assert quality_result.normalized.parsed_json["cf_request"]["CCAvg"] == 1.0
-    assert quality_result.field_provenance["CCAvg"] == "parser"
-    assert PROFILE_FIELD_RECOVERED not in quality_result.metadata.reason_codes
+    assert quality_result.normalized.parsed_json["status"] == "partial"
+    assert quality_result.normalized.parsed_json["cf_request"]["CCAvg"] == 1.8
+    assert quality_result.field_provenance["CCAvg"] == "deterministic_extractor"
+    assert PROFILE_FIELD_RECOVERED in quality_result.metadata.reason_codes
+    assert CONFLICTING_EXPLICIT_FIELD not in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_removes_qualitative_numeric_hallucinations(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"partial","cf_request":'
+            '{"Income":1,"Mortgage":0,"Online":1},'
+            '"missing_fields":["Family","CCAvg","Education","SecuritiesAccount","CDAccount","CreditCard"],'
+            '"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text="I need high income, low mortgage, and I use online banking.",
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["status"] == "needs_clarification"
+    assert quality_result.normalized.parsed_json["cf_request"] == {"Online": 1}
+    assert quality_result.normalized.parsed_json["missing_fields"] == [
+        "Income",
+        "Family",
+        "CCAvg",
+        "Education",
+        "Mortgage",
+        "SecuritiesAccount",
+        "CDAccount",
+        "CreditCard",
+    ]
+    assert quality_result.normalized.parsed_json["notes"] == [QUALITATIVE_PROFILE_VALUE_NOTE]
+    assert UNSUPPORTED_PROFILE_VALUE_REMOVED in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_maps_degree_label_to_education_taxonomy(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"partial","cf_request":'
+            '{"Income":48,"CCAvg":1.2,"Family":2,"CreditCard":1},'
+            '"missing_fields":["Education","Mortgage","SecuritiesAccount","CDAccount","Online"],'
+            '"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "I earn 48, card average spending 1.2, family of 2, and I studied at the "
+            "undergraduate level. I want a credit card."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["status"] == "partial"
+    assert quality_result.normalized.parsed_json["cf_request"] == {
+        "Income": 48,
+        "Family": 2,
+        "CCAvg": 1.2,
+        "Education": 1,
+        "CreditCard": 1,
+    }
+    assert quality_result.normalized.parsed_json["missing_fields"] == [
+        "Mortgage",
+        "SecuritiesAccount",
+        "CDAccount",
+        "Online",
+    ]
+    assert quality_result.normalized.parsed_json["notes"] == []
+    assert UNSUPPORTED_PROFILE_VALUE_REMOVED not in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_rejects_out_of_taxonomy_education_label(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"partial","cf_request":'
+            '{"Income":48,"CCAvg":1.2,"Family":2,"Education":2,"CreditCard":1},'
+            '"missing_fields":["Mortgage","SecuritiesAccount","CDAccount","Online"],"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "I earn 48, card average spending 1.2, family of 2, and I finished high school. "
+            "I want a credit card."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert "Education" not in quality_result.normalized.parsed_json["cf_request"]
+    assert "Education" in quality_result.normalized.parsed_json["missing_fields"]
+    assert quality_result.normalized.parsed_json["notes"] == [EDUCATION_LABEL_VALUE_NOTE]
+    assert UNSUPPORTED_PROFILE_VALUE_REMOVED in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_applies_unit_conversion_with_timeframe_guard(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"complete","cf_request":'
+            '{"Income":65000,"CCAvg":1500,"Family":2,"Education":2,"Mortgage":0,'
+            '"CDAccount":0,"Online":1},'
+            '"missing_fields":[],"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "I have an annual income of $65,000, a household of 2, spend about $1.5k "
+            "on cards, education level 2, and no mortgage. I use online banking."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["status"] == "needs_clarification"
+    assert quality_result.normalized.parsed_json["cf_request"] == {
+        "Income": 65.0,
+        "Family": 2,
+        "Education": 2,
+        "Mortgage": 0.0,
+        "Online": 1,
+    }
+    assert quality_result.normalized.parsed_json["missing_fields"] == [
+        "CCAvg",
+        "SecuritiesAccount",
+        "CDAccount",
+        "CreditCard",
+    ]
+    assert quality_result.normalized.parsed_json["notes"] == [UNIT_PROFILE_VALUE_NOTE]
+    assert UNSUPPORTED_PROFILE_VALUE_REMOVED in quality_result.metadata.reason_codes
+
+
+def test_run_parser_quality_converts_vietnamese_diacritic_unit_phrasing(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"partial","cf_request":'
+            '{"Income":1,"CCAvg":1,"Family":3,"Education":2,"Mortgage":1},'
+            '"missing_fields":["SecuritiesAccount","CDAccount","Online","CreditCard"],'
+            '"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "Thu nh\u1eadp n\u0103m c\u1ee7a t\u00f4i l\u00e0 1.75 t\u1ef7 VND, gia \u0111\u00ecnh 3 ng\u01b0\u1eddi, chi ti\u00eau th\u1ebb 37.5 tri\u1ec7u "
+            "VND/th\u00e1ng, h\u1ecdc v\u1ea5n th\u1ea1c s\u0129, th\u1ebf ch\u1ea5p 6.25 t\u1ef7 VND."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["cf_request"] == {
+        "Income": 70.0,
+        "Family": 3,
+        "CCAvg": 1.5,
+        "Education": 2,
+        "Mortgage": 250.0,
+    }
+    assert quality_result.normalized.parsed_json["missing_fields"] == [
+        "SecuritiesAccount",
+        "CDAccount",
+        "Online",
+        "CreditCard",
+    ]
+
+
+def test_run_parser_quality_removes_service_only_numeric_hallucinations_as_partial(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_cf_request","status":"complete","cf_request":'
+            '{"Income":0,"CCAvg":0,"Family":0,"Education":0,"Mortgage":0,'
+            '"CDAccount":0,"Online":1,"SecuritiesAccount":0,"CreditCard":1},'
+            '"missing_fields":["Income","CCAvg","Family","Education"],"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=(
+            "No mortgage, no CD account or securities account, but I use online banking "
+            "and own a bank credit card."
+        ),
+    )
+
+    assert quality_result.schema_validation.is_valid is True
+    assert quality_result.normalized.parsed_json["status"] == "partial"
+    assert quality_result.normalized.parsed_json["cf_request"] == {
+        "Mortgage": 0.0,
+        "SecuritiesAccount": 0,
+        "CDAccount": 0,
+        "Online": 1,
+        "CreditCard": 1,
+    }
+    assert quality_result.normalized.parsed_json["missing_fields"] == [
+        "Income",
+        "Family",
+        "CCAvg",
+        "Education",
+    ]
+    assert quality_result.normalized.parsed_json["notes"] == []
+    assert UNSUPPORTED_PROFILE_VALUE_REMOVED in quality_result.metadata.reason_codes
 
 
 def test_serialize_normalized_parse_payload_uses_stable_parser_quality_structure():

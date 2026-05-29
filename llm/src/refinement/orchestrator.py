@@ -35,6 +35,7 @@ from llm.src.refinement.types import (
     REFINEMENT_STATUS_UNSUPPORTED_FEEDBACK,
 )
 from llm.src.refinement.validation import validate_refinement_prediction
+from llm.src.runtime.policy_override import apply_constraint_policy_override_to_runtime_request
 from llm.src.runtime.reason_codes import INVALID_COUNTERFACTUAL_BLOCKED
 from llm.src.utils.hashing import make_run_id, sha256_file, sha256_text, utc_now_iso
 
@@ -213,6 +214,11 @@ class ConstraintRefinementOrchestrator:
                 runtime_payload["constraint_spec"] = dict(active_after)
             else:
                 runtime_payload.pop("constraint_spec", None)
+            runtime_payload = apply_constraint_policy_override_to_runtime_request(
+                runtime_payload,
+                base_policy=dataset_package.runtime_context().policy,
+                feature_order=feature_order,
+            )
 
             runtime_started = time.perf_counter()
             runtime_obj = self.runtime_orchestrator.handle(runtime_payload, include_debug_trace=True)

@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-import pandas as pd
-
 from llm.src.part2_eval.corpora import (
     BANK_BOUNDARY_PROFILES_CORPUS_PATH,
     G5_AGENT_PORTABILITY_CORPUS_PATH,
     G5_AGENT_PORTABILITY_SYNTH300_CORPUS_PATH,
     TIER_A_CORPUS_PATH,
+    TIER_A_CORPUS_V1_PATH,
     TIER_A_ANNOTATION_SCHEMA_VERSION,
     TIER_A_SCORER_OUTPUT_SCHEMA_VERSION,
     TIER_B_CORPUS_PATH,
@@ -28,11 +27,11 @@ from llm.src.part2_eval.corpora import (
     load_tier_c_bank_backend_corpus,
     load_tier_d_bank_replay_corpus,
 )
-from llm.src.runtime.model_registry import ModelRegistry
-from llm.src.runtime.policy_registry import PolicyRegistry
 
 
 def build_fake_bank_bundle(row_count: int = 260):
+    import pandas as pd
+
     rows = []
     for index in range(row_count):
         rows.append(
@@ -56,6 +55,9 @@ def build_fake_bank_bundle(row_count: int = 260):
 
 
 def load_real_bank_bundle():
+    from llm.src.runtime.model_registry import ModelRegistry
+    from llm.src.runtime.policy_registry import PolicyRegistry
+
     model_registry = ModelRegistry()
     policy_registry = PolicyRegistry(model_registry)
     return model_registry.get_bundle("bank"), policy_registry.get_policy("bank").desired_outcome
@@ -66,11 +68,20 @@ def test_load_tier_a_annotation_corpus_freezes_versions_and_case_split():
 
     assert payload["annotation_schema_version"] == TIER_A_ANNOTATION_SCHEMA_VERSION
     assert payload["scorer_output_schema_version"] == TIER_A_SCORER_OUTPUT_SCHEMA_VERSION
-    assert payload["case_count"] == 50
-    assert len(payload["cases"]) == 50
-    assert len([case for case in payload["cases"] if case["annotation_type"] == "initial_constraint_spec"]) == 25
-    assert len([case for case in payload["cases"] if case["annotation_type"] == "refinement_delta"]) == 25
+    assert payload["corpus_version"] == "part2_tier_a_bank_annotations_v2"
+    assert payload["case_count"] == 20
+    assert len(payload["cases"]) == 20
+    assert len([case for case in payload["cases"] if case["annotation_type"] == "initial_constraint_spec"]) == 10
+    assert len([case for case in payload["cases"] if case["annotation_type"] == "refinement_delta"]) == 10
+    assert "I earn" in payload["cases"][0]["input_text"]
     assert payload["corpus_sha256"]
+
+
+def test_load_tier_a_v1_annotation_corpus_remains_available():
+    payload = load_tier_a_annotation_corpus(TIER_A_CORPUS_V1_PATH)
+
+    assert payload["corpus_version"] == "part2_tier_a_bank_annotations_v1"
+    assert payload["case_count"] == 50
 
 
 def test_load_tier_b_bank_corpus_freezes_group_mix():
@@ -165,6 +176,7 @@ def test_load_frozen_corpus_fails_for_missing_or_malformed_files(tmp_path):
 
 def test_snapshot_files_exist():
     assert TIER_A_CORPUS_PATH.exists()
+    assert TIER_A_CORPUS_V1_PATH.exists()
     assert TIER_B_CORPUS_PATH.exists()
     assert TIER_B_SYNTH300_CORPUS_PATH.exists()
     assert TIER_C_CORPUS_PATH.exists()

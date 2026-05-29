@@ -145,12 +145,12 @@ def build_user_response_payload_from_clarification(
         response_kind="clarification_required",
         tone="info",
         headline="More profile details are required",
-        short_summary="Reply only with the missing fields. Existing values will be carried forward.",
+            short_summary="Reply with only the missing facts. Existing values will be carried forward.",
         next_actions=[
             NextAction(
                 action_type="provide_missing_fields",
                 label="Provide missing fields",
-                detail="Reply with only the listed missing values.",
+                    detail="Reply naturally, but include only the listed missing values.",
                 fields=list(payload.missing_fields),
                 primary=True,
             )
@@ -271,11 +271,11 @@ def _build_missing_fields_next_input(
     example = _build_missing_field_example(missing_fields)
     if carried_forward_fields:
         return (
-            f"Reply with only the missing fields: {missing_text}. "
+            f"Reply with only the missing facts: {missing_text}. "
             f"I will keep {_format_field_list(carried_forward_fields)}. "
             f"Example: {example}."
         )
-    return f"Reply with only the missing fields: {missing_text}. Example: {example}."
+    return f"Reply with only the missing facts: {missing_text}. Example: {example}."
 
 
 def _build_restart_required_next_input(*, dataset_label: str) -> str:

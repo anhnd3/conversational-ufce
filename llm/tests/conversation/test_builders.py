@@ -48,7 +48,7 @@ def test_clarification_builder_orders_missing_fields_and_requests_full_profile()
     assert payload.reply_strategy == "missing_fields_only"
     assert payload.missing_fields == ["Income", "Online", "CreditCard"]
     assert payload.carried_forward_fields == ["Family", "CCAvg", "Education"]
-    assert "Reply with only the missing fields: Income, Online, and CreditCard." in payload.next_required_input
+    assert "Reply with only the missing facts: Income, Online, and CreditCard." in payload.next_required_input
     assert "Family, CCAvg, and Education" in payload.next_required_input
     assert "missing fields" in render_clarification_text(payload).lower()
 

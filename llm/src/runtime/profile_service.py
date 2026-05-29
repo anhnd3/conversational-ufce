@@ -14,7 +14,7 @@ from llm.src.runtime.reason_codes import (
 from llm.src.runtime.types import RuntimeContext, RuntimeRequest
 
 
-ALLOWED_TOP_LEVEL_KEYS = frozenset({"dataset", "profile", "constraint_spec"})
+ALLOWED_TOP_LEVEL_KEYS = frozenset({"dataset", "profile", "constraint_spec", "policy_override"})
 
 
 class ProfileService:
@@ -37,6 +37,7 @@ class ProfileService:
                 "Runtime request must include a profile object.",
             )
         constraint_spec = request.get("constraint_spec")
+        policy_override = request.get("policy_override")
         if feature_order is not None:
             normalized_constraint_spec, errors = validate_and_normalize_constraint_spec(
                 constraint_spec,
@@ -57,6 +58,7 @@ class ProfileService:
             dataset=dataset_name,
             profile=dict(profile),
             constraint_spec=None if constraint_spec is None else dict(constraint_spec),
+            policy_override=None if policy_override is None else dict(policy_override),
         )
 
     def canonicalize(self, request: RuntimeRequest, context: RuntimeContext, raw_request: dict[str, Any]) -> pd.DataFrame:

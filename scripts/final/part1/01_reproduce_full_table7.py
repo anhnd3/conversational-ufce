@@ -42,12 +42,66 @@ from ufce.core.data_processing import (
     get_bupa_user_constraints,
     get_movie_user_constraints,
 )
+from scripts.final.part1._movie_proximity import (
+    mean_sem,
+    pairwise_normalized_l2_0_100_values,
+)
 
 ufc = UFCE()
 
 METHODS = ["UFCE1", "UFCE2", "UFCE3", "DiCE", "DiCE-UF", "AR"]
 MNAMES  = ["ufce1", "ufce2", "ufce3", "dice", "dice-uf", "ar"]
 METRICS = ["Prox-Jac", "Prox-Euc", "Sparsity", "Actionability", "Plausibility", "Feasibility"]
+
+def _normalize_method_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", str(value).strip().lower())
+
+METHOD_ALIASES = {
+    "ufce1": "UFCE1",
+    "ufce2": "UFCE2",
+    "ufce3": "UFCE3",
+    "dice": "DiCE",
+    "diceuf": "DiCE-UF",
+    "dicein": "DiCE-UF",
+    "ar": "AR",
+}
+
+METHOD_GROUPS = {
+    "all": METHODS,
+    "ufce": ["UFCE1", "UFCE2", "UFCE3"],
+    "external": ["DiCE", "DiCE-UF", "AR"],
+    "baselines": ["DiCE", "DiCE-UF", "AR"],
+    "dicear": ["DiCE", "DiCE-UF", "AR"],
+    "ardice": ["DiCE", "DiCE-UF", "AR"],
+}
+
+def parse_methods_arg(raw: str) -> List[str]:
+    tokens = [t for t in re.split(r"[,\s]+", str(raw or "all").strip()) if t]
+    if not tokens:
+        tokens = ["all"]
+
+    selected: List[str] = []
+    for token in tokens:
+        key = _normalize_method_key(token)
+        if key in METHOD_GROUPS:
+            selected.extend(METHOD_GROUPS[key])
+        elif key in METHOD_ALIASES:
+            selected.append(METHOD_ALIASES[key])
+        else:
+            allowed = sorted(set(list(METHOD_ALIASES.keys()) + list(METHOD_GROUPS.keys())))
+            raise ValueError(f"Unknown method selector '{token}'. Allowed selectors: {allowed}")
+
+    deduped: List[str] = []
+    for method in selected:
+        if method not in deduped:
+            deduped.append(method)
+    return deduped
+
+def selected_method_columns(selected_methods: List[str]) -> List[str]:
+    return [MNAMES[METHODS.index(method)] for method in selected_methods]
+
+def empty_cf_frame(features: List[str]) -> pd.DataFrame:
+    return pd.DataFrame(columns=list(features))
 
 # ---------- Author Table 7 (your corrected values) ----------
 AUTHOR_TABLE7: Dict[str, Dict[str, Dict[str, float]]] = {
@@ -456,6 +510,44 @@ def movie_distance_schema_status(
         reasons.append(f"projection_error={type(exc).__name__}")
     return len(reasons) == 0, reasons
 
+def movie_rms_contproximity(
+    *,
+    onecfs: pd.DataFrame,
+    onetestdata: pd.DataFrame,
+    twocfs: pd.DataFrame,
+    twotestdata: pd.DataFrame,
+    threecfs: pd.DataFrame,
+    threetestdata: pd.DataFrame,
+    dicecfs: pd.DataFrame,
+    dicecfs_in: pd.DataFrame,
+    dicetestdata_in: pd.DataFrame,
+    arcfs: pd.DataFrame,
+    Xtest: pd.DataFrame,
+    numf: List[str],
+    movie_distance_scaler: Dict[str, object],
+) -> Tuple[List[float], List[float]]:
+    method_pairs = [
+        (onetestdata, onecfs),
+        (twotestdata, twocfs),
+        (threetestdata, threecfs),
+        (Xtest, dicecfs),
+        (dicetestdata_in, dicecfs_in),
+        (Xtest, arcfs),
+    ]
+    means: List[float] = []
+    stds: List[float] = []
+    for factual_df, candidate_df in method_pairs:
+        values = pairwise_normalized_l2_0_100_values(
+            factual_df,
+            candidate_df,
+            numf,
+            movie_distance_scaler,
+        )
+        mean_value, std_value = mean_sem(values)
+        means.append(mean_value)
+        stds.append(std_value)
+    return means, stds
+
 def mad_fit(df: pd.DataFrame, numf: List[str]) -> Dict[str, pd.Series]:
     med = df[numf].median()
     mad = (df[numf] - med).abs().median()
@@ -481,10 +573,25 @@ def drop_dice_cols(cfdf: pd.DataFrame, outcome_label: str) -> pd.DataFrame:
         cfdf = cfdf.drop(drop_cols, axis=1)
     return cfdf
 
-def fold_mean_std_table(metric_name: str, mmeans: List[float], mstds: List[float]) -> None:
+def fold_mean_std_table(
+    metric_name: str,
+    mmeans: List[float],
+    mstds: List[float],
+    selected_methods: Optional[List[str]] = None,
+) -> None:
     # helpful compact printing
-    print(f"[FOLD] {metric_name} means: " + ", ".join([f"{MNAMES[i]}={mmeans[i]:.2f}" for i in range(len(MNAMES))]))
-    print(f"[FOLD] {metric_name} stds : " + ", ".join([f"{MNAMES[i]}={mstds[i]:.2f}" for i in range(len(MNAMES))]))
+    methods = selected_methods or METHODS
+    method_indices = [METHODS.index(method) for method in methods]
+
+    def _fmt(value) -> str:
+        try:
+            v = float(value)
+            return f"{v:.2f}" if np.isfinite(v) else "nan"
+        except Exception:
+            return "nan"
+
+    print(f"[FOLD] {metric_name} means: " + ", ".join([f"{MNAMES[i]}={_fmt(mmeans[i])}" for i in method_indices]))
+    print(f"[FOLD] {metric_name} stds : " + ", ".join([f"{MNAMES[i]}={_fmt(mstds[i])}" for i in method_indices]))
 
 def run_one_fold(
     *,
@@ -516,11 +623,12 @@ def run_one_fold(
     trace_positions: List[int],
     total_folds: int,
     expected_pred1_rate: Optional[float],
+    selected_methods: List[str],
 ):
     """
     Runs one fold:
     - prepares UFCE search space (MAD-scaled ONLY when ufce_mad_scaler is provided)
-    - generates CFs for 6 methods (UFCE1/2/3, DiCE, DiCE-UF, AR)
+    - generates CFs only for selected methods (UFCE1/2/3, DiCE, DiCE-UF, AR)
     - evaluates using evaluations.py
     Returns:
       fold_metrics: dict(metric -> list[6] means)
@@ -581,35 +689,47 @@ def run_one_fold(
         }
 
     distance_scaler = movie_distance_scaler if (dataset == "movie" and movie_distance_scaler is not None) else None
+    selected_methods = selected_methods or METHODS
 
     # -------------------------------
     # B) Generate CFs (author cfmethods.py)
     # -------------------------------
-    onecfs, t_ufce1, idx1 = sfexp(
-        X, data_lab1_ufce, testset_ufce[:],
-        uf, step, f2change, numf, catf, lr, desired_outcome, no_cf, features,
-        flip_filter_enabled=bool(flip_filter_enabled),
-        distance_data_lab1=data_lab1_dist,
-        distance_X_test=testset_dist,
-        distance_scaler=distance_scaler,
-        debug_ctx=debug_ctx,
-    )
-    twocfs, t_ufce2, idx2 = dfexp(
-        X, data_lab1_ufce, testset_ufce[:],
-        uf, MI_FP[:5], numf, catf, f2change, protectf, lr, desired_outcome, no_cf, features,
-        flip_filter_enabled=bool(flip_filter_enabled),
-        distance_data_lab1=data_lab1_dist,
-        distance_X_test=testset_dist,
-        distance_scaler=distance_scaler,
-    )
-    threecfs, t_ufce3, idx3 = tfexp(
-        X, data_lab1_ufce, testset_ufce[:],
-        uf, MI_FP[:5], numf, catf, f2change, protectf, lr, desired_outcome, no_cf, features,
-        flip_filter_enabled=bool(flip_filter_enabled),
-        distance_data_lab1=data_lab1_dist,
-        distance_X_test=testset_dist,
-        distance_scaler=distance_scaler,
-    )
+    if "UFCE1" in selected_methods:
+        onecfs, t_ufce1, idx1 = sfexp(
+            X, data_lab1_ufce, testset_ufce[:],
+            uf, step, f2change, numf, catf, lr, desired_outcome, no_cf, features,
+            flip_filter_enabled=bool(flip_filter_enabled),
+            distance_data_lab1=data_lab1_dist,
+            distance_X_test=testset_dist,
+            distance_scaler=distance_scaler,
+            debug_ctx=debug_ctx,
+        )
+    else:
+        onecfs, t_ufce1, idx1 = empty_cf_frame(features), 0.0, []
+
+    if "UFCE2" in selected_methods:
+        twocfs, t_ufce2, idx2 = dfexp(
+            X, data_lab1_ufce, testset_ufce[:],
+            uf, MI_FP[:5], numf, catf, f2change, protectf, lr, desired_outcome, no_cf, features,
+            flip_filter_enabled=bool(flip_filter_enabled),
+            distance_data_lab1=data_lab1_dist,
+            distance_X_test=testset_dist,
+            distance_scaler=distance_scaler,
+        )
+    else:
+        twocfs, t_ufce2, idx2 = empty_cf_frame(features), 0.0, []
+
+    if "UFCE3" in selected_methods:
+        threecfs, t_ufce3, idx3 = tfexp(
+            X, data_lab1_ufce, testset_ufce[:],
+            uf, MI_FP[:5], numf, catf, f2change, protectf, lr, desired_outcome, no_cf, features,
+            flip_filter_enabled=bool(flip_filter_enabled),
+            distance_data_lab1=data_lab1_dist,
+            distance_X_test=testset_dist,
+            distance_scaler=distance_scaler,
+        )
+    else:
+        threecfs, t_ufce3, idx3 = empty_cf_frame(features), 0.0, []
 
     # Inverse-transform UFCE CFs back to RAW for evaluation
     if dataset != "movie" and ufce_mad_scaler is not None:
@@ -622,16 +742,19 @@ def run_one_fold(
     threetestdata = testset.loc[idx3].reset_index(drop=True)
 
     # ---------------- DiCE ----------------
-    dicecfs, idx_dice, t_dice, _flag = dice_cfexp(
-        datasetdf, testset[:], numf, f2change, no_cf, lr, uf, outcome_label
-    )
+    if "DiCE" in selected_methods:
+        dicecfs, idx_dice, t_dice, _flag = dice_cfexp(
+            datasetdf, testset[:], numf, f2change, no_cf, lr, uf, outcome_label
+        )
 
-    no_dice = (
-        dicecfs is None
-        or (hasattr(dicecfs, "empty") and dicecfs.empty)
-        or idx_dice is None
-        or (hasattr(idx_dice, "__len__") and len(idx_dice) == 0)
-    )
+        no_dice = (
+            dicecfs is None
+            or (hasattr(dicecfs, "empty") and dicecfs.empty)
+            or idx_dice is None
+            or (hasattr(idx_dice, "__len__") and len(idx_dice) == 0)
+        )
+    else:
+        dicecfs, idx_dice, t_dice, no_dice = None, [], 0.0, True
 
     if no_dice:
         dicecfs = pd.DataFrame(columns=features)
@@ -641,16 +764,19 @@ def run_one_fold(
         dicetestdata = testset.loc[idx_dice].reset_index(drop=True)
 
     # ---------------- DiCE-UF ----------------
-    dicecfs_in, idx_in, t_diceuf, _flag2 = dice_cfexp_in(
-        datasetdf, testset[:], numf, f2change, no_cf, lr, uf, outcome_label
-    )
+    if "DiCE-UF" in selected_methods:
+        dicecfs_in, idx_in, t_diceuf, _flag2 = dice_cfexp_in(
+            datasetdf, testset[:], numf, f2change, no_cf, lr, uf, outcome_label
+        )
 
-    no_diceuf = (
-        dicecfs_in is None
-        or (hasattr(dicecfs_in, "empty") and dicecfs_in.empty)
-        or idx_in is None
-        or (hasattr(idx_in, "__len__") and len(idx_in) == 0)
-    )
+        no_diceuf = (
+            dicecfs_in is None
+            or (hasattr(dicecfs_in, "empty") and dicecfs_in.empty)
+            or idx_in is None
+            or (hasattr(idx_in, "__len__") and len(idx_in) == 0)
+        )
+    else:
+        dicecfs_in, idx_in, t_diceuf, no_diceuf = None, [], 0.0, True
 
     if no_diceuf:
         dicecfs_in = pd.DataFrame(columns=features)
@@ -661,15 +787,24 @@ def run_one_fold(
 
 
     # AR in RAW space + scaler (author)
-    arcfs, t_ar, idx_ar = ar_cfexp(X, numf, lr, testset[:], uf, scaler_ar, Xtrain, f2change)
-    artestdata = testset.loc[idx_ar].reset_index(drop=True)
-    if arcfs is not None and not arcfs.empty:
-        arcfs = arcfs.reset_index(drop=True)
+    if "AR" in selected_methods:
+        arcfs, t_ar, idx_ar = ar_cfexp(X, numf, lr, testset[:], uf, scaler_ar, Xtrain, f2change)
+        artestdata = testset.loc[idx_ar].reset_index(drop=True)
+        if arcfs is not None and not arcfs.empty:
+            arcfs = arcfs.reset_index(drop=True)
+    else:
+        arcfs, t_ar, idx_ar = empty_cf_frame(features), 0.0, []
+        artestdata = pd.DataFrame(columns=features)
 
-    print(
-        f"[TIME] UFCE1={t_ufce1:.6f} | UFCE2={t_ufce2:.6f} | UFCE3={t_ufce3:.6f} | "
-        f"DiCE={t_dice:.6f} | DiCE-UF={t_diceuf:.6f} | AR={t_ar:.6f}"
-    )
+    time_by_method = {
+        "UFCE1": t_ufce1,
+        "UFCE2": t_ufce2,
+        "UFCE3": t_ufce3,
+        "DiCE": t_dice,
+        "DiCE-UF": t_diceuf,
+        "AR": t_ar,
+    }
+    print("[TIME] " + " | ".join([f"{method}={time_by_method[method]:.6f}" for method in selected_methods]))
 
     # -------------------------------
     # C) Evaluate using author evaluations.py
@@ -740,23 +875,20 @@ def run_one_fold(
             projected_frames[frame_name] = frame.loc[:, features].copy()
 
         if all_safe:
-            scaled_frames = {
-                name: apply_distance_scaler(df, movie_distance_scaler)
-                for name, df in projected_frames.items()
-            }
-            cont_means, cont_stds = Contproximity(
-                scaled_frames["onecfs"],
-                scaled_frames["onetestdata"],
-                scaled_frames["twocfs"],
-                scaled_frames["twotestdata"],
-                scaled_frames["threecfs"],
-                scaled_frames["threetestdata"],
-                scaled_frames["dicecfs"],
-                scaled_frames["dicecfs_in"],
-                scaled_frames["dicetestdata_in"],
-                scaled_frames["arcfs"],
-                scaled_frames["Xtest"],
-                numf,
+            cont_means, cont_stds = movie_rms_contproximity(
+                onecfs=projected_frames["onecfs"],
+                onetestdata=projected_frames["onetestdata"],
+                twocfs=projected_frames["twocfs"],
+                twotestdata=projected_frames["twotestdata"],
+                threecfs=projected_frames["threecfs"],
+                threetestdata=projected_frames["threetestdata"],
+                dicecfs=projected_frames["dicecfs"],
+                dicecfs_in=projected_frames["dicecfs_in"],
+                dicetestdata_in=projected_frames["dicetestdata_in"],
+                arcfs=projected_frames["arcfs"],
+                Xtest=projected_frames["Xtest"],
+                numf=numf,
+                movie_distance_scaler=movie_distance_scaler,
             )
         else:
             if bool(debug_enabled):
@@ -826,12 +958,12 @@ def run_one_fold(
     }
 
     # Optional compact per-fold print
-    fold_mean_std_table("Prox-Jac", cat_means, cat_stds)
-    fold_mean_std_table("Prox-Euc", cont_means, cont_stds)
-    fold_mean_std_table("Sparsity", spar_means, spar_stds)
-    fold_mean_std_table("Actionability", act_means, act_stds)
-    fold_mean_std_table("Plausibility", plaus_means, plaus_stds)
-    fold_mean_std_table("Feasibility", feas_means, feas_stds)
+    fold_mean_std_table("Prox-Jac", cat_means, cat_stds, selected_methods)
+    fold_mean_std_table("Prox-Euc", cont_means, cont_stds, selected_methods)
+    fold_mean_std_table("Sparsity", spar_means, spar_stds, selected_methods)
+    fold_mean_std_table("Actionability", act_means, act_stds, selected_methods)
+    fold_mean_std_table("Plausibility", plaus_means, plaus_stds, selected_methods)
+    fold_mean_std_table("Feasibility", feas_means, feas_stds, selected_methods)
 
     return fold_metrics, fold_stds, times, pred_dist_debug
 
@@ -849,6 +981,8 @@ def run_for_dataset(
     if dataset not in TUNED_RUN2:
         raise ValueError(f"Dataset '{dataset}' missing from TUNED_RUN2. Allowed: {allowed_tuned}")
     cfg = TUNED_RUN2[dataset]
+    selected_methods = getattr(args, "selected_methods", METHODS)
+    selected_cols = selected_method_columns(selected_methods)
     args.radius = int(cfg["radius"])
     args.n_neighbors = int(cfg["n_neighbors"])
     flip_filter_enabled = bool(int(cfg["ufce_flip_filter"]))
@@ -871,6 +1005,7 @@ def run_for_dataset(
         lr, lr_mean, lr_std, Xtest, Xtrain, X, Y, df, scaler_mad_from_func = out
 
     print(f"[INFO] Dataset={dataset}")
+    print(f"[INFO] Selected methods: {', '.join(selected_methods)}")
     print(f"[INFO] LR CV acc: {lr_mean:.2f} +/- {lr_std:.2f}")
 
     (features, catf, numf, uf, f2change, outcome_label,
@@ -961,6 +1096,7 @@ def run_for_dataset(
             trace_positions=trace_positions,
             total_folds=len(fold_files),
             expected_pred1_rate=expected_pred1_rate,
+            selected_methods=selected_methods,
         )
 
         fold_records.append(fold_metrics)
@@ -976,10 +1112,10 @@ def run_for_dataset(
         std_table.loc[metric, :]  = np.nanstd(mat, axis=0, ddof=1)
 
     print("\n==================== OUR RESULTS (mean) ====================")
-    print(mean_table.to_string(float_format=lambda x: f"{x:.2f}" if np.isfinite(x) else "nan"))
+    print(mean_table.loc[:, selected_cols].to_string(float_format=lambda x: f"{x:.2f}" if np.isfinite(x) else "nan"))
 
     print("\n==================== OUR RESULTS (std) =====================")
-    print(std_table.to_string(float_format=lambda x: f"{x:.2f}" if np.isfinite(x) else "nan"))
+    print(std_table.loc[:, selected_cols].to_string(float_format=lambda x: f"{x:.2f}" if np.isfinite(x) else "nan"))
 
     # ---- Delta vs author (ours - author) ----
     metric_map = {
@@ -993,8 +1129,8 @@ def run_for_dataset(
 
     print("\n==================== DELTA vs AUTHOR (ours - author) ====================")
     rows = []
-    for mi, method in enumerate(METHODS):
-        col = MNAMES[mi]
+    for method in selected_methods:
+        col = MNAMES[METHODS.index(method)]
         for metric in METRICS:
             ours_v = float(mean_table.loc[metric, col])
             author_v = AUTHOR_TABLE7[dataset].get(method, {}).get(metric_map[metric], np.nan)
@@ -1054,6 +1190,15 @@ def main():
     ap.add_argument("--contprox_metric", type=str, default="euclidean")
     ap.add_argument("--data_dir", type=str, default=os.path.join("ufce", "data"), help="Repo-relative path to data folder")
     ap.add_argument("--fold_dir", type=str, default=os.path.join("ufce", "data", "folds"), help="Repo-relative path to folds folder")
+    ap.add_argument(
+        "--methods",
+        type=str,
+        default="all",
+        help=(
+            "Comma/space-separated method selectors. Examples: all, ufce, external, "
+            "dice,ar, dice,dice-uf,ar. external/baselines/dice_ar = DiCE,DiCE-UF,AR."
+        ),
+    )
     ap.add_argument("--debug", type=int, default=0)
     ap.add_argument("--trace_positions", type=str, default="")
     ap.add_argument(
@@ -1065,6 +1210,8 @@ def main():
     args = ap.parse_args()
     if int(args.debug) not in (0, 1):
         raise ValueError("--debug must be 0 or 1.")
+    args.selected_methods = parse_methods_arg(args.methods)
+    print(f"[INFO] Method selector '{args.methods}' -> {', '.join(args.selected_methods)}")
     trace_positions = parse_trace_positions_arg(args.trace_positions, int(args.debug))
     debug_enabled = bool(int(args.debug) == 1)
 

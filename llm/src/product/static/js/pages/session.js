@@ -817,18 +817,18 @@
     }
     if (replyStrategy === "missing_fields_only" && missingFields.length > 0) {
       if (carriedForwardFields.length > 0) {
-        return `Reply with only the missing fields: ${formatFieldList(missingFields)}. I'll keep the values already provided for ${formatFieldList(carriedForwardFields)}.`;
+        return `Reply with only the missing facts: ${formatFieldList(missingFields)}. I'll keep the values already provided for ${formatFieldList(carriedForwardFields)}.`;
       }
-      return `Reply with only the missing fields: ${formatFieldList(missingFields)}.`;
+      return `Reply with only the missing facts: ${formatFieldList(missingFields)}.`;
     }
     if (replyStrategy === "start_new_case") {
       return String(clarificationPayload.next_required_input || "Start a new case and submit one corrected bank profile.");
     }
     if (missingFields.length > 0) {
       if (carriedForwardFields.length > 0) {
-        return `Reply with only the missing fields: ${formatFieldList(missingFields)}. I'll keep the values already provided for ${formatFieldList(carriedForwardFields)}.`;
+        return `Reply with only the missing facts: ${formatFieldList(missingFields)}. I'll keep the values already provided for ${formatFieldList(carriedForwardFields)}.`;
       }
-      return `Reply with only the missing fields: ${formatFieldList(missingFields)}.`;
+      return `Reply with only the missing facts: ${formatFieldList(missingFields)}.`;
     }
     return stringOrNull(clarificationPayload.next_required_input);
   }

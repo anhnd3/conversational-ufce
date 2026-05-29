@@ -48,6 +48,8 @@ def handle_session_turn(
     debug_trace_enabled: bool,
     command: str | None,
     dataset_id: str | None = None,
+    constraint_spec: dict[str, Any] | None = None,
+    policy_override: dict[str, Any] | None = None,
 ):
     started = time.perf_counter()
     if state.is_case_complete:
@@ -70,6 +72,8 @@ def handle_session_turn(
         clarification_turns_used=state.clarification_turns_used,
         clarification_turn_limit=state.clarification_turn_limit,
         dataset_id=state.dataset_id,
+        constraint_spec=constraint_spec,
+        policy_override=policy_override,
     )
     state.clarification_turns_used = result.clarification_turns_used
     state.is_case_complete = bool(result.is_case_complete)

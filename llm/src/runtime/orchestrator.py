@@ -34,6 +34,7 @@ from llm.src.runtime.negotiation_controller import (
     NegotiationController,
 )
 from llm.src.runtime.policy_registry import PolicyRegistry
+from llm.src.runtime.policy_override import validate_and_apply_policy_override
 from llm.src.runtime.prediction_service import PredictionService
 from llm.src.runtime.profile_service import ProfileService
 from llm.src.runtime.ranking.scorer import DefaultCandidateRanker
@@ -41,6 +42,7 @@ from llm.src.runtime.reason_codes import (
     INVALID_DATASET,
     NO_FEASIBLE_CF_FOUND,
     NO_RECOURSE_NEEDED,
+    POLICY_OVERRIDE_INVALID,
     POLICY_NOT_FOUND,
     REQUEST_CONSTRAINTS_BLOCKED,
     UFCE_EXECUTION_ERROR,
@@ -55,6 +57,7 @@ from llm.src.runtime.reproducibility import (
 from llm.src.runtime.types import (
     CounterfactualCandidate,
     CounterfactualResult,
+    RuntimeContext,
     RuntimeDebugTrace,
     RuntimeResult,
 )
@@ -155,6 +158,28 @@ class RuntimeOrchestrator:
                 dataset_name,
                 feature_order=list(context.bundle.feature_order),
             )
+            base_context = context
+            effective_policy, normalized_policy_override, policy_override_errors = validate_and_apply_policy_override(
+                context.policy,
+                runtime_request.policy_override,
+                feature_order=list(context.bundle.feature_order),
+            )
+            if policy_override_errors:
+                raise RuntimeServiceError(
+                    (POLICY_OVERRIDE_INVALID,),
+                    "; ".join(policy_override_errors),
+                )
+            if normalized_policy_override is not None:
+                effective_mi_feature_pairs = _filter_mi_feature_pairs(
+                    context.mi_feature_pairs,
+                    allowed_features=effective_policy.f2change,
+                )
+                context = RuntimeContext(
+                    dataset_name=context.dataset_name,
+                    bundle=context.bundle,
+                    policy=effective_policy,
+                    mi_feature_pairs=effective_mi_feature_pairs,
+                )
             canonical_profile = dataset_package.normalize_profile(runtime_request.profile)
             canonical_profile_dict = dict(canonical_profile.values)
             canonical_request = canonical_request_from_legacy_request(
@@ -174,6 +199,10 @@ class RuntimeOrchestrator:
             debug_trace.deterministic_seed = deterministic_seed_value
             debug_trace.policy_version = context.policy.policy_version
             debug_trace.mi_feature_pairs = [list(pair) for pair in context.mi_feature_pairs]
+            debug_trace.base_policy = base_context.policy.to_dict()
+            debug_trace.policy_override = None if normalized_policy_override is None else dict(normalized_policy_override)
+            debug_trace.effective_policy = context.policy.to_dict()
+            debug_trace.effective_mi_feature_pairs = [list(pair) for pair in context.mi_feature_pairs]
 
             controller.transition(READY_FOR_PREDICTION)
             prediction = self.prediction_service.predict(
@@ -239,6 +268,7 @@ class RuntimeOrchestrator:
             )
             if constraint_filter is not None:
                 debug_trace.constraint_filter = constraint_filter
+            debug_trace.presentation_status = "constraint_blocked" if filter_reason_codes else "candidate_presentable"
             verification_results: list[VerificationResult] = []
             ranked_candidates: list[CanonicalCandidate] = []
             reason_codes = list(filter_reason_codes or backend_result.reason_codes)
@@ -446,6 +476,7 @@ class RuntimeOrchestrator:
             feature_order=feature_order,
             sort_candidates=sort_counterfactual_candidates,
             request_constraints_blocked_code=REQUEST_CONSTRAINTS_BLOCKED,
+            factual_profile=factual_profile,
         )
         if not filtered.feasible:
             return [], list(filtered.reason_codes), debug_summary
@@ -563,3 +594,16 @@ def _canonical_candidates_from_legacy_candidates(
             )
         )
     return normalized
+
+
+def _filter_mi_feature_pairs(
+    mi_feature_pairs: list[list[str]],
+    *,
+    allowed_features: list[str],
+) -> list[list[str]]:
+    allowed = set(allowed_features)
+    return [
+        [str(feature) for feature in pair]
+        for pair in mi_feature_pairs
+        if all(feature in allowed for feature in pair)
+    ]

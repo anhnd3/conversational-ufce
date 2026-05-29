@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
 from llm.src.conversation.bank_profile_extractor import (
@@ -11,12 +13,15 @@ from llm.src.conversation.bank_profile_extractor import (
     recover_explicit_labeled_bank_fields,
     recover_dense_bank_profile_candidate,
 )
-from llm.src.conversation.canonical_validator import BankCanonicalValidator
+from llm.src.runtime.datasets.bank.metadata import BANK_ALIASES, BANK_FEATURE_TYPES, BANK_REQUIRED_FIELD_ORDER
 
 
 def _bank_policy():
-    validator = BankCanonicalValidator()
-    return validator.context.policy, list(validator.required_fields)
+    return SimpleNamespace(
+        dataset_name="bank",
+        feature_type_map=dict(BANK_FEATURE_TYPES),
+        conversation_aliases={field: list(aliases) for field, aliases in BANK_ALIASES.items()},
+    ), list(BANK_REQUIRED_FIELD_ORDER)
 
 
 def _candidate(cf_request: dict[str, object], *, status: str = "partial") -> dict[str, object]:
@@ -155,6 +160,253 @@ def test_extract_explicit_bank_values_handles_coordinated_negation_and_own_langu
     assert result.conflicts == []
 
 
+def test_extract_explicit_bank_values_handles_coordinated_positive_services():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input="I want online banking and a credit card, but no CD account or securities account.",
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Online"] == 1
+    assert result.values["CreditCard"] == 1
+    assert result.values["CDAccount"] == 0
+    assert result.values["SecuritiesAccount"] == 0
+    assert result.conflicts == []
+
+
+def test_extract_explicit_bank_values_handles_explicit_semantic_prose_profile():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "I make 65, have a household of 2, card spending around 1.5, education level 2, "
+            "and no mortgage. No CD account or securities account, but I use online banking "
+            "and own a bank credit card."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values == {
+        "Income": 65.0,
+        "Family": 2,
+        "CCAvg": 1.5,
+        "Education": 2,
+        "Mortgage": 0.0,
+        "SecuritiesAccount": 0,
+        "CDAccount": 0,
+        "Online": 1,
+        "CreditCard": 1,
+    }
+    assert result.conflicts == []
+
+
+def test_extract_explicit_bank_values_handles_mortgage_target_prose():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "I earn 90, spend about 5.5 on my credit card each month, live in a family of 5, "
+            "and my education category is 3. My mortgage target is 250. I want online banking "
+            "and a credit card, but no CD account and no securities account."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Mortgage"] == 250.0
+    assert result.values["Online"] == 1
+    assert result.values["CreditCard"] == 1
+
+
+def test_extract_explicit_bank_values_handles_synonym_prose_profile():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "My salary is 58, my household size is 4, credit card spending is 2.1, "
+            "education category is 1, and mortgage is 35. I have no securities account, "
+            "without a certificate of deposit, use online banking, and do not own a bank credit card."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values == {
+        "Income": 58.0,
+        "Family": 4,
+        "CCAvg": 2.1,
+        "Education": 1,
+        "Mortgage": 35.0,
+        "SecuritiesAccount": 0,
+        "CDAccount": 0,
+        "Online": 1,
+        "CreditCard": 0,
+    }
+    assert result.conflicts == []
+
+
+def test_extract_explicit_bank_values_does_not_invent_from_qualitative_numeric_language():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input="I need high income, low mortgage, and I use online banking.",
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert "Income" not in result.values
+    assert "Mortgage" not in result.values
+    assert result.values["Online"] == 1
+
+
+def test_extract_explicit_bank_values_converts_supported_units_with_timeframe_guard():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "I have an annual income of $65,000, a household of 2, spend about $1.5k per month on cards, "
+            "education level 2, and no mortgage. I use online banking."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Income"] == 65.0
+    assert result.values["CCAvg"] == 1.5
+    assert result.values == {
+        "Income": 65.0,
+        "Family": 2,
+        "CCAvg": 1.5,
+        "Education": 2,
+        "Mortgage": 0.0,
+        "Online": 1,
+    }
+
+
+def test_extract_explicit_bank_values_keeps_timeframe_ambiguous_unit_out():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "My income is $65k, household 2, spend $1.5k on cards, education level 2, "
+            "and no mortgage."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert "Income" not in result.values
+    assert "CCAvg" not in result.values
+    assert result.values["Family"] == 2
+    assert result.values["Education"] == 2
+    assert result.values["Mortgage"] == 0.0
+
+
+def test_extract_explicit_bank_values_maps_education_taxonomy_labels():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input="I earn 48, family 2, CCAvg 1.2, undergraduate level, mortgage 35, and online banking yes.",
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Education"] == 1
+
+
+def test_extract_explicit_bank_values_converts_vnd_amounts():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "Thu nhap nam cua toi la 1.75 ty VND, gia dinh 2 nguoi, "
+            "chi tieu the 37.5 trieu VND/thang, hoc van thac si, the chap 6.25 ty VND."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Income"] == 70.0
+    assert result.values["CCAvg"] == 1.5
+    assert result.values["Mortgage"] == 250.0
+    assert result.values["Education"] == 2
+    assert result.field_evidence["Income"]["evidence_kind"] == "unit_converted"
+    assert result.field_evidence["CCAvg"]["evidence_kind"] == "unit_converted"
+
+
+def test_extract_explicit_bank_values_converts_vnd_amounts_with_diacritics_without_false_conflict():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "Thu nh\u1eadp n\u0103m c\u1ee7a t\u00f4i l\u00e0 1.75 t\u1ef7 VND, gia \u0111\u00ecnh 2 ng\u01b0\u1eddi, "
+            "chi ti\u00eau th\u1ebb 37.5 tri\u1ec7u VND/th\u00e1ng, h\u1ecdc v\u1ea5n th\u1ea1c s\u0129, th\u1ebf ch\u1ea5p 6.25 t\u1ef7 VND."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.conflicts == []
+    assert result.values["Income"] == 70.0
+    assert result.values["CCAvg"] == 1.5
+    assert result.values["Mortgage"] == 250.0
+    assert result.field_evidence["Income"]["evidence_kind"] == "unit_converted"
+    assert result.field_evidence["Income"]["language"] in {"vi", "mixed"}
+    assert result.field_evidence["CCAvg"]["evidence_kind"] == "unit_converted"
+    assert result.field_evidence["CCAvg"]["language"] in {"vi", "mixed"}
+
+
+def test_extract_explicit_bank_values_converts_usd_thousand_wording_in_vietnamese():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "T\u00f4i c\u00f3 thu nh\u1eadp 70 ngh\u00ecn \u0111\u00f4 m\u1ed7i n\u0103m, gia \u0111\u00ecnh 3 ng\u01b0\u1eddi, "
+            "chi ti\u00eau th\u1ebb 1.5 ngh\u00ecn \u0111\u00f4 m\u1ed7i th\u00e1ng, h\u1ecdc v\u1ea5n \u0111\u1ea1i h\u1ecdc, kh\u00f4ng c\u00f3 th\u1ebf ch\u1ea5p."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert result.values["Income"] == 70.0
+    assert result.values["CCAvg"] == 1.5
+    assert result.values["Education"] == 1
+    assert result.values["Mortgage"] == 0.0
+
+
+def test_extract_explicit_bank_values_detects_prose_numeric_conflict():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input="I earn 68, actually I earn 75, and I use online banking.",
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert "Income" not in result.values
+    assert result.conflict_fields == ["Income"]
+
+
+def test_extract_explicit_bank_values_detects_boolean_prose_conflict():
+    policy, required_fields = _bank_policy()
+
+    result = extract_explicit_bank_values(
+        user_input=(
+            "I use online banking, but also no online banking. I earn 70, family of 2, "
+            "spend 2.0 on cards, education level 2, mortgage 0."
+        ),
+        policy=policy,
+        target_fields=required_fields,
+    )
+
+    assert "Online" not in result.values
+    assert result.conflict_fields == ["Online"]
+    assert "Explicit field 'Online' has conflicting values in the same turn." in result.conflicts
+
+
 def test_recover_dense_bank_profile_candidate_marks_extractor_only_and_agreement_provenance():
     policy, required_fields = _bank_policy()
     candidate = _candidate(
@@ -208,7 +460,7 @@ def test_recover_dense_bank_profile_candidate_keeps_parser_only_provenance_when_
     }
 
 
-def test_recover_dense_bank_profile_candidate_marks_conflicts_without_overwrite():
+def test_recover_dense_bank_profile_candidate_prefers_deterministic_value_on_parser_disagreement():
     policy, required_fields = _bank_policy()
     candidate = _candidate(
         {
@@ -236,13 +488,10 @@ def test_recover_dense_bank_profile_candidate_marks_conflicts_without_overwrite(
     )
 
     assert result.candidate is not None
-    assert result.candidate["status"] == "conflict"
-    assert result.candidate["cf_request"]["Online"] == 0
-    assert result.field_provenance["Online"] == FIELD_PROVENANCE_CONFLICT
-    assert (
-        "Explicit field 'Online' disagrees between parser output and deterministic extraction."
-        in result.candidate["conflicts"]
-    )
+    assert result.candidate["status"] == "complete"
+    assert result.candidate["cf_request"]["Online"] == 1
+    assert result.field_provenance["Online"] == FIELD_PROVENANCE_DETERMINISTIC
+    assert result.candidate["conflicts"] == []
 
 
 @pytest.mark.parametrize(

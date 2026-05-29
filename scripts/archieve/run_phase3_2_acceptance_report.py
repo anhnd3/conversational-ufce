@@ -179,7 +179,7 @@ def run_product_acceptance_checks(*, base_url: str, sqlite_path: Path) -> dict[s
 
     checks["home_page_ok"] = home["ok"]
     checks["health_endpoint_ok"] = health["ok"] and health["payload"]["status"] in {"healthy", "unhealthy"}
-    checks["version_endpoint_ok"] = version["ok"] and version["payload"]["parser_schema_version"] == "parser_schema_v2"
+    checks["version_endpoint_ok"] = version["ok"] and version["payload"]["parser_schema_version"] == "parser_schema_v3"
     checks["catalog_endpoint_ok"] = catalog["ok"] and any(
         item["dataset_key"] == "bank" and item["availability_status"] == "active"
         for item in catalog["payload"]

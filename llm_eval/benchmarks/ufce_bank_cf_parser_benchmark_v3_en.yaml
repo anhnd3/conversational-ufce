@@ -1,0 +1,282 @@
+benchmark_name: ufce_bank_cf_parser_v3_en
+description: Bank benchmark v3 (English) for unit-aware and evidence-driven natural-language parsing.
+target_cf_fields:
+- name: Income
+  type: float
+  description: Target annual income value in $000
+- name: CCAvg
+  type: float
+  description: Average monthly credit card spending in $000
+- name: Family
+  type: int
+  description: Family size
+- name: Education
+  type: int
+  description: Education category code (1 undergrad, 2 graduate, 3 advanced/professional)
+- name: Mortgage
+  type: float
+  description: Mortgage value in $000
+- name: CDAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: Online
+  type: binary
+  description: 1=yes, 0=no
+- name: SecuritiesAccount
+  type: binary
+  description: 1=yes, 0=no
+- name: CreditCard
+  type: binary
+  description: 1=yes, 0=no
+output_contract:
+  task: extract_cf_request
+  status_enum:
+  - complete
+  - partial
+  - needs_clarification
+  - conflict
+  rules:
+  - Return only fields explicitly inferable from the input.
+  - Do not invent missing values.
+  - Use canonical field names exactly as defined.
+  - Binary fields must be 0 or 1.
+  - Education semantic labels are allowed only for the taxonomy mapping 1/2/3.
+  - Include field_evidence for every field in cf_request.
+  - missing_fields must list canonical field names that are not specified but would be needed for a complete CF request.
+  - conflicts must describe contradictory or invalid instructions briefly.
+  - notes may contain short normalization notes if needed; otherwise return an empty list.
+cases:
+- case_id: EN01
+  group: NL_EN
+  description: Complete prose profile with explicit semantic values and coordinated booleans
+  input: I earn 90, spend about 5.5 on my credit card each month, live in a family of 5, and my education category is 3. My mortgage target is 250. I want online banking and a credit card, but no CD account and no securities account.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 90
+      Family: 5
+      CCAvg: 5.5
+      Education: 3
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "I earn 90", evidence_kind: explicit_numeric, normalized_from: "90", language: en}
+      Family: {source_text: "family of 5", evidence_kind: explicit_numeric, normalized_from: "5", language: en}
+      CCAvg: {source_text: "spend about 5.5", evidence_kind: explicit_numeric, normalized_from: "5.5", language: en}
+      Education: {source_text: "education category is 3", evidence_kind: explicit_numeric, normalized_from: "3", language: en}
+      Mortgage: {source_text: "mortgage target is 250", evidence_kind: explicit_numeric, normalized_from: "250", language: en}
+      CDAccount: {source_text: "no CD account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "want", language: en}
+      SecuritiesAccount: {source_text: "no securities account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      CreditCard: {source_text: "a credit card", evidence_kind: explicit_boolean, normalized_from: "want", language: en}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: EN02
+  group: NL_EN
+  description: Unit-aware USD conversion with annual and monthly timeframe
+  input: My annual income is $70,000, family of 2, and I spend about $1.5k per month on credit cards. I have graduate education, mortgage is $250k, no CD account or securities account, I use online banking, and I own a credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 70
+      Family: 2
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "$70,000", evidence_kind: unit_converted, normalized_from: "$70,000", language: en}
+      Family: {source_text: "family of 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      CCAvg: {source_text: "$1.5k per month", evidence_kind: unit_converted, normalized_from: "$1.5k", language: en}
+      Education: {source_text: "graduate education", evidence_kind: taxonomy_mapped, normalized_from: "graduate", language: en}
+      Mortgage: {source_text: "$250k", evidence_kind: unit_converted, normalized_from: "$250k", language: en}
+      CDAccount: {source_text: "no CD account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "use", language: en}
+      SecuritiesAccount: {source_text: "no securities account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      CreditCard: {source_text: "own a credit card", evidence_kind: explicit_boolean, normalized_from: "own", language: en}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: EN03
+  group: NL_EN
+  description: VND heuristic conversion to dataset units
+  input: My annual income is 1.75 ty VND, family 2, monthly card spend is 37.5 trieu VND/thang, graduate level education, and mortgage 6.25 ty VND. No securities account, no CD account, I use online banking, and I have a credit card.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 70
+      Family: 2
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 250
+      CDAccount: 0
+      Online: 1
+      SecuritiesAccount: 0
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "1.75 ty VND", evidence_kind: unit_converted, normalized_from: "1.75 ty VND", language: mixed}
+      Family: {source_text: "family 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      CCAvg: {source_text: "37.5 trieu VND/thang", evidence_kind: unit_converted, normalized_from: "37.5 trieu VND/thang", language: mixed}
+      Education: {source_text: "graduate level education", evidence_kind: taxonomy_mapped, normalized_from: "graduate", language: en}
+      Mortgage: {source_text: "6.25 ty VND", evidence_kind: unit_converted, normalized_from: "6.25 ty VND", language: mixed}
+      CDAccount: {source_text: "no CD account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "use", language: en}
+      SecuritiesAccount: {source_text: "no securities account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      CreditCard: {source_text: "have a credit card", evidence_kind: explicit_boolean, normalized_from: "have", language: en}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: EN04
+  group: NL_EN
+  description: Unit mention without timeframe must request clarification for Income and CCAvg
+  input: My income is $70k and I spend $1.5k on cards. Family is 2, education 2, no mortgage, and I use online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Family: 2
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    field_evidence:
+      Family: {source_text: "Family is 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      Education: {source_text: "education 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      Mortgage: {source_text: "no mortgage", evidence_kind: explicit_numeric, normalized_from: "no mortgage", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "use", language: en}
+    missing_fields:
+    - Income
+    - CCAvg
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Unit-based numeric mention needs explicit annual (Income) or monthly (CCAvg) context before normalization
+- case_id: EN05
+  group: NL_EN
+  description: Education taxonomy mapping undergrad to code 1
+  input: Income 48, family 2, CCAvg 1.2, undergraduate level, mortgage 35, no securities account, no CD account, online banking yes, credit card yes.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 48
+      Family: 2
+      CCAvg: 1.2
+      Education: 1
+      Mortgage: 35
+      SecuritiesAccount: 0
+      CDAccount: 0
+      Online: 1
+      CreditCard: 1
+    field_evidence:
+      Income: {source_text: "Income 48", evidence_kind: explicit_numeric, normalized_from: "48", language: en}
+      Family: {source_text: "family 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      CCAvg: {source_text: "CCAvg 1.2", evidence_kind: explicit_numeric, normalized_from: "1.2", language: en}
+      Education: {source_text: "undergraduate level", evidence_kind: taxonomy_mapped, normalized_from: "undergraduate", language: en}
+      Mortgage: {source_text: "mortgage 35", evidence_kind: explicit_numeric, normalized_from: "35", language: en}
+      SecuritiesAccount: {source_text: "no securities account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      CDAccount: {source_text: "no CD account", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      Online: {source_text: "online banking yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      CreditCard: {source_text: "credit card yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+    missing_fields: []
+    conflicts: []
+    notes: []
+- case_id: EN06
+  group: NL_EN
+  description: Out-of-taxonomy education label requires clarification
+  input: I earn 48, family of 2, spend 1.2 on cards, high school education, mortgage 35, and I use online banking.
+  expected_output:
+    task: extract_cf_request
+    status: needs_clarification
+    cf_request:
+      Income: 48
+      Family: 2
+      CCAvg: 1.2
+      Mortgage: 35
+      Online: 1
+    field_evidence:
+      Income: {source_text: "I earn 48", evidence_kind: explicit_numeric, normalized_from: "48", language: en}
+      Family: {source_text: "family of 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      CCAvg: {source_text: "spend 1.2 on cards", evidence_kind: explicit_numeric, normalized_from: "1.2", language: en}
+      Mortgage: {source_text: "mortgage 35", evidence_kind: explicit_numeric, normalized_from: "35", language: en}
+      Online: {source_text: "online banking", evidence_kind: explicit_boolean, normalized_from: "use", language: en}
+    missing_fields:
+    - Education
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts: []
+    notes:
+    - Education labels are mapped only for Undergrad(1), Graduate(2), or Advanced/Professional(3); other school-level labels need clarification
+- case_id: EN07
+  group: NL_EN
+  description: Numeric contradiction should set conflict and keep conflict evidence
+  input: I earn 68, actually I earn 75, family of 1, spend 1.5 on cards each month, education level 2, mortgage 0, and online banking yes.
+  expected_output:
+    task: extract_cf_request
+    status: conflict
+    cf_request:
+      Family: 1
+      CCAvg: 1.5
+      Education: 2
+      Mortgage: 0
+      Online: 1
+    field_evidence:
+      Income: {source_text: "Income", evidence_kind: conflict, normalized_from: "", language: unknown}
+      Family: {source_text: "family of 1", evidence_kind: explicit_numeric, normalized_from: "1", language: en}
+      CCAvg: {source_text: "spend 1.5 on cards", evidence_kind: explicit_numeric, normalized_from: "1.5", language: en}
+      Education: {source_text: "education level 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      Mortgage: {source_text: "mortgage 0", evidence_kind: explicit_numeric, normalized_from: "0", language: en}
+      Online: {source_text: "online banking yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+    missing_fields:
+    - SecuritiesAccount
+    - CDAccount
+    - CreditCard
+    conflicts:
+    - Explicit field 'Income' has conflicting values in the same turn.
+    notes: []
+- case_id: EN08
+  group: NL_EN
+  description: Hard and soft constraints from prose remain strict
+  input: Income 72, Family 1, CCAvg 4.8, Education 2, Mortgage 200, CDAccount yes, Online no, SecuritiesAccount yes, CreditCard no. Do not change Income. Prefer fewer changes.
+  expected_output:
+    task: extract_cf_request
+    status: complete
+    cf_request:
+      Income: 72
+      Family: 1
+      CCAvg: 4.8
+      Education: 2
+      Mortgage: 200
+      CDAccount: 1
+      Online: 0
+      SecuritiesAccount: 1
+      CreditCard: 0
+    field_evidence:
+      Income: {source_text: "Income 72", evidence_kind: explicit_numeric, normalized_from: "72", language: en}
+      Family: {source_text: "Family 1", evidence_kind: explicit_numeric, normalized_from: "1", language: en}
+      CCAvg: {source_text: "CCAvg 4.8", evidence_kind: explicit_numeric, normalized_from: "4.8", language: en}
+      Education: {source_text: "Education 2", evidence_kind: explicit_numeric, normalized_from: "2", language: en}
+      Mortgage: {source_text: "Mortgage 200", evidence_kind: explicit_numeric, normalized_from: "200", language: en}
+      CDAccount: {source_text: "CDAccount yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      Online: {source_text: "Online no", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+      SecuritiesAccount: {source_text: "SecuritiesAccount yes", evidence_kind: explicit_boolean, normalized_from: "yes", language: en}
+      CreditCard: {source_text: "CreditCard no", evidence_kind: explicit_boolean, normalized_from: "no", language: en}
+    constraint_spec:
+      disallowed_changes:
+      - Income
+      prefer_fewer_changes: true
+    missing_fields: []
+    conflicts: []
+    notes: []

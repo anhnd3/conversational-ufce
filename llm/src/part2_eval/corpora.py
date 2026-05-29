@@ -4,19 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
-from llm.src.part2_eval.bank_synth_corpus import (
-    build_synth_generation_metadata,
-    build_synth_group_profile_map,
-    generate_bank_boundary_profiles_corpus,
-    generate_bank_synth_profile_pool,
-)
 from llm.src.part2_eval.common import sha256_json_payload
-from llm.src.refinement.delta import build_active_constraint_spec
-from llm.src.refinement.validation import validate_refinement_prediction
-from llm.src.runtime.constraint_spec import validate_and_normalize_constraint_spec
-from ufce.core.data_processing import get_bank_user_constraints
 
 
 BANK_FEATURE_ORDER = [
@@ -32,7 +20,8 @@ BANK_FEATURE_ORDER = [
 ]
 BANK_BOOLEAN_FIELDS = ("SecuritiesAccount", "CDAccount", "Online", "CreditCard")
 ROOT = Path(__file__).resolve().parents[3]
-TIER_A_CORPUS_VERSION = "part2_tier_a_bank_annotations_v1"
+TIER_A_CORPUS_V1_VERSION = "part2_tier_a_bank_annotations_v1"
+TIER_A_CORPUS_VERSION = "part2_tier_a_bank_annotations_v2"
 TIER_B_CORPUS_VERSION = "part2_tier_b_bank_sessions_v1"
 TIER_B_SYNTH300_CORPUS_VERSION = "part2_tier_b_bank_sessions_v2_synth300"
 TIER_C_CORPUS_V1_VERSION = "part2_tier_c_bank_backend_v1"
@@ -46,7 +35,8 @@ TIER_A_SCORER_OUTPUT_SCHEMA_VERSION = "part2_tier_a_scorer_output_schema_v1"
 TIER_A_ANNOTATION_SCHEMA_PATH = ROOT / "docs" / "validation" / "schemas" / "part2_tier_a_annotation_schema_v1.json"
 TIER_A_SCORER_OUTPUT_SCHEMA_PATH = ROOT / "docs" / "validation" / "schemas" / "part2_tier_a_scorer_output_schema_v1.json"
 VALIDATION_CORPORA_ROOT = ROOT / "docs" / "validation" / "corpora"
-TIER_A_CORPUS_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_a_bank_annotations_v1.json"
+TIER_A_CORPUS_V1_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_a_bank_annotations_v1.json"
+TIER_A_CORPUS_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_a_bank_annotations_v2.json"
 TIER_B_CORPUS_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_b_bank_sessions_v1.json"
 TIER_B_SYNTH300_CORPUS_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_b_bank_sessions_v2_synth300.json"
 TIER_C_CORPUS_V1_PATH = VALIDATION_CORPORA_ROOT / "part2_tier_c_bank_backend_v1.json"
@@ -62,7 +52,8 @@ def build_tier_a_annotation_corpus() -> dict[str, Any]:
 
 
 def load_tier_a_annotation_corpus(path: Path | None = None) -> dict[str, Any]:
-    return load_frozen_corpus(path or TIER_A_CORPUS_PATH, expected_version=TIER_A_CORPUS_VERSION)
+    source_path = Path(path or TIER_A_CORPUS_PATH).resolve()
+    return load_frozen_corpus(source_path, expected_version=infer_tier_a_expected_version(source_path))
 
 
 def load_tier_b_bank_corpus(path: Path | None = None) -> dict[str, Any]:
@@ -214,7 +205,7 @@ def generate_tier_a_annotation_corpus() -> dict[str, Any]:
     initial_patterns = [
         ("Do not change Income.", {"disallowed_changes": ["Income"]}),
         ("Do not change Mortgage.", {"disallowed_changes": ["Mortgage"]}),
-        ("Keep Mortgage at or below 120.", {"numeric_bounds": {"Mortgage": {"max": 120.0}}}),
+        ("Keep Mortgage at or below 120.", {"numeric_bounds": {"Mortgage": {"max": 120}}}),
         ("Change at most one thing.", {"max_changed_features": 1}),
         ("Prefer smaller edits.", {"prefer_fewer_changes": True}),
     ]
@@ -242,20 +233,14 @@ def generate_tier_a_annotation_corpus() -> dict[str, Any]:
         (
             "Mortgage must stay under 120.",
             {},
-            {"set_numeric_bounds": {"Mortgage": {"max": 120.0}}},
+            {"set_numeric_bounds": {"Mortgage": {"max": 120}}},
         ),
     ]
 
     cases: list[dict[str, Any]] = []
-    for profile_index, profile in enumerate(profiles, start=1):
-        profile_prompt = render_bank_profile_prompt(profile)
+    for profile_index, profile in enumerate(profiles[:2], start=1):
+        profile_prompt = render_bank_natural_profile_prompt(profile)
         for pattern_index, (feedback_text, raw_spec) in enumerate(initial_patterns, start=1):
-            expected_spec, errors = validate_and_normalize_constraint_spec(
-                raw_spec,
-                feature_order=BANK_FEATURE_ORDER,
-            )
-            if errors:
-                raise ValueError(f"Invalid frozen initial constraint pattern: {errors}")
             cases.append(
                 {
                     "case_id": f"TIERA-INIT-{profile_index:02d}-{pattern_index:02d}",
@@ -264,34 +249,22 @@ def generate_tier_a_annotation_corpus() -> dict[str, Any]:
                     "input_text": f"{profile_prompt} {feedback_text}",
                     "active_constraint_spec": None,
                     "pending_refinement_clarification": None,
-                    "expected_constraint_spec": expected_spec,
+                    "expected_constraint_spec": raw_spec,
                     "expected_delta": None,
-                    "tags": ["bank", "initial_constraint_spec"],
+                    "tags": ["bank", "initial_constraint_spec", "explicit_semantic_nl"],
                 }
             )
         for pattern_index, (feedback_text, active_spec_raw, raw_delta) in enumerate(refinement_patterns, start=1):
-            active_spec = build_active_constraint_spec(active_spec_raw, feature_order=BANK_FEATURE_ORDER)
-            prediction = {
-                "task": "extract_constraint_feedback",
-                "status": "apply",
-                "constraint_feedback_delta": raw_delta,
-                "ambiguities": [],
-                "unsupported_feedback": [],
-                "notes": [],
-            }
-            validation = validate_refinement_prediction(prediction, feature_order=BANK_FEATURE_ORDER)
-            if not validation.is_valid or validation.normalized_delta is None:
-                raise ValueError(f"Invalid frozen refinement pattern: {validation.errors}")
             cases.append(
                 {
                     "case_id": f"TIERA-REF-{profile_index:02d}-{pattern_index:02d}",
                     "annotation_type": "refinement_delta",
                     "group": "M36",
                     "input_text": feedback_text,
-                    "active_constraint_spec": active_spec,
+                    "active_constraint_spec": active_spec_raw,
                     "pending_refinement_clarification": None,
                     "expected_constraint_spec": None,
-                    "expected_delta": validation.normalized_delta,
+                    "expected_delta": raw_delta,
                     "tags": ["bank", "refinement_delta"],
                 }
             )
@@ -404,6 +377,12 @@ def generate_tier_b_bank_corpus(*, bundle, desired_outcome: int) -> dict[str, An
 
 
 def generate_tier_b_bank_synth300_corpus(*, bundle, desired_outcome: int) -> dict[str, Any]:
+    from llm.src.part2_eval.bank_synth_corpus import (
+        build_synth_generation_metadata,
+        build_synth_group_profile_map,
+        generate_bank_synth_profile_pool,
+    )
+
     profile_pool = generate_bank_synth_profile_pool(bundle=bundle, desired_outcome=desired_outcome)
     grouped_profiles = build_synth_group_profile_map(profile_pool)
     cases: list[dict[str, Any]] = []
@@ -490,6 +469,9 @@ def generate_tier_b_bank_synth300_corpus(*, bundle, desired_outcome: int) -> dic
 
 
 def generate_tier_c_bank_backend_corpus(*, bundle, desired_outcome: int) -> dict[str, Any]:
+    import numpy as np
+    from ufce.core.data_processing import get_bank_user_constraints
+
     (
         features,
         _catf,
@@ -695,6 +677,8 @@ def generate_g5_agent_portability_synth300_corpus(*, tier_b_corpus: dict[str, An
 
 
 def generate_bank_boundary_profiles_snapshot() -> dict[str, Any]:
+    from llm.src.part2_eval.bank_synth_corpus import generate_bank_boundary_profiles_corpus
+
     return generate_bank_boundary_profiles_corpus()
 
 
@@ -731,6 +715,25 @@ def render_bank_profile_prompt(
     return " ".join(sentences).strip()
 
 
+def render_bank_natural_profile_prompt(profile: dict[str, Any]) -> str:
+    securities_text = "I have a securities account" if int(profile["SecuritiesAccount"]) == 1 else "I do not have a securities account"
+    cd_text = "I have a CD account" if int(profile["CDAccount"]) == 1 else "I do not have a CD account"
+    online_text = "I use online banking" if int(profile["Online"]) == 1 else "I do not use online banking"
+    credit_text = (
+        "I own a bank credit card"
+        if int(profile["CreditCard"]) == 1
+        else "I do not own a bank credit card"
+    )
+    mortgage_value = render_number(profile["Mortgage"])
+    mortgage_text = "no mortgage" if float(profile["Mortgage"]) == 0.0 else f"a mortgage of {mortgage_value}"
+    return (
+        f"I earn {render_number(profile['Income'])}, live in a family of {int(profile['Family'])}, "
+        f"spend about {render_number(profile['CCAvg'])} on my credit card each month, "
+        f"and my education level is {int(profile['Education'])}. "
+        f"I have {mortgage_text}. {securities_text}, {cd_text}, {online_text}, and {credit_text}."
+    )
+
+
 def render_bank_boolean_followup_prompt(profile: dict[str, Any]) -> str:
     parts = []
     for field_name in ("SecuritiesAccount", "CDAccount", "Online", "CreditCard"):
@@ -751,6 +754,8 @@ def render_bank_clarification_followup_prompt(
 
 
 def build_active_constraint_pattern(index: int, profile: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    from llm.src.runtime.constraint_spec import validate_and_normalize_constraint_spec
+
     patterns = [
         ("Do not change Income.", {"disallowed_changes": ["Income"]}),
         ("Do not change Mortgage.", {"disallowed_changes": ["Mortgage"]}),
@@ -801,6 +806,15 @@ def infer_tier_c_expected_version(path: Path) -> str | None:
         return TIER_C_CORPUS_VERSION
     if filename == TIER_C_CORPUS_V1_PATH.name:
         return TIER_C_CORPUS_V1_VERSION
+    return None
+
+
+def infer_tier_a_expected_version(path: Path) -> str | None:
+    filename = Path(path).name
+    if filename == TIER_A_CORPUS_PATH.name:
+        return TIER_A_CORPUS_VERSION
+    if filename == TIER_A_CORPUS_V1_PATH.name:
+        return TIER_A_CORPUS_V1_VERSION
     return None
 
 

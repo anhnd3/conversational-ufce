@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import inspect
 import sys
 from pathlib import Path
@@ -50,6 +51,10 @@ from llm.src.parser.parser_quality import finalize_parser_quality_metadata, run_
 from llm.src.runtime.datasets import BankDatasetPackage, GradDatasetPackage
 from llm.src.runtime.model_registry import ModelRegistry
 from llm.src.runtime.orchestrator import RuntimeOrchestrator
+from llm.src.runtime.policy_override import (
+    POLICY_OVERRIDE_DERIVATION_VERSION,
+    apply_constraint_policy_override_to_runtime_request,
+)
 from llm.src.runtime.registries.dataset_registry import DatasetRegistry
 from llm.src.runtime.reason_codes import INVALID_COUNTERFACTUAL_BLOCKED, REQUEST_CONSTRAINTS_BLOCKED
 from llm.src.utils.hashing import make_run_id, sha256_file, sha256_text, utc_now_iso
@@ -113,6 +118,8 @@ class BankConversationOrchestrator:
         clarification_turns_used: int = 0,
         clarification_turn_limit: int = 3,
         dataset_id: str = "bank",
+        constraint_spec: dict[str, Any] | None = None,
+        policy_override: dict[str, Any] | None = None,
     ) -> ConversationTurnResult:
         started = time.perf_counter()
         prepared = self.prepare_turn(user_input=user_input, dataset_id=dataset_id)
@@ -137,6 +144,8 @@ class BankConversationOrchestrator:
             clarification_turns_used=clarification_turns_used,
             clarification_turn_limit=clarification_turn_limit,
             dataset_id=dataset_id,
+            constraint_spec=constraint_spec,
+            policy_override=policy_override,
         )
         timing_metrics = dict(result.timing_metrics or {})
         timing_metrics["end_to_end_latency_ms"] = round((time.perf_counter() - started) * 1000.0, 3)
@@ -257,6 +266,8 @@ class BankConversationOrchestrator:
         clarification_turns_used: int = 0,
         clarification_turn_limit: int = 3,
         dataset_id: str = "bank",
+        constraint_spec: dict[str, Any] | None = None,
+        policy_override: dict[str, Any] | None = None,
     ) -> ConversationTurnResult:
         turn_id = make_run_id()
         timestamp_utc = utc_now_iso()
@@ -316,6 +327,25 @@ class BankConversationOrchestrator:
                 bounded_suggestion_available=False,
             )
             runtime_payload = builder_result.runtime_request
+            if constraint_spec is not None:
+                runtime_payload = dict(runtime_payload)
+                runtime_payload["constraint_spec"] = dict(constraint_spec)
+            if policy_override is not None:
+                runtime_payload = dict(runtime_payload)
+                runtime_payload["policy_override"] = dict(policy_override)
+            runtime_payload = apply_constraint_policy_override_to_runtime_request(
+                runtime_payload,
+                base_policy=dataset_package.runtime_context().policy,
+                feature_order=list(builder_result.canonical_field_order),
+            )
+            builder_provenance = dict(builder_result.provenance)
+            if isinstance(runtime_payload.get("policy_override"), dict):
+                builder_provenance["policy_override_derivation_version"] = POLICY_OVERRIDE_DERIVATION_VERSION
+            builder_result = replace(
+                builder_result,
+                runtime_request=runtime_payload,
+                provenance=builder_provenance,
+            )
             runtime_started = time.perf_counter()
             runtime_obj = self.runtime_orchestrator.handle(
                 runtime_payload,

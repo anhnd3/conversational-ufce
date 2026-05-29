@@ -192,7 +192,7 @@ class BankDatasetPackage(DatasetPackage):
         return ["Income", "CCAvg", "Mortgage"]
 
     def primary_response_schema_name(self) -> str:
-        return "ufce_bank_cf_parser_output_v2"
+        return "ufce_bank_cf_parser_output_v3"
 
     def refinement_response_schema_name(self) -> str:
         return "ufce_bank_refinement_feedback_output_v1"

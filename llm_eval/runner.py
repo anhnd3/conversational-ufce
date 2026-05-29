@@ -8,7 +8,14 @@ from tqdm import tqdm
 from llm.src.adapters.lmstudio_client import call_lm_studio, extract_response_data
 from llm.src.orchestration.parse_then_validate import parse_then_validate
 from llm.src.parser.response_normalizer import NormalizedParseResult
-from llm.src.parser.prompt_builder import build_request_payload, build_user_prompt, load_system_prompt
+from llm.src.parser.prompt_builder import (
+    build_live_response_schema,
+    build_request_payload,
+    build_user_prompt,
+    load_system_prompt,
+    normalize_parser_schema_version,
+    response_schema_name_for_version,
+)
 from llm.src.utils.hashing import (
     make_run_id,
     sha256_file,
@@ -32,6 +39,8 @@ from llm_eval.scoring import attach_stability_scores, score_prediction
 
 def run_evaluation(config: EvalConfig) -> dict[str, Any]:
     benchmark = load_benchmark(config.benchmark_path)
+    parser_schema_version = infer_parser_schema_version(benchmark_name=benchmark.benchmark_name)
+    schema_name = response_schema_name_for_version(parser_schema_version)
     cases = select_cases(benchmark, config)
     system_prompt = load_system_prompt(config.system_prompt_path)
     run_id = make_run_id()
@@ -52,7 +61,11 @@ def run_evaluation(config: EvalConfig) -> dict[str, Any]:
         dynamic_ncols=True,
     ) as progress:
         for case in cases:
-            user_prompt = build_user_prompt(benchmark, case)
+            user_prompt = build_user_prompt(
+                benchmark,
+                case,
+                schema_version=parser_schema_version,
+            )
             request_payload = build_request_payload(
                 model=config.model_alias,
                 system_prompt=system_prompt,
@@ -60,6 +73,11 @@ def run_evaluation(config: EvalConfig) -> dict[str, Any]:
                 temperature=config.temperature,
                 top_p=config.top_p,
                 max_tokens=config.max_tokens,
+                response_schema=build_live_response_schema(
+                    benchmark,
+                    schema_version=parser_schema_version,
+                ),
+                schema_name=schema_name,
             )
             for repeat_id in range(1, config.repeats + 1):
                 progress.set_description(
@@ -82,6 +100,7 @@ def run_evaluation(config: EvalConfig) -> dict[str, Any]:
                     api_result=api_result,
                     response_data=response_data,
                     benchmark=benchmark,
+                    case=case,
                 )
                 scoring = score_prediction(
                     benchmark=benchmark,
@@ -141,6 +160,8 @@ def run_evaluation(config: EvalConfig) -> dict[str, Any]:
         run_dir=run_dir,
         config=config,
         benchmark=benchmark,
+        parser_schema_version=parser_schema_version,
+        response_schema_name=schema_name,
         cases=cases,
         system_prompt=system_prompt,
         run_id=run_id,
@@ -283,10 +304,12 @@ def evaluate_model_output(
     api_result: dict[str, Any],
     response_data: dict[str, Any],
     benchmark: BenchmarkDefinition,
+    case=None,
 ) -> tuple[NormalizedParseResult, ValidationResult]:
     return parse_then_validate(
         message_text=response_data["message_text"],
         benchmark=benchmark,
+        user_text=None if case is None else case.input_text,
         api_error=api_result.get("error"),
     )
 
@@ -300,6 +323,8 @@ def write_outputs(
     run_dir: Path,
     config: EvalConfig,
     benchmark: BenchmarkDefinition,
+    parser_schema_version: str,
+    response_schema_name: str,
     cases,
     system_prompt: str,
     run_id: str,
@@ -319,6 +344,8 @@ def write_outputs(
         build_config_snapshot(
             config=config,
             benchmark=benchmark,
+            parser_schema_version=parser_schema_version,
+            response_schema_name=response_schema_name,
             cases=cases,
             system_prompt=system_prompt,
             run_id=run_id,
@@ -330,6 +357,8 @@ def build_config_snapshot(
     *,
     config: EvalConfig,
     benchmark: BenchmarkDefinition,
+    parser_schema_version: str,
+    response_schema_name: str,
     cases,
     system_prompt: str,
     run_id: str,
@@ -353,10 +382,25 @@ def build_config_snapshot(
         "timeout_s": config.timeout_s,
         "request_contract": {
             "endpoint": "/api/v1/chat",
-            "payload_keys": ["model", "system_prompt", "input"],
-            "generation_params_sent": [],
+            "payload_keys": ["model", "system_prompt", "input", "response_format"],
+            "generation_params_sent": ["temperature", "top_p", "max_tokens"],
+            "response_format": {
+                "type": "json_schema",
+                "json_schema_name": response_schema_name,
+                "strict": True,
+            },
+            "parser_schema_version": parser_schema_version,
         },
         "selected_case_ids": [case.case_id for case in cases],
         "selected_group": config.group,
         "selected_limit": config.limit,
     }
+
+
+def infer_parser_schema_version(*, benchmark_name: str) -> str:
+    lowered = str(benchmark_name or "").lower()
+    if "v2" in lowered:
+        return "v2"
+    if "v3" in lowered:
+        return "v3"
+    return normalize_parser_schema_version(None)

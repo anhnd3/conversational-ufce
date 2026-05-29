@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import math
 import os
 import sys
 from pathlib import Path
@@ -18,6 +19,16 @@ os.environ.setdefault("MPLCONFIGDIR", str(MPL_DIR))
 def load_runner():
     path = ROOT / "scripts" / "final" / "part1" / "01b_reproduce_ufce_only.py"
     spec = importlib.util.spec_from_file_location("table7_ufce_only_runner", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_tuner():
+    path = ROOT / "scripts" / "final" / "part1" / "02_tune_final_parameters.py"
+    spec = importlib.util.spec_from_file_location("table7_ufce_tuner", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     sys.modules[spec.name] = module
@@ -53,7 +64,66 @@ def test_cli_defaults_to_clean_table7_bundle() -> None:
 
     assert args.runtime_profile == "final_freeze"
     assert args.bundle_mode == "table7_author_public"
-    assert args.ufce_flip_filter == 0
+    assert args.ufce_flip_filter is None
+
+
+def test_diagnostics_accepts_force_flip_override() -> None:
+    runner = load_runner()
+
+    args = runner.build_arg_parser().parse_args(["--diagnostics", "--ufce_flip_filter", "1"])
+    args.run_id = "unit-test-run"
+    runner.validate_diagnostic_args(args)
+
+    assert args.runtime_profile == "final_freeze"
+    assert args.ufce_flip_filter == 1
+    assert args.out_dir.endswith("unit-test-run")
+
+
+def test_new_best_params_runtime_profile_resolves_known_dataset_configs() -> None:
+    runner = load_runner()
+
+    expected = {
+        "bank": {
+            "radius": 90,
+            "n_neighbors": 150,
+            "min_act": 1,
+            "min_feas": 0,
+            "ufce_flip_filter": 1,
+        },
+        "bupa": {
+            "radius": 70,
+            "n_neighbors": 200,
+            "min_act": 1,
+            "min_feas": 1,
+            "ufce_flip_filter": 1,
+        },
+        "grad": {
+            "radius": 16,
+            "n_neighbors": 400,
+            "min_act": 0,
+            "min_feas": 0,
+            "ufce_flip_filter": 1,
+        },
+        "movie": {
+            "radius": 160,
+            "n_neighbors": 50,
+            "min_act": 1,
+            "min_feas": 1,
+            "ufce_flip_filter": 1,
+        },
+        "wine": {
+            "radius": 15,
+            "n_neighbors": 1000,
+            "min_act": 0,
+            "min_feas": 0,
+            "ufce_flip_filter": 1,
+        },
+    }
+
+    for dataset, cfg_expected in expected.items():
+        args = runner.build_arg_parser().parse_args(["--runtime_profile", "new_best_params", "--dataset", dataset])
+        cfg = runner.resolve_effective_cfg(dataset, args)
+        assert cfg == cfg_expected
 
 
 def test_bundle_mode_accepts_hyphen_and_underscore_aliases() -> None:
@@ -62,10 +132,12 @@ def test_bundle_mode_accepts_hyphen_and_underscore_aliases() -> None:
     hyphen_args = runner.build_arg_parser().parse_args(["--bundle-mode", "table7_author_public"])
     underscore_args = runner.build_arg_parser().parse_args(["--bundle_mode", "table7_author_public"])
     legacy_args = runner.build_arg_parser().parse_args(["--bundle_mode", "author_public"])
+    domain_args = runner.build_arg_parser().parse_args(["--bundle_mode", "domain_actionable"])
 
     assert hyphen_args.bundle_mode == "table7_author_public"
     assert underscore_args.bundle_mode == "table7_author_public"
     assert runner._canonical_bundle_mode(legacy_args.bundle_mode) == "table7_author_public"
+    assert domain_args.bundle_mode == "domain_actionable"
 
 
 def test_table7_bundle_resolves_author_public_sources_for_all_datasets() -> None:
@@ -146,6 +218,166 @@ def test_blindspot_bundle_resolves_as_not_main_table7() -> None:
     assert resolution.effective_uf_source.startswith("blindspot_diagnostic:")
 
 
+def test_domain_actionable_bundle_resolves_expected_constraints() -> None:
+    runner = load_runner()
+    args = runner.build_arg_parser().parse_args(["--bundle-mode", "domain_actionable"])
+
+    expected = {
+        "bank": {
+            "f2change": ["Income", "CCAvg", "Mortgage", "CDAccount", "Online", "CreditCard", "SecuritiesAccount"],
+            "uf": {},
+            "step": {"CreditCard": 1, "SecuritiesAccount": 1},
+        },
+        "grad": {
+            "f2change": ["GRE Score", "TOEFL Score", "University Rating", "SOP", "LOR", "CGPA", "Research"],
+            "uf": {},
+            "step": {},
+        },
+        "bupa": {
+            "f2change": ["Sgpt", "Sgot", "Gammagt", "Drinks"],
+            "uf": {},
+            "step": {"Drinks": 1},
+        },
+        "wine": {
+            "f2change": [
+                "fixed acidity",
+                "free sulfur dioxide",
+                "total sulfur dioxide",
+                "pH",
+                "alcohol",
+                "density",
+                "volatile acidity",
+                "citric acid",
+                "residual sugar",
+            ],
+            "uf": {},
+            "step": {},
+        },
+        "movie": {
+            "f2change": [
+                "Production_expense",
+                "Multiplex_coverage",
+                "Num_multiplex",
+                "Movie_length",
+                "Lead_Actor_Rating",
+                "Lead_Actress_rating",
+                "Director_rating",
+                "Producer_rating",
+                "Genre",
+                "Collection",
+                "Budget",
+            ],
+            "uf": {},
+            "step": {},
+        },
+    }
+
+    for dataset, expected_cfg in expected.items():
+        dataset_df = pd.read_csv(ROOT / "ufce" / "data" / f"{dataset}.csv")
+        (
+            _features,
+            _catf,
+            _numf,
+            uf,
+            f2change,
+            *_rest,
+        ) = runner.get_dataset_constraints(dataset, dataset_df)
+
+        resolution = runner.resolve_bundle_config(
+            dataset=dataset,
+            args=args,
+            author_uf=uf,
+            author_f2change=f2change,
+        )
+
+        assert resolution.effective_bundle_mode == "domain_actionable"
+        assert resolution.not_main_table7 is True
+        assert resolution.bundle_cfg["uf_mode"] == "domain_actionable"
+        assert resolution.bundle_cfg["f2change_mode"] == "domain_actionable"
+        assert resolution.bundle_cfg["step_mode"] == "domain_actionable"
+        assert resolution.f2change == expected_cfg["f2change"]
+        assert set(f2change).issubset(set(resolution.f2change))
+        for feature, value in expected_cfg["uf"].items():
+            assert resolution.uf[feature] == value
+        for feature, value in expected_cfg["step"].items():
+            assert resolution.step[feature] == value
+        assert resolution.effective_uf_source.startswith(f"domain_actionable:{dataset}:")
+        assert resolution.effective_f2change_source.startswith(f"domain_actionable:{dataset}:")
+        assert resolution.effective_step_source.startswith(f"domain_actionable:{dataset}:")
+
+
+def test_domain_actionable_rejects_unknown_datasets() -> None:
+    runner = load_runner()
+    args = runner.build_arg_parser().parse_args(["--bundle-mode", "domain_actionable"])
+
+    with pytest.raises(ValueError, match="domain_actionable is only supported"):
+        runner.resolve_bundle_config(
+            dataset="adult",
+            args=args,
+            author_uf={"hours-per-week": 5},
+            author_f2change=["hours-per-week"],
+        )
+
+
+def test_tuner_domain_actionable_profile_avoids_magic_uf_step() -> None:
+    tuner = load_tuner()
+
+    wine_df = pd.read_csv(ROOT / "ufce" / "data" / "wine.csv")
+    *_prefix, wine_uf, wine_f2change, _outcome, _desired, _nbr, _protect, _lab0, _lab1 = tuner.get_dataset_constraints("wine", wine_df)
+    wine_step = tuner.get_step_config("wine")
+    resolved_uf, resolved_f2change, resolved_step = tuner.apply_constraint_profile(
+        dataset="wine",
+        uf=wine_uf,
+        f2change=wine_f2change,
+        step=wine_step,
+        profile=tuner.DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE,
+    )
+
+    assert "citric acid" in resolved_f2change
+    assert "residual sugar" in resolved_f2change
+    assert "sulphates" not in resolved_f2change
+    assert "sulphates" not in resolved_uf
+    assert "sulphates" not in resolved_step
+
+    movie_df = pd.read_csv(ROOT / "ufce" / "data" / "movie.csv")
+    *_prefix, movie_uf, movie_f2change, _outcome, _desired, _nbr, _protect, _lab0, _lab1 = tuner.get_dataset_constraints("movie", movie_df)
+    movie_step = tuner.get_step_config("movie")
+    resolved_uf, resolved_f2change, resolved_step = tuner.apply_constraint_profile(
+        dataset="movie",
+        uf=movie_uf,
+        f2change=movie_f2change,
+        step=movie_step,
+        profile=tuner.DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE,
+    )
+
+    assert "Marketing_expense" not in resolved_f2change
+    assert "3D_available" not in resolved_f2change
+    assert "Marketing_expense" not in resolved_uf
+    assert "3D_available" not in resolved_uf
+    assert "Marketing_expense" not in resolved_step
+    assert "3D_available" not in resolved_step
+
+
+def test_tuner_eval_mode_and_constraint_profile_are_part_of_config_key() -> None:
+    tuner = load_tuner()
+    base = {
+        "radius": 7,
+        "n_neighbors": 1000,
+        "contprox_metric": "euclidean",
+        "min_act": 1,
+        "min_feas": 1,
+        "ufce_flip_filter": 1,
+        "constraint_profile": tuner.DOMAIN_ACTIONABLE_CONSTRAINT_PROFILE,
+        "eval_mode": tuner.STRICT_EVAL_MODE,
+    }
+    relaxed = dict(base)
+    relaxed["eval_mode"] = tuner.RELAXED_EVAL_MODE
+
+    assert tuner.eval_mode_to_ufce_method(tuner.STRICT_EVAL_MODE) == "other"
+    assert tuner.eval_mode_to_ufce_method(tuner.RELAXED_EVAL_MODE) == "ufc"
+    assert tuner.config_key("wine", 123, base) != tuner.config_key("wine", 123, relaxed)
+
+
 def test_target_selection_uses_normalized_score_over_raw_abs_delta() -> None:
     runner = load_runner()
     rows = [
@@ -187,6 +419,52 @@ def test_mi_feature_pair_normalization_uses_dataset_feature_order() -> None:
     )
 
     assert normalized == [["Income", "CCAvg"], ["CCAvg", "CDAccount"]]
+
+
+def test_movie_prox_euc_contract_uses_rms_minmax_0_100() -> None:
+    runner = load_runner()
+    scaler = {
+        "kind": "movie_minmax_0_100",
+        "scale_cols": ["a", "b"],
+        "medians": pd.Series({"a": 0.0, "b": 0.0}),
+        "mads": pd.Series({"a": 1.0, "b": 1.0}),
+        "constant_cols": [],
+    }
+    factual = pd.DataFrame([{"a": 0.0, "b": 0.0}])
+
+    one_axis, _contrib, cols, normalizer = runner._feature_contributions(
+        factual,
+        pd.DataFrame([{"a": 100.0, "b": 0.0}]),
+        ["a", "b"],
+        scaler,
+    )
+    all_axes, _contrib, _cols, _normalizer = runner._feature_contributions(
+        factual,
+        pd.DataFrame([{"a": 100.0, "b": 100.0}]),
+        ["a", "b"],
+        scaler,
+    )
+    clipped, _contrib, _cols, _normalizer = runner._feature_contributions(
+        factual,
+        pd.DataFrame([{"a": 200.0, "b": 200.0}]),
+        ["a", "b"],
+        scaler,
+    )
+    no_shared, _contrib, no_cols, no_normalizer = runner._feature_contributions(
+        factual,
+        pd.DataFrame([{"c": 100.0}]),
+        ["c"],
+        scaler,
+    )
+
+    assert cols == ["a", "b"]
+    assert normalizer == "movie_minmax_0_100_rms"
+    assert one_axis == pytest.approx(100.0 / math.sqrt(2.0))
+    assert all_axes == pytest.approx(100.0)
+    assert clipped == pytest.approx(100.0)
+    assert math.isnan(no_shared)
+    assert no_cols == []
+    assert no_normalizer == "none"
 
 
 def test_delta_normalization_handles_zero_and_missing_author_values() -> None:
