@@ -90,33 +90,27 @@ mi_pairs = ufc.get_top_MI_features(x_all, features)
 print(mi_pairs[:5])
 ```
 
-## Supported Reproduction Workflows
+## Supported Thesis Workflows
 
-The current repo does not treat `ufce/` as a standalone app. The maintained workflows live in the root `scripts/` directory.
+The current repo does not treat `ufce/` as a standalone app. The maintained
+workflows live in the root `scripts/final/` directory and use semantic names.
 
 ### 1. UFCE-only reproduction across the five datasets
 
 ```bash
-./.venv/bin/python scripts/reproduce_results_v3.py --dataset bank --out_dir outputs/repro_v3_bank
+./.venv/bin/python scripts/final/part1/ufce_only_reproduction.py --dataset all --runtime_profile final_freeze --bundle-mode table7_author_public --out-dir outputs/final/part1/ufce_only_final_freeze
 ```
 
 What it does:
 
 - runs UFCE1, UFCE2, and UFCE3 only
-- uses the tuned per-dataset defaults baked into the script
+- uses the tuned/final-freeze profiles used by the thesis
 - writes fold-aggregated CSV outputs
-
-Current tuned movie defaults in the maintained runner are:
-
-- `radius=160`
-- `n_neighbors=100`
-- `min_act=1`
-- `min_feas=1`
 
 ### 2. Full Table 7 style comparison
 
 ```bash
-./.venv/bin/python scripts/reproduce_full_table7_result.py --dataset bank --out_dir outputs/full_table7_bank
+./.venv/bin/python scripts/final/part1/table7_full_reproduction.py --dataset all
 ```
 
 What it does:
@@ -124,47 +118,30 @@ What it does:
 - runs UFCE, DiCE, DiCE-UF, and AR
 - compares reproduced values against author-style reference targets
 
-### 3. Hyper-tuning
+### 3. Parameter tuning provenance
 
 ```bash
-./.venv/bin/python scripts/hypertune_ufce_p7.py --dataset bank --run_stage run2 --out_dir outputs/hypertune_bank
+./.venv/bin/python scripts/final/part1/ufce_parameter_tuning.py --dataset all --run_stage all --out-dir outputs/final/part1/ufce_parameter_tuning
 ```
 
 What it does:
 
 - `run1`: tunes gate-style parameters
 - `run2`: sweeps `radius` and `n_neighbors`
-- writes leaderboard and comparison artifacts
+- documents why thesis reproduction uses tuned/final-freeze settings rather than author defaults
 
 ### 4. Bank conversational Part II evaluation
 
 Representative maintained scripts:
 
-- `scripts/run_part2_thesis_metrics_report.py`
-- `scripts/run_part2_refinement_metrics_report.py`
-- `scripts/run_part2_backend_comparison_report.py`
-- `scripts/run_part2_agent_portability_report.py`
-- `scripts/run_part2_replay_robustness_report.py`
+- `scripts/final/part2/parser_benchmark_metrics.py`
+- `scripts/final/part2/conversation_quality_metrics.py`
+- `scripts/final/part2/no_valid_counterfactual_diagnostics.py`
+- `scripts/final/part2/policy_control_evaluation.py`
 
 These scripts evaluate UFCE as part of the larger Part II bank-only conversational system rather than as a standalone package.
 
-## Investigation Helpers
-
-The repository also intentionally keeps a small set of trace/debug helpers for
-auditing suspicious behaviors in the UFCE paper path and reproduction path:
-
-- `scripts/run_ufce_trace_harness.py`
-  - trace-first audit harness
-  - writes per-query UFCE1/UFCE2/UFCE3 traces, structured UFCE1 debug events, and invariant warnings
-  - defaults to the author-style `totest/testfold_*_pred_0.csv` inputs
-- `scripts/run_ufce_smoke.py`
-  - single-query smoke runner built on top of the same trace harness logic
-  - useful when checking one suspicious case quickly before a larger rerun
-- `scripts/rerun_movie_run2_minmax100.sh`
-  - retained as a historical movie rerun wrapper because it was used in the movie scaling / force-flip investigation
-
-These helpers are not the primary thesis production runners, but they are kept
-on purpose and should not be treated as disposable cleanup targets.
+Detailed table-level provenance is maintained in `docs/THESIS_TABLE_TO_SCRIPT_MAP.md`.
 
 ## Testing
 
@@ -174,7 +151,8 @@ Package-level regression check:
 ./.venv/bin/pytest ufce/tests/test_lr_bundle.py -q
 ```
 
-Broader Part II evaluation checks live under `llm/tests/` and are exercised by the closeout and report runners in the repository root.
+Broader Part II evaluation checks live under `llm/tests/` and can be run with
+the retained Part II metric scripts listed above.
 
 ## Notes On Legacy Material
 
