@@ -1,10 +1,10 @@
 # Final Thesis Runbook
 
-This document provides clean, final-facing commands for reproducing all thesis evidence.
+This runbook lists the GitHub-facing workflows kept for thesis methodology and
+experiments. Numbered process scripts have been replaced by semantic script
+names; historical/debug scripts remain local-only.
 
-For full script inventory and dependency details, see `docs/FINAL_SCRIPT_INVENTORY.md`.
-
-## 1. Setup
+## Setup
 
 ```bash
 cp .env.example .env
@@ -13,208 +13,84 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Edit `.env` if your LM Studio instance uses a non-default port or model alias:
-
-- `LM_STUDIO_API_BASE=http://127.0.0.1:1234` (change if needed)
-- `MODEL_ALIAS=qwen/qwen3-14b` (must match what LM Studio is serving)
-
-## 2. Environment Doctor
-
-Before running any evidence reproduction, validate the environment:
+For Part II parser runs, LM Studio must expose the configured model alias:
 
 ```bash
-python scripts/final/thesis/doctor.py
-python scripts/final/thesis/doctor.py --check-lm-studio    # also checks LM Studio connectivity
+LM_STUDIO_API_BASE=http://127.0.0.1:1234
+MODEL_ALIAS=qwen/qwen3-14b
 ```
 
-Output goes to `outputs/final/doctor/<run_id>/` with both JSON and Markdown summaries.
+## Part I: UFCE Reproduction And UFCE-FF
 
-## 3. Part I Evidence Reproduction
-
-### Quick Start (All-in-One)
-
-Run the complete Part I closeout in one command:
+Full Table 7 reproduction with DiCE, DiCE-UF, AR, and UFCE baselines:
 
 ```bash
-python scripts/final/part1/99_part1_closeout.py --out-dir outputs/final/part1_closeout
+python scripts/final/part1/table7_full_reproduction.py --dataset all
 ```
 
-This orchestrates all required evidence groups sequentially. Outputs go to `outputs/final/part1_closeout/<run_id>/`.
-
-### Individual Reproduction Steps (Optional)
-
-If you need to rerun only a specific Part I section:
-
-#### 3.1 Table 7 Full Reproduction
+UFCE-only locked reproduction under the thesis final-freeze profile:
 
 ```bash
-python scripts/final/part1/01_reproduce_full_table7.py --dataset all --out-dir outputs/final/part1/table7
-python scripts/final/part1/01_reproduce_full_table7.py --dataset bank --out-dir outputs/final/part1/table7_bank
+python scripts/final/part1/ufce_only_reproduction.py --dataset all --runtime_profile final_freeze --bundle-mode table7_author_public --out-dir outputs/final/part1/ufce_only_final_freeze
 ```
 
-#### 3.2 UFCE-Only Reproduction
+Parameter tuning provenance for the final-freeze/tuned settings:
 
 ```bash
-python scripts/final/part1/01b_reproduce_ufce_only.py --dataset all --out-dir outputs/final/part1/ufce_only
+python scripts/final/part1/ufce_parameter_tuning.py --dataset all --run_stage all --out-dir outputs/final/part1/ufce_parameter_tuning
 ```
 
-#### 3.3 Parameter Tuning
+Original author-pool replay for raw, post-hoc-valid-only, and UFCE-FF selector views:
 
 ```bash
-python scripts/final/part1/02_tune_final_parameters.py --dataset all --stage all --out-dir outputs/final/part1/hypertune
-python scripts/final/part1/02_tune_final_parameters.py --dataset bank --stage run2 --out-dir outputs/final/part1/hypertune_bank
+python scripts/final/part1/author_pool_selector_audit.py --dataset all --config-profile final_freeze --bundle-mode table7_author_public --mi-k 5 --no-cf 10 --emit-pairs --out-dir outputs/final/part1/author_pool_selector_audit
 ```
 
-Supported `--stage`: `run1`, `run2`, or `all`.
-
-#### 3.4 Force-Flip Audit
+Standalone author raw/post-hoc replay:
 
 ```bash
-python scripts/final/part1/03_force_flip_audit.py --dataset all --out-dir outputs/final/part1/force_flip
+python scripts/final/part1/author_raw_posthoc_replay.py --dataset all --bundle-mode table7_author_public --out-dir outputs/final/part1/author_raw_posthoc_replay
 ```
 
-Validates that raw UFCE output does not produce strict valid recourse in force-flip cases.
-
-**Note:** The current trace harness may not expose `raw_candidate_count` and `flip_valid_candidate_count` directly; these fields will be `null` with a warning if the underlying script doesn't provide them. This is documented as a limitation.
-
-#### 3.4b Public Force-Flip vs New-Best Recovery
+Red Wine proximity-space sensitivity diagnostic:
 
 ```bash
-python scripts/final/part1/06_public_forceflip_newbest.py --dataset all
+python scripts/final/part1/red_wine_proximity_sensitivity.py --out-dir outputs/final/part1/red_wine_proximity_sensitivity
 ```
 
-Builds a single evidence pack comparing published Table 7 values, public/final-freeze UFCE with `force_flip=1`, and the latest `new_best_params` profile in `01b_reproduce_ufce_only.py`.
-The final comparison table is metric-direction aware: `Prox-Jac`, `Prox-Euc`, and `Sparsity` are lower-is-better; `Actionability`, `Plausibility`, and `Feasibility` are higher-is-better.
-
-#### 3.5 Black-Box Regression Audit
+UFCE-FF experiment runner for public-source, final-freeze, and new-best profile checks:
 
 ```bash
-python scripts/final/part1/03b_blackbox_regression_audit.py --dataset all --out-dir outputs/final/part1/blackbox_regression
+python scripts/final/part1/ufce_force_flip_experiment.py --dataset all --mode final_comparison --config-profile final_freeze --bundle-mode table7_author_public --out-dir outputs/final/part1/ufce_force_flip_experiment
 ```
 
-Validates classifier/model bundle assumptions used by force-flip audit. Does not retrain models unless the underlying reproduction script already does so.
+## Part II: Natural-Language Feedback Prototype
 
-#### 3.6 Parameter Bundle Ablation (uf / f2change / step)
+Parser/model benchmark metrics for the local LLM comparison:
 
 ```bash
-python scripts/final/part1/04_parameter_bundle_ablation.py --dataset all --out-dir outputs/final/part1/parameter_bundle
+python scripts/final/part2/parser_benchmark_metrics.py --out-dir outputs/final/part2/parser_benchmark_metrics
 ```
 
-Supports thesis claim that public UFCE behavior is best understood as a coupled heuristic parameter bundle.
-
-#### 3.7 Trace Harness (Per-Query Debug)
+Conversation quality metrics for Bank Loan sessions:
 
 ```bash
-python scripts/final/part1/05_trace_harness.py --dataset bank --out-dir outputs/final/part1/traces_bank
+python scripts/final/part2/conversation_quality_metrics.py --out-dir outputs/final/part2/conversation_quality_metrics
 ```
 
-## 4. Part II Conversational Evidence Validation
-
-### Quick Start (All-in-One)
+No-valid-counterfactual diagnostics for safe-stop cases:
 
 ```bash
-python scripts/final/part2/99_part2_closeout.py --out-dir outputs/final/part2_closeout
+python scripts/final/part2/no_valid_counterfactual_diagnostics.py --out-dir outputs/final/part2/no_valid_counterfactual_diagnostics
 ```
 
-**Requirements:** LM Studio must be running at the configured `LM_STUDIO_API_BASE` URL. If unavailable, the closeout will record a clear failure reason without faking a pass.
-
-### Individual Steps (Optional)
-
-#### 4.1 Parser Metrics (Requires LM Studio)
+Policy-control evaluation for constraint behavior:
 
 ```bash
-python scripts/final/part2/01_parser_metrics.py --out-dir outputs/final/part2/parser_metrics
+python scripts/final/part2/policy_control_evaluation.py --out-dir outputs/final/part2/policy_control_evaluation
 ```
 
-#### 4.2 Conversation Metrics
+## Evidence Map
 
-```bash
-python scripts/final/part2/02_conversation_metrics.py --out-dir outputs/final/part2/conversation_metrics
-```
-
-#### 4.3 Refinement Metrics
-
-```bash
-python scripts/final/part2/03_refinement_metrics.py --out-dir outputs/final/part2/refinement_metrics
-```
-
-#### 4.4 Backend Comparison
-
-```bash
-python scripts/final/part2/04_backend_comparison.py --out-dir outputs/final/part2/backend_comparison
-```
-
-#### 4.5 Agent Portability
-
-```bash
-python scripts/final/part2/05_agent_portability.py --out-dir outputs/final/part2/agent_portability
-```
-
-#### 4.6 Replay Robustness
-
-```bash
-python scripts/final/part2/06_replay_robustness.py --out-dir outputs/final/part2/replay_robustness
-```
-
-## 5. Product Demo Validation
-
-### Start Local Demo Server
-
-```bash
-# Terminal A: start the product demo server
-python scripts/final/product/01_serve_demo.py
-```
-
-The server reads config from `.env` and prints resolved configuration on startup (host, port, LM Studio base, model alias).
-
-### Run Smoke Test Against Running Server
-
-```bash
-# Terminal B: run smoke tests against a running server
-python scripts/final/product/02_product_smoke.py --base-url http://127.0.0.1:8000 --out-dir outputs/final/product_smoke
-```
-
-### Run Acceptance Report
-
-```bash
-# Optional: include manual session ID for final validation
-python scripts/final/product/03_product_acceptance.py \
-  --base-url http://127.0.0.1:8000 \
-  --out-dir outputs/final/product_acceptance
-```
-
-## 6. Export Final Evidence Pack
-
-After running closeouts, create a final evidence pack without rerunning experiments:
-
-```bash
-python scripts/final/thesis/export_evidence_pack.py \
-  --part1-closeout outputs/final/part1_closeout/<run_id> \
-  --part2-closeout outputs/final/part2_closeout/<run_id> \
-  --out-dir outputs/final/evidence_pack
-```
-
-Output contains `README.md`, `MANIFEST.json`, claim-to-evidence mapping, and selected reports. Heavy raw outputs are excluded unless `--include-raw` is passed.
-
-## 7. Troubleshooting
-
-### LM Studio Not Reachable
-
-If Part II closeout fails with a preflight error:
-1. Ensure LM Studio is running at the configured URL (default `http://127.0.0.1:1234`).
-2. Run `python scripts/final/thesis/doctor.py --check-lm-studio` to diagnose connectivity.
-3. Verify model alias in `.env` matches what LM Studio is actually serving.
-
-### Part II Closeout Fails at Preflight (LM Studio Unavailable)
-
-The closeout records a clear failure reason and does not fake a pass. The doctor script explains how to start LM Studio. Do not attempt to bypass the preflight check.
-
-### Product Tests Require Server
-
-Product smoke and acceptance tests require a running server in another terminal. If you get connection errors, verify the server is running with `python scripts/final/product/01_serve_demo.py` before launching tests.
-
-### Missing Data Files
-
-If reproduction scripts fail with missing data:
-- Verify `ufce/data/` contains CSV files (bank.csv, wine.csv, etc.)
-- Verify `ufce/data/folds/` exists and has fold definitions for each dataset.
+Use `docs/THESIS_TABLE_TO_SCRIPT_MAP.md` for the table-by-table mapping from
+Chapter 4 numbers to scripts, configs, inputs, and expected artifacts.

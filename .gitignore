@@ -187,3 +187,44 @@ logs
 outputs/*
 docs/thesis/*
 docs/reports/*
+
+# Thesis cleanup: keep these locally, but do not publish them to GitHub.
+llm_eval/outputs/
+ufce/core_author/results/
+**/desktop.ini
+tmp/
+experiments/
+
+# Historical/debug workflows superseded by semantic thesis scripts.
+scripts/archieve/
+scripts/final/part1/[0-9][0-9]*.py
+scripts/final/part2/[0-9][0-9]*.py
+scripts/final/thesis/all_closeout.py
+scripts/final/thesis/export_evidence_pack.py
+
+# Forensic/fixed-core branch kept local-only.
+docs/DEVELOPMENT_HISTORY.md
+docs/ufce_forensic_audit/
+ufce/core_author_fixed/
+ufce/core_author/uf_analysis.ipynb
+ufce/core_author/Supplemental Material/
+
+# Tests for local-only archived workflows.
+ufce/tests/test_core_author_fixed_*.py
+ufce/tests/test_hypothesis_ablation.py
+ufce/tests/test_public_forceflip_newbest.py
+llm/tests/test_case_study_export.py
+llm/tests/test_chapter4_part2_core_evidence.py
+llm/tests/test_evidence_runner.py
+llm/tests/test_part2_agent_portability_report.py
+llm/tests/test_part2_backend_comparison_report.py
+llm/tests/test_part2_closeout_bundle.py
+llm/tests/test_part2_end_to_end_bank.py
+llm/tests/test_part2_golden_parity_report.py
+llm/tests/test_part2_refinement_metrics_report.py
+llm/tests/test_part2_replay_robustness_report.py
+llm/tests/test_phase1_closeout_suite.py
+llm/tests/test_phase2_chapter_pack.py
+llm/tests/test_phase3_1_closeout_suite.py
+llm/tests/test_phase3_2_acceptance_report.py
+llm/tests/test_phase3_2_metrics_report.py

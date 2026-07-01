@@ -9,7 +9,7 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-RUNNER_PATH = ROOT / "scripts" / "final" / "part2" / "07_no_valid_cf_diagnostics.py"
+RUNNER_PATH = ROOT / "scripts" / "final" / "part2" / "no_valid_counterfactual_diagnostics.py"
 
 
 def load_runner():

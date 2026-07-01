@@ -2,7 +2,10 @@ import numpy as np
 
 from scipy.spatial.distance import cdist, pdist
 from scipy.spatial.distance import _validate_vector
-from scipy.stats import median_absolute_deviation
+try:
+    from scipy.stats import median_absolute_deviation
+except ImportError:  # scipy >= 1.9
+    from scipy.stats import median_abs_deviation as median_absolute_deviation
 #%matplotlib inline
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
@@ -432,4 +435,3 @@ def lof(x, cf_list, X, scaler):
     print("lof here:", lof_values)
     return np.mean(np.abs(lof_values))
 # End> 3rd party adapted ///////
-

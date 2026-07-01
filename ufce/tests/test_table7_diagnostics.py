@@ -17,7 +17,7 @@ os.environ.setdefault("MPLCONFIGDIR", str(MPL_DIR))
 
 
 def load_runner():
-    path = ROOT / "scripts" / "final" / "part1" / "01b_reproduce_ufce_only.py"
+    path = ROOT / "scripts" / "final" / "part1" / "ufce_only_reproduction.py"
     spec = importlib.util.spec_from_file_location("table7_ufce_only_runner", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -27,7 +27,7 @@ def load_runner():
 
 
 def load_tuner():
-    path = ROOT / "scripts" / "final" / "part1" / "02_tune_final_parameters.py"
+    path = ROOT / "scripts" / "final" / "part1" / "ufce_parameter_tuning.py"
     spec = importlib.util.spec_from_file_location("table7_ufce_tuner", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None

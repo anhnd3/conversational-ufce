@@ -15,7 +15,7 @@ MPL_DIR = ROOT / ".pytest_cache" / "matplotlib"
 MPL_DIR.mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("MPLCONFIGDIR", str(MPL_DIR))
 
-from scripts.archieve.reproduce_results_v3 import build_movie_distance_scaler as reproduce_v3_movie_distance_scaler
+from scripts.final.part1.ufce_only_reproduction import build_movie_distance_scaler as thesis_movie_distance_scaler
 from ufce.core.data_processing import classify_dataset_getModel, get_movie_user_constraints
 from ufce.model_bundles.lr_bundle import (
     DATASET_DROP_COLUMNS,
@@ -177,7 +177,7 @@ def test_movie_distance_scaler_matches_reproduction_helper() -> None:
         numf=numf,
         outcome_label=outcome_label,
     )
-    reproduction_scaler = reproduce_v3_movie_distance_scaler(
+    reproduction_scaler = thesis_movie_distance_scaler(
         datasetdf=bundle.dataset_df,
         features=features,
         numf=numf,

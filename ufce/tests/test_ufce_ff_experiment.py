@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def load_runner():
-    path = ROOT / "scripts" / "final" / "part1" / "07_ufce_ff_experiment.py"
+    path = ROOT / "scripts" / "final" / "part1" / "ufce_force_flip_experiment.py"
     spec = importlib.util.spec_from_file_location("ufce_ff_experiment_runner", path)
     module = importlib.util.module_from_spec(spec)
     assert spec is not None and spec.loader is not None
