@@ -28,7 +28,10 @@ from sklearn.metrics import mutual_info_score
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial.distance import cdist, pdist
 from scipy.spatial.distance import _validate_vector
-from scipy.stats import median_absolute_deviation
+try:
+    from scipy.stats import median_absolute_deviation
+except ImportError:  # scipy >= 1.9
+    from scipy.stats import median_abs_deviation as median_absolute_deviation
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
@@ -41,7 +44,10 @@ from sklearn.feature_selection import mutual_info_regression
 import warnings
 warnings.filterwarnings("ignore")
 
-plt.style.use("seaborn-whitegrid")
+try:
+    plt.style.use("seaborn-whitegrid")
+except OSError:
+    plt.style.use("seaborn-v0_8-whitegrid")
 pd.set_option('display.max_columns', None)  # or 1000
 pd.set_option('display.max_rows', None)  # or 1000
 
