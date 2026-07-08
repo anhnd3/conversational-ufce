@@ -51,6 +51,7 @@ FIELD_EVIDENCE_NORMALIZED = "field_evidence_normalized"
 AMBIGUOUS_CONSTRAINT_PHRASE = "ambiguous_constraint_phrase"
 AMBIGUOUS_PREFERENCE_PHRASE = "ambiguous_preference_phrase"
 CONSTRAINT_SPEC_ABSENT = "constraint_spec_absent"
+BANK_PROFILE_PARSE_V2_TASK = "extract_bank_profile_v2"
 
 QUALITATIVE_PROFILE_VALUE_NOTE = "Qualitative profile terms are not converted to numeric Bank dataset values"
 EDUCATION_LABEL_VALUE_NOTE = (
@@ -177,6 +178,7 @@ def run_parser_quality(
     candidate = normalized.parsed_json
 
     if isinstance(candidate, dict):
+        is_bank_profile_v2_candidate = candidate.get("task") == BANK_PROFILE_PARSE_V2_TASK
         candidate, alias_or_value_changed, alias_or_value_reasons = _normalize_parser_contract_fields(
             candidate,
             benchmark_spec=benchmark_spec,
@@ -186,7 +188,7 @@ def run_parser_quality(
         deterministic_recovery_applied = deterministic_recovery_applied or alias_or_value_changed
 
         user_text_clean = str(user_text or "").strip()
-        if user_text_clean and dataset_id == "bank":
+        if user_text_clean and dataset_id == "bank" and not is_bank_profile_v2_candidate:
             candidate, field_provenance, dense_recovery_changed = _recover_profile_fields_from_user_text(
                 candidate=candidate,
                 user_text=user_text_clean,

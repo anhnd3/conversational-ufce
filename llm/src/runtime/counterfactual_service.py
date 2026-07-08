@@ -22,7 +22,7 @@ from llm.src.runtime.types import (
     RuntimeDebugTrace,
     UFCERequest,
 )
-from ufce.core.cfmethods import dfexp, initUFCE, sfexp, tfexp
+from ufce.ufce_ff.cfmethods import dfexp, initUFCE, sfexp, tfexp
 
 
 Runner = Callable[..., Tuple[pd.DataFrame, float, List[int]]]

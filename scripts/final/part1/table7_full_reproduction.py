@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import argparse
+import json
 import os
 from pyexpat import features
 import sys
@@ -8,7 +10,7 @@ import glob
 import time
 import re
 import warnings
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 import numpy as np
 import pandas as pd
@@ -46,12 +48,21 @@ from scripts.final.part1._movie_proximity import (
     mean_sem,
     pairwise_normalized_l2_0_100_values,
 )
+from scripts.final.part1 import ufce_only_reproduction as final_cfg
 
 ufc = UFCE()
 
 METHODS = ["UFCE1", "UFCE2", "UFCE3", "DiCE", "DiCE-UF", "AR"]
 MNAMES  = ["ufce1", "ufce2", "ufce3", "dice", "dice-uf", "ar"]
 METRICS = ["Prox-Jac", "Prox-Euc", "Sparsity", "Actionability", "Plausibility", "Feasibility"]
+DEFAULT_TABLE48_REFERENCE_CSV = os.path.join(
+    "outputs",
+    "final",
+    "part1",
+    "09_author_pool_finalfreeze_20260624",
+    "author_pool_metric_summary.csv",
+)
+DEFAULT_TABLE48_REFERENCE_SCOPE = "author_pool_forceflip"
 
 def _normalize_method_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value).strip().lower())
@@ -99,6 +110,62 @@ def parse_methods_arg(raw: str) -> List[str]:
 
 def selected_method_columns(selected_methods: List[str]) -> List[str]:
     return [MNAMES[METHODS.index(method)] for method in selected_methods]
+
+
+def build_arg_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dataset", required=True, choices=["bank", "grad", "wine", "bupa", "movie", "all"])
+    ap.add_argument("--no_cf", type=int, default=50)
+    ap.add_argument("--radius", type=int, default=None)
+    ap.add_argument("--n_neighbors", type=int, default=None)
+    ap.add_argument("--min_act", type=int, default=None)
+    ap.add_argument("--min_feas", type=int, default=None)
+    ap.add_argument("--ufce_flip_filter", type=int, default=None, choices=[0, 1])
+    ap.add_argument("--runtime_profile", type=str, default="final_freeze", choices=["tuned_run2", "final_freeze", "new_best_params"])
+    ap.add_argument(
+        "--bundle_mode",
+        "--bundle-mode",
+        dest="bundle_mode",
+        type=str,
+        default="table7_author_public",
+        choices=["author_public", "table7_author_public", "final_blindspot_best", final_cfg.DOMAIN_ACTIONABLE],
+    )
+    ap.add_argument("--contprox_metric", type=str, default="euclidean")
+    ap.add_argument("--data_dir", type=str, default=os.path.join("ufce", "data"), help="Repo-relative path to data folder")
+    ap.add_argument("--fold_dir", type=str, default=os.path.join("ufce", "data", "folds"), help="Repo-relative path to folds folder")
+    ap.add_argument(
+        "--methods",
+        type=str,
+        default="all",
+        help=(
+            "Comma/space-separated method selectors. Examples: all, ufce, external, "
+            "dice,ar, dice,dice-uf,ar. external/baselines/dice_ar = DiCE,DiCE-UF,AR."
+        ),
+    )
+    ap.add_argument("--debug", type=int, default=0)
+    ap.add_argument("--trace_positions", type=str, default="")
+    ap.add_argument(
+        "--expected_pred1_rate",
+        type=float,
+        default=None,
+        help="Optional expected class-1 prediction rate for debug checks. Use 0-1 (or 0-100, auto-normalized).",
+    )
+    ap.add_argument("--out_dir", "--out-dir", dest="out_dir", type=str, default="")
+    ap.add_argument(
+        "--table48_reference_csv",
+        "--table48-reference-csv",
+        dest="table48_reference_csv",
+        type=str,
+        default=DEFAULT_TABLE48_REFERENCE_CSV,
+    )
+    ap.add_argument(
+        "--table48_reference_scope",
+        "--table48-reference-scope",
+        dest="table48_reference_scope",
+        type=str,
+        default=DEFAULT_TABLE48_REFERENCE_SCOPE,
+    )
+    return ap
 
 def empty_cf_frame(features: List[str]) -> pd.DataFrame:
     return pd.DataFrame(columns=list(features))
@@ -409,6 +476,78 @@ def parse_trace_positions_arg(trace_positions_raw: str, debug_flag: int) -> List
     if len(trace_positions) > 0 and int(debug_flag) != 1:
         raise ValueError("Set --debug 1 or remove --trace_positions.")
     return trace_positions
+
+
+def _selected_metric_table(
+    source_table: pd.DataFrame,
+    selected_methods: List[str],
+) -> pd.DataFrame:
+    out = pd.DataFrame(index=METRICS, dtype=float)
+    for method in selected_methods:
+        col = MNAMES[METHODS.index(method)]
+        out[method] = source_table.loc[:, col].astype(float)
+    return out
+
+
+def _safe_json_scalar(value: Any) -> Any:
+    try:
+        fv = float(value)
+    except Exception:
+        return value
+    return fv if np.isfinite(fv) else None
+
+
+def _write_json(path: str, payload: Dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False, sort_keys=True)
+
+
+def build_bank_table48(
+    reference_csv: str,
+    reference_scope: str,
+    metric_rows: List[Dict[str, object]],
+) -> Optional[pd.DataFrame]:
+    if not reference_csv or not os.path.exists(reference_csv):
+        return None
+    reference_df = pd.read_csv(reference_csv)
+    bank_ref = reference_df[
+        (reference_df["dataset"].astype(str) == "bank")
+        & (reference_df["metric_scope"].astype(str) == str(reference_scope))
+    ].copy()
+    if bank_ref.empty:
+        return None
+
+    metric_df = pd.DataFrame(metric_rows)
+    if metric_df.empty:
+        return None
+    bank_cmp = metric_df[metric_df["dataset"].astype(str) == "bank"].copy()
+    if bank_cmp.empty:
+        return None
+
+    required_methods = {"DiCE", "AR"}
+    if not required_methods.issubset(set(bank_cmp["method"].astype(str))):
+        return None
+
+    rows: List[Dict[str, object]] = []
+    for metric in METRICS:
+        row: Dict[str, object] = {"Metric": metric}
+        for method, label in (("UFCE1", "UFCE-FF1"), ("UFCE2", "UFCE-FF2"), ("UFCE3", "UFCE-FF3")):
+            match = bank_ref[bank_ref["method"].astype(str) == method]
+            if match.empty or metric not in match.columns:
+                return None
+            row[label] = float(match.iloc[0][metric])
+        for method in ("DiCE", "AR"):
+            match = bank_cmp[
+                (bank_cmp["method"].astype(str) == method)
+                & (bank_cmp["metric_name"].astype(str) == metric)
+            ]
+            if match.empty:
+                return None
+            row[method] = float(match.iloc[0]["reproduced_value"])
+        rows.append(row)
+
+    return pd.DataFrame(rows, columns=["Metric", "UFCE-FF1", "UFCE-FF2", "UFCE-FF3", "DiCE", "AR"])
 
 def build_movie_distance_scaler(
     datasetdf: pd.DataFrame,
@@ -977,18 +1116,14 @@ def run_for_dataset(
     expected_pred1_rate: Optional[float],
 ) -> Dict[str, object]:
     t0 = time.time()
-    allowed_tuned = sorted(TUNED_RUN2.keys())
-    if dataset not in TUNED_RUN2:
-        raise ValueError(f"Dataset '{dataset}' missing from TUNED_RUN2. Allowed: {allowed_tuned}")
-    cfg = TUNED_RUN2[dataset]
+    cfg = final_cfg.resolve_effective_cfg(dataset, args)
     selected_methods = getattr(args, "selected_methods", METHODS)
     selected_cols = selected_method_columns(selected_methods)
-    args.radius = int(cfg["radius"])
-    args.n_neighbors = int(cfg["n_neighbors"])
     flip_filter_enabled = bool(int(cfg["ufce_flip_filter"]))
     print(
         "[CFG] "
-        f"dataset={dataset} tuned radius={args.radius} n_neighbors={args.n_neighbors} "
+        f"dataset={dataset} runtime_profile={args.runtime_profile} "
+        f"radius={int(cfg['radius'])} n_neighbors={int(cfg['n_neighbors'])} "
         f"min_act={int(cfg['min_act'])} min_feas={int(cfg['min_feas'])} flip={int(cfg['ufce_flip_filter'])}"
     )
 
@@ -1011,11 +1146,37 @@ def run_for_dataset(
     (features, catf, numf, uf, f2change, outcome_label,
      desired_outcome, nbr_features, protectf, data_lab0, data_lab1) = get_constraints(dataset, datasetdf)
 
-    step = get_step_config(dataset)
-    MI_FP = ufc.get_top_MI_features(X, features)
+    bundle = final_cfg.resolve_bundle_config(
+        dataset=dataset,
+        args=args,
+        author_uf=uf,
+        author_f2change=f2change,
+    )
+    uf = bundle.uf
+    f2change = bundle.f2change
+    step = bundle.step
+    effective_config = final_cfg.effective_config_record(
+        dataset=dataset,
+        cfg=cfg,
+        bundle=bundle,
+        runtime_profile=str(args.runtime_profile),
+    )
+    print(
+        "[BUNDLE] "
+        f"dataset={dataset} requested_bundle_mode={bundle.requested_bundle_mode} "
+        f"effective_bundle_mode={bundle.effective_bundle_mode} "
+        f"uf_mode={bundle.bundle_cfg['uf_mode']} "
+        f"step_mode={bundle.bundle_cfg['step_mode']} "
+        f"f2change_mode={bundle.bundle_cfg['f2change_mode']}"
+    )
+
+    MI_FP = final_cfg.normalize_mi_feature_pairs(ufc.get_top_MI_features(X, features), features)
     print(f"[INFO] Top-5 MI feature pairs: {MI_FP[:5]}")
     print(f"[INFO] outcome_label={outcome_label} | desired_outcome={desired_outcome}")
-    print(f"[INFO] UFCE radius={args.radius} | n_neighbors={args.n_neighbors} | contprox_metric={args.contprox_metric} | no_cf={args.no_cf}")
+    print(
+        f"[INFO] UFCE radius={int(cfg['radius'])} | n_neighbors={int(cfg['n_neighbors'])} "
+        f"| contprox_metric={args.contprox_metric} | no_cf={args.no_cf}"
+    )
     # This script consumes pre-existing fold CSV files; pred0_n_folds is not used here.
 
     # AR scaler (author style)
@@ -1053,8 +1214,8 @@ def run_for_dataset(
         raise FileNotFoundError(f"No folds found in {fold_dir}")
 
     init_ufce_global(
-        radius=args.radius,
-        n_neighbors=args.n_neighbors,
+        radius=int(cfg["radius"]),
+        n_neighbors=int(cfg["n_neighbors"]),
         contprox_metric=args.contprox_metric,
         min_act=int(cfg["min_act"]),
         min_feas=int(cfg["min_feas"]),
@@ -1140,6 +1301,42 @@ def run_for_dataset(
     df_delta = pd.DataFrame(rows, columns=["method", "metric", "author", "ours_mean", "delta"])
     print(df_delta.to_string(index=False, float_format=lambda x: f"{x:.2f}" if np.isfinite(x) else "nan"))
 
+    selected_mean_table = _selected_metric_table(mean_table, selected_methods)
+    selected_std_table = _selected_metric_table(std_table, selected_methods)
+    metric_rows: List[Dict[str, object]] = []
+    for method in selected_methods:
+        for metric in METRICS:
+            author_v = AUTHOR_TABLE7[dataset].get(method, {}).get(metric_map[metric], np.nan)
+            reproduced_v = float(selected_mean_table.loc[metric, method])
+            reproduced_std = float(selected_std_table.loc[metric, method])
+            delta = reproduced_v - author_v if (np.isfinite(reproduced_v) and np.isfinite(author_v)) else np.nan
+            metric_rows.append(
+                {
+                    "dataset": dataset,
+                    "method": method,
+                    "metric_name": metric,
+                    "author_value": author_v,
+                    "reproduced_value": reproduced_v,
+                    "reproduced_std": reproduced_std,
+                    "delta_vs_author": delta,
+                    "runtime_profile": str(args.runtime_profile),
+                    "requested_bundle_mode": bundle.requested_bundle_mode,
+                    "effective_bundle_mode": bundle.effective_bundle_mode,
+                    "effective_radius": int(cfg["radius"]),
+                    "effective_n_neighbors": int(cfg["n_neighbors"]),
+                    "effective_min_act": int(cfg["min_act"]),
+                    "effective_min_feas": int(cfg["min_feas"]),
+                    "effective_ufce_flip_filter": int(cfg["ufce_flip_filter"]),
+                    "effective_uf_source": bundle.effective_uf_source,
+                    "effective_f2change_source": bundle.effective_f2change_source,
+                    "effective_step_source": bundle.effective_step_source,
+                    "movie_prox_contract": "movie_minmax_0_100_rms" if dataset == "movie" else "raw_euclidean",
+                    "has_movie_distance_scaler": bool(dataset == "movie" and movie_distance_scaler is not None),
+                    "no_cf": int(args.no_cf),
+                    "contprox_metric": str(args.contprox_metric),
+                }
+            )
+
     valid_non_pred0 = np.array([r.get("non_pred0_rate", np.nan) for r in pred_dist_records], dtype=float)
     valid_non_pred0 = valid_non_pred0[np.isfinite(valid_non_pred0)]
     valid_all_pred0 = np.array([r.get("all_pred0", np.nan) for r in pred_dist_records], dtype=float)
@@ -1170,6 +1367,32 @@ def run_for_dataset(
                 f"{all_pred0_folds}/{len(valid_all_pred0)} folds."
             )
 
+    dataset_out_dir = str(getattr(args, "out_dir", "") or "").strip()
+    dataset_artifact_dir = ""
+    if dataset_out_dir:
+        dataset_artifact_dir = os.path.join(dataset_out_dir, dataset)
+        os.makedirs(dataset_artifact_dir, exist_ok=True)
+        selected_mean_table.to_csv(os.path.join(dataset_artifact_dir, "metrics_mean.csv"), index_label="metric")
+        selected_std_table.to_csv(os.path.join(dataset_artifact_dir, "metrics_std.csv"), index_label="metric")
+        df_delta.to_csv(os.path.join(dataset_artifact_dir, "delta_vs_author.csv"), index=False)
+        pd.DataFrame(metric_rows).to_csv(os.path.join(dataset_artifact_dir, "metric_summary_long.csv"), index=False)
+        _write_json(
+            os.path.join(dataset_artifact_dir, "run_manifest.json"),
+            {
+                "dataset": dataset,
+                "selected_methods": list(selected_methods),
+                "runtime_profile": str(args.runtime_profile),
+                "requested_bundle_mode": bundle.requested_bundle_mode,
+                "effective_bundle_mode": bundle.effective_bundle_mode,
+                "effective_config": {k: _safe_json_scalar(v) for k, v in effective_config.items()},
+                "movie_prox_contract": "movie_minmax_0_100_rms" if dataset == "movie" else "raw_euclidean",
+                "has_movie_distance_scaler": bool(dataset == "movie" and movie_distance_scaler is not None),
+                "no_cf": int(args.no_cf),
+                "contprox_metric": str(args.contprox_metric),
+                "n_folds": int(len(fold_files)),
+            },
+        )
+
     runtime_sec = float(time.time() - t0)
     print(f"\n[DONE] Total runtime: {runtime_sec:.2f}s")
     return {
@@ -1178,36 +1401,12 @@ def run_for_dataset(
         "runtime_sec": runtime_sec,
         "error": "",
         "n_folds": int(len(fold_files)),
+        "metric_rows": metric_rows,
+        "artifact_dir": dataset_artifact_dir,
     }
 
 def main():
-    import argparse
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--dataset", required=True, choices=["bank", "grad", "wine", "bupa", "movie", "all"])
-    ap.add_argument("--no_cf", type=int, default=50)
-    ap.add_argument("--radius", type=int, default=500)
-    ap.add_argument("--n_neighbors", type=int, default=1000)
-    ap.add_argument("--contprox_metric", type=str, default="euclidean")
-    ap.add_argument("--data_dir", type=str, default=os.path.join("ufce", "data"), help="Repo-relative path to data folder")
-    ap.add_argument("--fold_dir", type=str, default=os.path.join("ufce", "data", "folds"), help="Repo-relative path to folds folder")
-    ap.add_argument(
-        "--methods",
-        type=str,
-        default="all",
-        help=(
-            "Comma/space-separated method selectors. Examples: all, ufce, external, "
-            "dice,ar, dice,dice-uf,ar. external/baselines/dice_ar = DiCE,DiCE-UF,AR."
-        ),
-    )
-    ap.add_argument("--debug", type=int, default=0)
-    ap.add_argument("--trace_positions", type=str, default="")
-    ap.add_argument(
-        "--expected_pred1_rate",
-        type=float,
-        default=None,
-        help="Optional expected class-1 prediction rate for debug checks. Use 0-1 (or 0-100, auto-normalized).",
-    )
-    args = ap.parse_args()
+    args = build_arg_parser().parse_args()
     if int(args.debug) not in (0, 1):
         raise ValueError("--debug must be 0 or 1.")
     args.selected_methods = parse_methods_arg(args.methods)
@@ -1222,17 +1421,59 @@ def main():
         expected_pred1_rate = float(expected_pred1_rate)
 
     if args.dataset != "all":
-        run_for_dataset(
+        rec = run_for_dataset(
             args.dataset,
             args,
             debug_enabled=debug_enabled,
             trace_positions=trace_positions,
             expected_pred1_rate=expected_pred1_rate,
         )
+        out_dir = str(getattr(args, "out_dir", "") or "").strip()
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+            summary_df = pd.DataFrame(
+                [
+                    {
+                        "dataset": rec["dataset"],
+                        "status": rec["status"],
+                        "runtime_sec": rec["runtime_sec"],
+                        "n_folds": rec["n_folds"],
+                        "error": rec["error"],
+                    }
+                ]
+            )
+            summary_df.to_csv(os.path.join(out_dir, "batch_summary.csv"), index=False)
+            metric_rows = rec.get("metric_rows", [])
+            if metric_rows:
+                pd.DataFrame(metric_rows).to_csv(os.path.join(out_dir, "metric_summary_long.csv"), index=False)
+                table48_df = build_bank_table48(
+                    str(args.table48_reference_csv),
+                    str(args.table48_reference_scope),
+                    metric_rows,
+                )
+                if table48_df is not None:
+                    table48_df.to_csv(os.path.join(out_dir, "table48_bank_finalbundle.csv"), index=False)
+            _write_json(
+                os.path.join(out_dir, "summary.json"),
+                {
+                    "dataset": str(args.dataset),
+                    "selected_methods": list(args.selected_methods),
+                    "runtime_profile": str(args.runtime_profile),
+                    "requested_bundle_mode": str(args.bundle_mode),
+                    "no_cf": int(args.no_cf),
+                    "contprox_metric": str(args.contprox_metric),
+                    "batch_ok": 1 if rec["status"] == "ok" else 0,
+                    "batch_failed": 0 if rec["status"] == "ok" else 1,
+                    "total_runtime_sec": float(rec["runtime_sec"]),
+                    "table48_reference_csv": str(args.table48_reference_csv),
+                    "table48_reference_scope": str(args.table48_reference_scope),
+                },
+            )
         return
 
     batch_t0 = time.time()
     batch_records: List[Dict[str, object]] = []
+    all_metric_rows: List[Dict[str, object]] = []
     for dataset in ALL_DATASETS:
         ds_t0 = time.time()
         print(f"\n==================== BATCH DATASET: {dataset} ====================")
@@ -1254,6 +1495,7 @@ def main():
             }
             print(f"[ERROR] dataset={dataset} failed with {type(exc).__name__}: {exc}")
         batch_records.append(rec)
+        all_metric_rows.extend(rec.get("metric_rows", []))
 
     summary_df = pd.DataFrame(batch_records, columns=["dataset", "status", "runtime_sec", "n_folds", "error"])
     print("\n==================== BATCH SUMMARY ====================")
@@ -1265,6 +1507,35 @@ def main():
         "[DONE][BATCH] "
         f"ok={ok_count} failed={failed_count} total_runtime={total_runtime:.2f}s"
     )
+    out_dir = str(getattr(args, "out_dir", "") or "").strip()
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+        summary_df.to_csv(os.path.join(out_dir, "batch_summary.csv"), index=False)
+        if all_metric_rows:
+            pd.DataFrame(all_metric_rows).to_csv(os.path.join(out_dir, "metric_summary_long.csv"), index=False)
+            table48_df = build_bank_table48(
+                str(args.table48_reference_csv),
+                str(args.table48_reference_scope),
+                all_metric_rows,
+            )
+            if table48_df is not None:
+                table48_df.to_csv(os.path.join(out_dir, "table48_bank_finalbundle.csv"), index=False)
+        _write_json(
+            os.path.join(out_dir, "summary.json"),
+            {
+                "dataset": str(args.dataset),
+                "selected_methods": list(args.selected_methods),
+                "runtime_profile": str(args.runtime_profile),
+                "requested_bundle_mode": str(args.bundle_mode),
+                "no_cf": int(args.no_cf),
+                "contprox_metric": str(args.contprox_metric),
+                "batch_ok": ok_count,
+                "batch_failed": failed_count,
+                "total_runtime_sec": total_runtime,
+                "table48_reference_csv": str(args.table48_reference_csv),
+                "table48_reference_scope": str(args.table48_reference_scope),
+            },
+        )
     if failed_count > 0:
         raise SystemExit(1)
 

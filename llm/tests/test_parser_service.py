@@ -93,6 +93,52 @@ def test_call_lm_studio_formats_structured_http_errors(monkeypatch):
     )
 
 
+def test_call_lm_studio_parses_streaming_chat_chunks(monkeypatch):
+    class DummyStreamResponse:
+        ok = True
+        status_code = 200
+        text = ""
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        @staticmethod
+        def iter_lines(decode_unicode=True):
+            assert decode_unicode is True
+            return iter(
+                [
+                    b'data: {"choices":[{"delta":{"role":"assistant","content":"hello"}}]}',
+                    'data: {"choices":[{"delta":{"content":" world"}}]}',
+                    'data: {"choices":[{"delta":{},"finish_reason":"stop"}],"usage":{"completion_tokens":2}}',
+                    "data: [DONE]",
+                ]
+            )
+
+    def fake_post(url, json, timeout, stream):
+        assert url == "http://localhost:1234/v1/chat/completions"
+        assert json["stream"] is True
+        assert timeout == 30.0
+        assert stream is True
+        return DummyStreamResponse()
+
+    monkeypatch.setattr("llm.src.adapters.lmstudio_client.requests.post", fake_post)
+
+    result = call_lm_studio(
+        "http://localhost:1234",
+        {"model": "qwen3-14b", "system_prompt": "x", "input": "y", "stream": True},
+        30.0,
+    )
+    extracted = extract_response_data(result["response_json"], result["elapsed_ms"])
+
+    assert result["ok"] is True
+    assert result["response_json"]["stream_chunk_count"] == 3
+    assert extracted["message_text"] == "hello world"
+    assert extracted["usage"]["completion_tokens"] == 2
+
+
 def test_adapt_chat_completions_payload_translates_legacy_fields():
     payload = adapt_chat_completions_payload(
         {

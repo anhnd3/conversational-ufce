@@ -601,6 +601,7 @@ class UFCE():
                             pred_label = int(np.asarray(pred).reshape(-1)[0])
                             if pred_label == int(desired_outcome):
                                 cfdf = pd.concat([cfdf, temptempdf], ignore_index=True, axis=0, sort=False)
+                            cfdf = pd.concat([cfdf, temptempdf], ignore_index=True, axis=0)
                             if len(cfdf) >= k:
                                 break
                             try:
@@ -686,15 +687,6 @@ class UFCE():
                             break
             else:
                 print("could'nt found counterfactuals for the features: ", f1, f2)
-        if cfdf.empty != True:
-            if all(col in cfdf.columns for col in order):
-                pred_input = cfdf[order]
-            else:
-                pred_input = cfdf
-            preds = np.asarray(model.predict(pred_input)).reshape(-1)
-            cfdf = cfdf.loc[preds == int(desired_outcome)].reset_index(drop=True)
-            if len(cfdf) > k:
-                cfdf = cfdf.iloc[:k].reset_index(drop=True)
         return cfdf, two_feature_explore
 
     def Triple_F(self, df, test_instance, protected_features, feature_pairs, u_cat_f_list, numf, user_term_intervals, features_2change, model, desired_outcome, order, k):
@@ -779,6 +771,10 @@ class UFCE():
                                                                         sort=False)
                                             if len(cfdf) >= k:
                                                  break
+                                            cfdf = pd.concat([cfdf, temptempdf], ignore_index=True, axis=0,
+                                                                        sort=False)
+                                            if len(cfdf) >= k:
+                                                break
                                     else: #f3 in u_cat_f_list: #f3 is categorical
                                         log_model_inner, ba = self.catclassifyModel(df, f1, f3)
                                         tempdf1 = temptempdf.copy()
@@ -791,6 +787,10 @@ class UFCE():
                                         pred = model.predict(temptempdf)
                                         if pred == desired_outcome:  #
                                             cfdf = pd.concat([cfdf, temptempdf], ignore_index=True, axis=0, sort=False)
+                                            if len(cfdf) >= k:
+                                                break
+                                        cfdf = pd.concat([cfdf, temptempdf], ignore_index=True, axis=0,
+                                                                     sort=False)
                                         if len(cfdf) >= k:
                                             break
                         try:
@@ -976,15 +976,6 @@ class UFCE():
                                         break
             else:
                 print("Could'nt found counterfactuals for the features: ", f1, f2)
-        if cfdf.empty != True:
-            if all(col in cfdf.columns for col in order):
-                pred_input = cfdf[order]
-            else:
-                pred_input = cfdf
-            preds = np.asarray(model.predict(pred_input)).reshape(-1)
-            cfdf = cfdf.loc[preds == int(desired_outcome)].reset_index(drop=True)
-            if len(cfdf) > k:
-                cfdf = cfdf.iloc[:k].reset_index(drop=True)
         return cfdf, three_feature_explore
 
     def mad_cityblock(self, u, v, mad):

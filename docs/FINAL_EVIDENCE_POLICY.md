@@ -21,18 +21,22 @@ These files stay on the machine but are removed from Git tracking:
 - generated output folders such as `outputs/**` and `llm_eval/outputs/**`
 - original author result plots under `ufce/core_author/results/**`
 - Windows `desktop.ini` files
-- temporary workspaces such as `tmp/**` and `experiments/**`
+- temporary workspaces such as `tmp/**`, `.tmp/**`, and `experiments/**`
 - historical `scripts/archieve/**` workflows after their active references are replaced
 - numbered audit/closeout/checkpoint scripts in `scripts/final/part1` and `scripts/final/part2` that are not part of the thesis-facing workflow list
 - forensic/development notes not cited by the final thesis evidence map
+- thesis draft folders such as `docs/thesis/**` and generated report folders such as `docs/reports/**`
 
 ## Reproducibility Rule
 
 The GitHub-facing repo must preserve the parameter provenance behind the thesis
 numbers. In particular, Part I raw/final-freeze reproduction is not treated as
-the author's default configuration; `ufce_parameter_tuning.py` and
-`ufce_only_reproduction.py` remain tracked because they document and expose the
-tuned profiles used by the experiments.
+the author's default configuration. The thesis-facing Part I scripts are split
+by semantic path: `ufce/core_author` raw replay, `ufce/core` final-freeze replay,
+post-hoc valid-only aggregation over raw selected outputs, and `ufce/ufce_ff`.
+`ufce_parameter_tuning.py` and the canonical scripts under
+`scripts/final/part1/0*.py` remain tracked because they document and expose the
+tuned profiles and final core variants used by the experiments.
 
 ## Output Policy
 
