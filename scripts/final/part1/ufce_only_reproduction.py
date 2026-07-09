@@ -775,7 +775,12 @@ def print_feature_relations(X: pd.DataFrame, features: List[str], mi_pairs: List
     print("=========================\n")
 
 
-def resolve_effective_cfg(dataset: str, args) -> Dict[str, int]:
+def _resolve_selection_policy_for_args(args, ufce_flip_filter: int) -> str:
+    del args, ufce_flip_filter
+    return "ufce_core_raw"
+
+
+def resolve_effective_cfg(dataset: str, args) -> Dict[str, object]:
     config_sources: Dict[str, Dict[str, Dict[str, int]]] = {
         "final_freeze": FINAL_RUNTIME_CONFIG,
         "tuned_run2": TUNED_RUN2,
@@ -792,14 +797,19 @@ def resolve_effective_cfg(dataset: str, args) -> Dict[str, int]:
         raise ValueError(f"Dataset '{dataset}' missing from runtime profile. Allowed: {allowed}")
 
     tuned = config_source[dataset]
+    base_flip_filter = (
+        int(args.ufce_flip_filter) if args.ufce_flip_filter is not None else int(tuned["ufce_flip_filter"])
+    )
+    selection_policy = _resolve_selection_policy_for_args(args, base_flip_filter)
     return {
         "radius": int(args.radius) if args.radius is not None else int(tuned["radius"]),
         "n_neighbors": int(args.n_neighbors) if args.n_neighbors is not None else int(tuned["n_neighbors"]),
         "min_act": int(args.min_act) if args.min_act is not None else int(tuned["min_act"]),
         "min_feas": int(args.min_feas) if args.min_feas is not None else int(tuned["min_feas"]),
-        "ufce_flip_filter": (
-            int(args.ufce_flip_filter) if args.ufce_flip_filter is not None else int(tuned["ufce_flip_filter"])
-        ),
+        "ufce_flip_filter": 0,
+        "selection_policy": selection_policy,
+        "validity_gate_stage": "none",
+        "core_variant": "ufce_core",
     }
 
 
@@ -811,6 +821,8 @@ def effective_runtime_fields(dataset: str, args) -> Dict[str, object]:
         "effective_min_act": int(cfg["min_act"]),
         "effective_min_feas": int(cfg["min_feas"]),
         "effective_ufce_flip_filter": int(cfg["ufce_flip_filter"]),
+        "selection_policy": str(cfg["selection_policy"]),
+        "validity_gate_stage": str(cfg["validity_gate_stage"]),
     }
 
 
@@ -831,6 +843,8 @@ def effective_config_record(
         "effective_min_act": int(cfg["min_act"]),
         "effective_min_feas": int(cfg["min_feas"]),
         "effective_ufce_flip_filter": int(cfg["ufce_flip_filter"]),
+        "selection_policy": str(cfg["selection_policy"]),
+        "validity_gate_stage": str(cfg["validity_gate_stage"]),
         "effective_uf_source": bundle.effective_uf_source,
         "effective_f2change_source": bundle.effective_f2change_source,
         "effective_step_source": bundle.effective_step_source,
@@ -841,10 +855,7 @@ def effective_config_record(
 
 
 def build_effective_manifest_config(args) -> Dict[str, Dict[str, object]]:
-    if getattr(args, "dataset", "bank") == "all" and _canonical_bundle_mode(str(args.bundle_mode)) == DOMAIN_ACTIONABLE:
-        datasets = DOMAIN_ACTIONABLE_DATASETS
-    else:
-        datasets = ALL_DATASETS if getattr(args, "dataset", "bank") == "all" else [str(args.dataset)]
+    datasets = parse_dataset_selector(getattr(args, "dataset", "bank"), str(args.bundle_mode))
     out: Dict[str, Dict[str, object]] = {}
     effective_bundle_mode = _canonical_bundle_mode(str(args.bundle_mode))
     for dataset in datasets:
@@ -1603,11 +1614,16 @@ def build_fold_diagnostics(
     step: Dict[str, float],
     no_cf: int,
     flip_filter_enabled: bool,
+    selection_policy: str,
     movie_distance_scaler: Optional[Dict[str, object]],
     method_payloads: Dict[str, Dict[str, Any]],
     top_k: int,
 ) -> Dict[str, List[Dict[str, object]]]:
     active_ufc = _active_ufce_instance()
+    del flip_filter_enabled
+    selection_policy = str(selection_policy or "ufce_core_raw")
+    validity_gate_stage = "none"
+    effective_force_flip = 0
     records: Dict[str, List[Dict[str, object]]] = {
         "input_config": [],
         "candidate_generation": [],
@@ -1699,6 +1715,9 @@ def build_fold_diagnostics(
                     "effective_n_neighbors": int(cfg["n_neighbors"]),
                     "effective_min_act": int(cfg["min_act"]),
                     "effective_min_feas": int(cfg["min_feas"]),
+                    "selection_policy": selection_policy,
+                    "validity_gate_stage": validity_gate_stage,
+                    "effective_force_flip": int(effective_force_flip),
                     "effective_uf_source": bundle_meta.get("effective_uf_source"),
                     "effective_f2change_source": bundle_meta.get("effective_f2change_source"),
                     "effective_step_source": bundle_meta.get("effective_step_source"),
@@ -1718,6 +1737,10 @@ def build_fold_diagnostics(
             raw_count = int(len(generated_df))
             flip_count = int(len(flip_df))
             selected_count = int(len(ufce_selected_df))
+            trace_selection_policy = str(trace_row.get("selection_policy", selection_policy))
+            trace_validity_gate_stage = str(trace_row.get("validity_gate_stage", validity_gate_stage))
+            trace_effective_force_flip = int(trace_row.get("effective_force_flip", effective_force_flip))
+            trace_author_compat_fallback = str(trace_row.get("author_compat_fallback", "none"))
             empty_reason = ""
             if raw_count == 0:
                 empty_reason = "no_raw_candidate_generated"
@@ -1736,6 +1759,10 @@ def build_fold_diagnostics(
                     "candidate_count_after_basic_filter": flip_count,
                     "selected_candidate_by_ufce_id": selected_by_ufce_id,
                     "candidate_empty_reason": empty_reason,
+                    "selection_policy": trace_selection_policy,
+                    "validity_gate_stage": trace_validity_gate_stage,
+                    "effective_force_flip": trace_effective_force_flip,
+                    "author_compat_fallback": trace_author_compat_fallback,
                     "top_k_raw_candidates_json": _candidate_records(
                         generated_df,
                         dataset=dataset,
@@ -1806,6 +1833,10 @@ def build_fold_diagnostics(
                         "metric_candidate_type": "raw_candidate",
                         "metric_candidate_id": metric_candidate_id,
                         "metric_candidate_selection_stage": "ufce_returned_output",
+                        "selection_policy": trace_selection_policy,
+                        "validity_gate_stage": trace_validity_gate_stage,
+                        "effective_force_flip": trace_effective_force_flip,
+                        "author_compat_fallback": trace_author_compat_fallback,
                     }
                 )
 
@@ -1885,6 +1916,10 @@ def build_fold_diagnostics(
                     "metric_candidate_selection_stage": "ufce_returned_output",
                     "metric_candidate_differs_from_ufce_selected": False,
                     "metric_candidate_explanation": "Table 7 metrics use the public UFCE returned output; force-flip validation is logged separately.",
+                    "selection_policy": trace_selection_policy,
+                    "validity_gate_stage": trace_validity_gate_stage,
+                    "effective_force_flip": trace_effective_force_flip,
+                    "author_compat_fallback": trace_author_compat_fallback,
                     "selected_candidate_metrics_json": {
                         "Prox-Jac": prox_jac,
                         "Prox-Euc": prox_euc,
@@ -1909,6 +1944,10 @@ def build_fold_diagnostics(
                     "metric_candidate_id": metric_candidate_id,
                     "metric_candidate_selection_stage": "ufce_returned_output",
                     "has_selected_candidate": bool(has_selected),
+                    "selection_policy": trace_selection_policy,
+                    "validity_gate_stage": trace_validity_gate_stage,
+                    "effective_force_flip": trace_effective_force_flip,
+                    "author_compat_fallback": trace_author_compat_fallback,
                     "prox_euc_final_value": prox_euc,
                     "prox_euc_contract": MOVIE_PROX_EUC_CONTRACT if dataset == "movie" else "euclidean over numf",
                     "prox_jac_value": prox_jac,
@@ -1923,7 +1962,7 @@ def build_fold_diagnostics(
                     "plausibility_fail_reason": plaus_reason,
                     "feasibility_fail_reason": feas_reason,
                     "metric_source_contract": (
-                        "force_flip_strict_reproduction" if bool(flip_filter_enabled) else "public_table7_reproduction"
+                        "force_flip_strict_reproduction" if effective_force_flip == 1 else "public_table7_reproduction"
                     ),
                 }
             )
@@ -1983,6 +2022,10 @@ def build_fold_diagnostics(
                         "apf_fold_numerator": None,
                         "apf_fold_denominator": None,
                         "apf_fail_reason": "" if passed else fail_reason,
+                        "selection_policy": trace_selection_policy,
+                        "validity_gate_stage": trace_validity_gate_stage,
+                        "effective_force_flip": trace_effective_force_flip,
+                        "author_compat_fallback": trace_author_compat_fallback,
                         "actionable_features_json": list(f2change),
                         "changed_features_json": changed_features,
                         "non_actionable_changed_features_json": non_actionable_changed,
@@ -2041,6 +2084,7 @@ def run_one_fold(
     fold_name: str,
     scaler: Optional[Dict],
     flip_filter_enabled: bool,
+    selection_policy: str,
     movie_distance_scaler: Optional[Dict[str, object]],
     fold_index: int,
     debug: int,
@@ -2058,6 +2102,7 @@ def run_one_fold(
     deterministic_seed = int(hashlib.sha256(f"{dataset}:{fold_name}:42".encode("utf-8")).hexdigest()[:8], 16)
     random.seed(deterministic_seed)
     np.random.seed(deterministic_seed % (2**32 - 1))
+    selection_policy = str(selection_policy or "ufce_core_raw")
     use_mad = _has_mad_scaler(scaler)
 
     # Movie: keep UFCE logic in raw space, but use scaled distance space for neighbor search.
@@ -2081,13 +2126,7 @@ def run_one_fold(
         data_lab1_dist = None
         distance_scaler = None
 
-    dbg_fold = fold_df_dist if fold_df_dist is not None else fold_df_ufce
-    dbg_lab1 = data_lab1_dist if data_lab1_dist is not None else data_lab1_ufce
-    if not dbg_fold.empty and not dbg_lab1.empty:
-        x0 = dbg_fold[features].iloc[0:1].values
-        lab1 = dbg_lab1[features].values
-        dists = np.linalg.norm(lab1 - x0, axis=1)
-        print(f"[DBG] Scaled Distances: min={dists.min():.2f}, mean={dists.mean():.2f}, max={dists.max():.2f}")
+    # Scaled-distance summary debug is muted for long final runs.
 
     if mi_top_k is None or int(mi_top_k) <= 0:
         mi_pairs_for_fold = list(mi_fp)
@@ -2113,6 +2152,7 @@ def run_one_fold(
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
             return_trace=True,
+            selection_policy=selection_policy,
         )
         twocfs, t2, idx2, trace2 = cfmethods.dfexp(
             x_all,
@@ -2133,6 +2173,7 @@ def run_one_fold(
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
             return_trace=True,
+            selection_policy=selection_policy,
         )
         threecfs, t3, idx3, trace3 = cfmethods.tfexp(
             x_all,
@@ -2153,6 +2194,7 @@ def run_one_fold(
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
             return_trace=True,
+            selection_policy=selection_policy,
         )
     else:
         trace1, trace2, trace3 = [], [], []
@@ -2173,6 +2215,7 @@ def run_one_fold(
             distance_data_lab1=data_lab1_dist,
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
+            selection_policy=selection_policy,
         )
         twocfs, t2, idx2 = cfmethods.dfexp(
             x_all,
@@ -2192,6 +2235,7 @@ def run_one_fold(
             distance_data_lab1=data_lab1_dist,
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
+            selection_policy=selection_policy,
         )
         threecfs, t3, idx3 = cfmethods.tfexp(
             x_all,
@@ -2211,6 +2255,7 @@ def run_one_fold(
             distance_data_lab1=data_lab1_dist,
             distance_X_test=fold_df_dist,
             distance_scaler=distance_scaler,
+            selection_policy=selection_policy,
         )
 
     if use_mad and dataset != "movie":
@@ -2351,6 +2396,7 @@ def run_one_fold(
             step=step,
             no_cf=no_cf,
             flip_filter_enabled=bool(flip_filter_enabled),
+            selection_policy=selection_policy,
             movie_distance_scaler=movie_distance_scaler,
             method_payloads=method_payloads,
             top_k=diagnostics_top_k,
@@ -2583,6 +2629,7 @@ def run_for_dataset(dataset: str, args, run_id: str) -> Dict[str, object]:
             fold_name=fold_name,
             scaler=scaler,
             flip_filter_enabled=bool(cfg["ufce_flip_filter"]),
+            selection_policy=str(cfg["selection_policy"]),
             movie_distance_scaler=movie_distance_scaler,
             fold_index=fold_idx,
             debug=args.debug,
@@ -2664,6 +2711,8 @@ def run_for_dataset(dataset: str, args, run_id: str) -> Dict[str, object]:
             "bundle_mode": bundle.effective_bundle_mode,
             "effective_bundle_mode": bundle.effective_bundle_mode,
             "ufce_flip_filter": int(cfg["ufce_flip_filter"]),
+            "selection_policy": str(cfg["selection_policy"]),
+            "validity_gate_stage": str(cfg["validity_gate_stage"]),
             "values": cfg,
             "bundle": bundle_cfg,
             "effective_config": effective_config,
@@ -2698,6 +2747,7 @@ def write_run_manifest(args, run_id: str, out_dir: str, extra: Optional[Dict[str
         "fold_file": args.fold_file,
         "contprox_metric": args.contprox_metric,
         "ufce_flip_filter_override": args.ufce_flip_filter,
+        "selection_policy": args.selection_policy,
         "data_dir": args.data_dir,
         "folds_dir": args.folds_dir,
         "out_dir": out_dir,
@@ -3031,6 +3081,8 @@ def build_provenance(args, run_id: str, results: Sequence[Dict[str, object]], di
         for dataset in ALL_DATASETS
     }
     locked_manifest = build_locked_config_manifest(results)
+    selection_policy_by_dataset = _effective_field_map(results, "selection_policy")
+    diagnostic_mode = "force_flip_strict" if any(v == "force_flip" for v in selection_policy_by_dataset.values()) else "raw_table7"
     return {
         "run_id": run_id,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -3054,6 +3106,8 @@ def build_provenance(args, run_id: str, results: Sequence[Dict[str, object]], di
         "effective_step_source": _effective_field_map(results, "effective_step_source"),
         "effective_bundle_mode": _effective_field_map(results, "effective_bundle_mode"),
         "effective_ufce_flip_filter": _effective_field_map(results, "effective_ufce_flip_filter"),
+        "selection_policy": selection_policy_by_dataset,
+        "validity_gate_stage": _effective_field_map(results, "validity_gate_stage"),
         "fallback_used": _effective_field_map(results, "fallback_used"),
         "fallback_reason": _effective_field_map(results, "fallback_reason"),
         "not_main_table7": _effective_field_map(results, "not_main_table7"),
@@ -3070,7 +3124,7 @@ def build_provenance(args, run_id: str, results: Sequence[Dict[str, object]], di
                 "current UFCE-only reproduction contract; APF metrics are fold-level counts over selected UFCE outputs"
             ),
             "diagnostic_mode": (
-                "force_flip_strict" if int(getattr(args, "ufce_flip_filter", 0)) == 1 else "raw_table7"
+                diagnostic_mode
             ),
             "relative_delta_epsilon": RELATIVE_DELTA_EPSILON,
         },
@@ -3286,7 +3340,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         choices=["author_public", "table7_author_public", "final_blindspot_best", DOMAIN_ACTIONABLE],
         help="UF/f2change/step bundle mode.",
     )
-    parser.add_argument("--dataset", type=str, default="bank", choices=["bank", "grad", "wine", "bupa", "movie", "all"])
+    parser.add_argument("--dataset", type=str, default="bank", help="{bank,grad,wine,bupa,movie,all} or comma-list")
     parser.add_argument("--data_dir", type=str, default=os.path.join("ufce", "data"), help="Repo-relative path to data folder")
     parser.add_argument("--folds_dir", type=str, default=os.path.join("ufce", "data", "folds"), help="Repo-relative path to folds folder")
     parser.add_argument("--no_cf", type=int, default=10, help="Number of CFs requested per instance")
@@ -3307,6 +3361,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         choices=[0, 1],
         help="Override tuned UFCE flipping filter (0/1) when provided; default uses the runtime profile.",
+    )
+    parser.add_argument(
+        "--selection-policy",
+        dest="selection_policy",
+        type=str,
+        default="auto",
+        choices=["auto", "public_author", "force_flip"],
+        help=(
+            "UFCE selection contract: auto follows ufce_flip_filter, public_author preserves "
+            "published-style selection/fallback, force_flip filters candidates before find_best_row."
+        ),
     )
     parser.add_argument("--debug", type=int, default=0, choices=[0, 1], help="Enable trust debug logs (0/1)")
     parser.add_argument(
@@ -3365,6 +3430,19 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def parse_dataset_selector(value: str, bundle_mode: str) -> List[str]:
+    text = str(value).strip().lower()
+    if text == "all":
+        return list(DOMAIN_ACTIONABLE_DATASETS if _canonical_bundle_mode(str(bundle_mode)) == DOMAIN_ACTIONABLE else ALL_DATASETS)
+    datasets = [item.strip().lower() for item in text.split(",") if item.strip()]
+    unknown = [item for item in datasets if item not in ALL_DATASETS]
+    if unknown:
+        raise ValueError(f"Unknown dataset(s): {', '.join(unknown)}")
+    if not datasets:
+        raise ValueError("At least one dataset is required.")
+    return datasets
+
+
 def main() -> None:
     parser = build_arg_parser()
     args = parser.parse_args()
@@ -3373,12 +3451,13 @@ def main() -> None:
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     args.run_id = run_id
     validate_diagnostic_args(args)
+    selected_datasets = parse_dataset_selector(args.dataset, args.bundle_mode)
 
     manifest_path = write_run_manifest(args, run_id, args.out_dir)
     print(f"- Run manifest saved: {manifest_path}")
 
-    if args.dataset != "all":
-        rec = run_for_dataset(args.dataset, args, run_id)
+    if len(selected_datasets) == 1 and str(args.dataset).strip().lower() != "all":
+        rec = run_for_dataset(selected_datasets[0], args, run_id)
         if bool(args.diagnostics):
             diagnostic_dir = write_diagnostic_artifacts(args, run_id, [rec])
             print(f"- Diagnostics saved: {diagnostic_dir}")
@@ -3387,8 +3466,7 @@ def main() -> None:
     os.makedirs(args.out_dir, exist_ok=True)
     batch_records: List[Dict[str, object]] = []
     batch_t0 = time.time()
-    batch_datasets = DOMAIN_ACTIONABLE_DATASETS if _canonical_bundle_mode(str(args.bundle_mode)) == DOMAIN_ACTIONABLE else ALL_DATASETS
-    for dataset in batch_datasets:
+    for dataset in selected_datasets:
         ds_t0 = time.time()
         print(f"\n==================== BATCH DATASET: {dataset} ====================")
         try:

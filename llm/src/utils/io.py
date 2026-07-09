@@ -2,14 +2,40 @@ from __future__ import annotations
 
 import csv
 import json
+from collections.abc import Mapping
+from datetime import date, datetime, time
 from pathlib import Path
 from typing import Any
+
+
+def json_ready(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, (datetime, date, time)):
+        return value.isoformat()
+    if isinstance(value, Mapping):
+        return {str(key): json_ready(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [json_ready(item) for item in value]
+    if hasattr(value, "tolist"):
+        converted = value.tolist()
+        if converted is not value:
+            return json_ready(converted)
+    if hasattr(value, "item"):
+        converted = value.item()
+        if converted is not value:
+            return json_ready(converted)
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    raise TypeError(f"Object of type {value.__class__.__name__} is not JSON serializable")
 
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8") as handle:
         for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True))
+            handle.write(json.dumps(json_ready(row), ensure_ascii=True, sort_keys=True))
             handle.write("\n")
 
 
@@ -51,6 +77,6 @@ def write_case_scores_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def write_json(path: Path, payload: Any) -> None:
     path.write_text(
-        json.dumps(payload, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
+        json.dumps(json_ready(payload), ensure_ascii=True, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

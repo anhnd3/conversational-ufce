@@ -193,11 +193,16 @@ llm_eval/outputs/
 ufce/core_author/results/
 **/desktop.ini
 tmp/
+.tmp/
 experiments/
 
 # Historical/debug workflows superseded by semantic thesis scripts.
 scripts/archieve/
 scripts/final/part1/[0-9][0-9]*.py
+!scripts/final/part1/01_author_raw_reproduction.py
+!scripts/final/part1/02_ufce_core_final_freeze.py
+!scripts/final/part1/03_ufce_post_hoc.py
+!scripts/final/part1/04_ufce_ff.py
 scripts/final/part2/[0-9][0-9]*.py
 scripts/final/thesis/all_closeout.py
 scripts/final/thesis/export_evidence_pack.py

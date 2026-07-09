@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import importlib.util
 import json
 import math
@@ -166,6 +167,46 @@ def load_author_modules():
 
     author_cfmethods.ufc = author_ufce.UFCE()
     return SimpleNamespace(ufce=author_ufce, cfmethods=author_cfmethods)
+
+
+def load_post_hoc_modules():
+    from ufce.post_hoc import cfmethods as post_hoc_cfmethods
+    from ufce.post_hoc import ufce as post_hoc_ufce
+
+    post_hoc_cfmethods.ufc = post_hoc_ufce.UFCE()
+    return SimpleNamespace(ufce=post_hoc_ufce, cfmethods=post_hoc_cfmethods)
+
+
+def resolve_core_package_for_dataset(core_package: str, dataset: str) -> str:
+    package = str(core_package).strip()
+    if package == "auto":
+        return "ufce.post_hoc" if str(dataset).strip().lower() == "movie" else "ufce.core_author"
+    return package
+
+
+def load_core_package_modules(core_package: str):
+    package = str(core_package).strip()
+    if package == "ufce.core_author":
+        return load_author_modules()
+    if package == "ufce.post_hoc":
+        return load_post_hoc_modules()
+    raise ValueError(f"Unsupported core package: {core_package}")
+
+
+def source_core_label(core_package: str) -> str:
+    labels = {
+        "ufce.core_author": "ufce/core_author",
+        "ufce.post_hoc": "ufce/post-hoc",
+    }
+    return labels.get(str(core_package).strip(), str(core_package).strip())
+
+
+def supported_kwargs(fn, kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        params = inspect.signature(fn).parameters
+    except (TypeError, ValueError):
+        return {}
+    return {key: value for key, value in kwargs.items() if key in params}
 
 
 def file_sha256(path: Path) -> str:
@@ -765,6 +806,7 @@ def prepare_dataset_context(mod01b, dataset: str, bundle_mode: str) -> Dict[str,
 
     return {
         "dataset": dataset,
+        "mod01b": mod01b,
         "datasetdf": datasetdf,
         "lr": lr,
         "xtrain": xtrain,
@@ -803,10 +845,27 @@ def run_author_methods(
     features = context["features"]
     mi_fp = context["mi_fp"] if mi_top_k is None or int(mi_top_k) <= 0 else context["mi_fp"][: int(mi_top_k)]
     fold_features = fold_df.loc[:, features].copy()
+    distance_kwargs: Dict[str, Any] = {}
+    if dataset == "movie" and context.get("movie_distance_scaler") is not None:
+        movie_distance_scaler = context["movie_distance_scaler"]
+        distance_kwargs = {
+            "distance_data_lab1": context["mod01b"].apply_distance_scaler(
+                context["data_lab1"].loc[:, features].copy(),
+                movie_distance_scaler,
+            ),
+            "distance_X_test": context["mod01b"].apply_distance_scaler(
+                fold_features.copy(),
+                movie_distance_scaler,
+            ),
+            "distance_scaler": movie_distance_scaler,
+            "flip_filter_enabled": False,
+            "selection_policy": "ufce_core_raw",
+        }
 
     outputs: Dict[str, MethodOutput] = {}
     runtime_rows: List[Dict[str, Any]] = []
 
+    sf_kwargs = supported_kwargs(author_modules.cfmethods.sfexp, distance_kwargs)
     onecfs, t1, idx1 = author_modules.cfmethods.sfexp(
         context["x_all"],
         context["data_lab1"],
@@ -820,9 +879,11 @@ def run_author_methods(
         context["desired_outcome"],
         no_cf,
         features,
+        **sf_kwargs,
     )
     outputs["UFCE1"] = MethodOutput(onecfs.reset_index(drop=True), [int(v) for v in idx1], float(t1) * 1000.0)
 
+    df_kwargs = supported_kwargs(author_modules.cfmethods.dfexp, distance_kwargs)
     twocfs, t2, idx2 = author_modules.cfmethods.dfexp(
         context["x_all"],
         context["data_lab1"],
@@ -837,9 +898,11 @@ def run_author_methods(
         context["desired_outcome"],
         no_cf,
         features,
+        **df_kwargs,
     )
     outputs["UFCE2"] = MethodOutput(twocfs.reset_index(drop=True), [int(v) for v in idx2], float(t2) * 1000.0)
 
+    tf_kwargs = supported_kwargs(author_modules.cfmethods.tfexp, distance_kwargs)
     threecfs, t3, idx3 = author_modules.cfmethods.tfexp(
         context["x_all"],
         context["data_lab1"],
@@ -854,6 +917,7 @@ def run_author_methods(
         context["desired_outcome"],
         no_cf,
         features,
+        **tf_kwargs,
     )
     outputs["UFCE3"] = MethodOutput(threecfs.reset_index(drop=True), [int(v) for v in idx3], float(t3) * 1000.0)
 
@@ -872,6 +936,15 @@ def run_author_methods(
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run raw author UFCE and post-hoc LR validity audit.")
     parser.add_argument("--dataset", default="all", help="{bank,bupa,grad,wine,movie,all} or comma-list")
+    parser.add_argument(
+        "--core-package",
+        default="auto",
+        choices=["auto", "ufce.core_author", "ufce.post_hoc"],
+        help=(
+            "Generation core package. auto uses ufce/core_author except Movie, "
+            "where it uses ufce/post_hoc so the Movie distance/scaler fixes are available."
+        ),
+    )
     parser.add_argument("--bundle-mode", default="table7_author_public")
     parser.add_argument("--mi-k", default="5", help="Feature-pair count for UFCE2/3; use 'all' for all pairs.")
     parser.add_argument("--no-cf", type=int, default=1)
@@ -892,7 +965,7 @@ def main() -> int:
     output_root.mkdir(parents=True, exist_ok=True)
 
     mod01b = load_runner_01b()
-    author_modules = load_author_modules()
+    resolved_core_packages: Dict[str, str] = {}
 
     query_rows: List[Dict[str, Any]] = []
     runtime_rows: List[Dict[str, Any]] = []
@@ -900,7 +973,32 @@ def main() -> int:
 
     dataset_iter = tqdm_wrap(datasets, total=len(datasets), desc="Datasets", leave=True, disable=not progress)
     for dataset in dataset_iter:
+        dataset_core_package = resolve_core_package_for_dataset(args.core_package, dataset)
+        resolved_core_packages[dataset] = dataset_core_package
+        author_modules = load_core_package_modules(dataset_core_package)
+        source_core = source_core_label(dataset_core_package)
         context = prepare_dataset_context(mod01b, dataset, args.bundle_mode)
+        if dataset_core_package == "ufce.post_hoc" and hasattr(author_modules.cfmethods, "initUFCE"):
+            cfg = mod01b.resolve_effective_cfg(
+                dataset,
+                SimpleNamespace(
+                    runtime_profile="final_freeze",
+                    radius=None,
+                    n_neighbors=None,
+                    min_act=None,
+                    min_feas=None,
+                    ufce_flip_filter=0,
+                    selection_policy="auto",
+                ),
+            )
+            author_modules.cfmethods.initUFCE(
+                radius=int(cfg["radius"]),
+                n_neighbors=int(cfg["n_neighbors"]),
+                contprox_metric="euclidean",
+                min_act=int(cfg["min_act"]),
+                min_feas=int(cfg["min_feas"]),
+                atol=1e-5,
+            )
         testfold_path = ROOT / "ufce" / "data" / "folds" / dataset / "totest"
         testfolds = sorted(testfold_path.glob("*.csv"))
         if not testfolds:
@@ -974,7 +1072,7 @@ def main() -> int:
                         "fold_id": fold_path.name,
                         "method": method,
                         "metric_scope": metric_scope,
-                        "source_core": "ufce/core_author",
+                        "source_core": source_core,
                         "bundle_mode": str(context["bundle"].effective_bundle_mode),
                         "mi_k": "all" if mi_top_k is None else str(mi_top_k),
                         "query_count": int(len(fold_df)),
@@ -1000,7 +1098,7 @@ def main() -> int:
                             "fold_id": fold_path.name,
                             "method": method,
                             "mode": "author_raw_posthoc",
-                            "source_core": "ufce/core_author",
+                            "source_core": source_core,
                             "bundle_mode": str(context["bundle"].effective_bundle_mode),
                             "mi_k": "all" if mi_top_k is None else str(mi_top_k),
                         }
@@ -1038,10 +1136,18 @@ def main() -> int:
     metric_comparison.to_csv(metric_comparison_csv, index=False)
     comparison.to_csv(comparison_csv, index=False)
 
+    source_core_summary = ", ".join(
+        f"{dataset}:{source_core_label(package)}" for dataset, package in sorted(resolved_core_packages.items())
+    )
+    all_core_author = bool(resolved_core_packages) and all(
+        package == "ufce.core_author" for package in resolved_core_packages.values()
+    )
     manifest = {
         "status": "ok",
         "output_root": str(output_root),
         "mode": "author_raw_posthoc",
+        "core_package": str(args.core_package),
+        "resolved_core_packages": dict(sorted(resolved_core_packages.items())),
         "datasets": datasets,
         "bundle_mode": str(args.bundle_mode),
         "mi_k": "all" if mi_top_k is None else str(mi_top_k),
@@ -1050,14 +1156,15 @@ def main() -> int:
         "fold_file": args.fold_file,
         "compare_dir": str(compare_dir) if compare_dir else None,
         "source": {
-            "local_author_dir": str(AUTHOR_DIR),
+            "source_core": source_core_summary,
+            "local_author_dir": str(AUTHOR_DIR) if all_core_author else None,
             "github_repo": "https://github.com/msnizami/UFCE",
             "github_ufce_py": "https://github.com/msnizami/UFCE/blob/main/ufce.py",
             "github_cfmethods_py": "https://github.com/msnizami/UFCE/blob/main/cfmethods.py",
-            "local_ufce_py_sha256": file_sha256(AUTHOR_DIR / "ufce.py"),
-            "local_cfmethods_py_sha256": file_sha256(AUTHOR_DIR / "cfmethods.py"),
+            "local_ufce_py_sha256": file_sha256(AUTHOR_DIR / "ufce.py") if all_core_author else None,
+            "local_cfmethods_py_sha256": file_sha256(AUTHOR_DIR / "cfmethods.py") if all_core_author else None,
             "behavior_note": (
-                "core_author mirrors the GitHub root files and is loaded with an author UFCE shim; "
+                f"{source_core_summary} is loaded as the UFCE generation core; "
                 "validity is checked only after selected UFCE outputs are returned."
             ),
         },
@@ -1079,7 +1186,7 @@ def main() -> int:
         "# Author Raw Post-hoc UFCE Summary",
         "",
         f"- output_root: `{output_root}`",
-        f"- source_core: `ufce/core_author`",
+        f"- source_core: `{source_core_summary}`",
         f"- github_repo: `https://github.com/msnizami/UFCE`",
         f"- compare_dir: `{compare_dir}`" if compare_dir else "- compare_dir: `None`",
         "",

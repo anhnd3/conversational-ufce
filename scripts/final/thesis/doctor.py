@@ -104,7 +104,7 @@ def check_model_alias() -> Dict[str, Any]:
     # Load from .env or default
     import os
 
-    model_alias = os.getenv("MODEL_ALIAS", "qwen/qwen3-14b")
+    model_alias = os.getenv("MODEL_ALIAS", "qwen3-14b")
 
     # Try to fetch models and verify alias is present
     try:
@@ -233,6 +233,7 @@ def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Environment doctor for thesis final runs.")
     parser.add_argument("--check-lm-studio", action="store_true")
+    parser.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "final" / "doctor")
 
     args = parser.parse_args()
 
@@ -271,8 +272,11 @@ def main() -> int:
         "all_passed": all_passed,
     }
 
-    # Write to outputs/doctor/<run_id>/
-    run_root = ROOT / "outputs" / "final" / "doctor" / f"doctor_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    out_dir = args.out_dir
+    if not out_dir.is_absolute():
+        out_dir = ROOT / out_dir
+
+    run_root = out_dir / f"doctor_{datetime.now().strftime('%Y%m%d%H%M%S')}"
     run_root.mkdir(parents=True, exist_ok=True)
 
     with open(run_root / "doctor_summary.json", "w") as f:

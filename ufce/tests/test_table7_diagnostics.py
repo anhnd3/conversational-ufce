@@ -88,42 +88,39 @@ def test_new_best_params_runtime_profile_resolves_known_dataset_configs() -> Non
             "n_neighbors": 150,
             "min_act": 1,
             "min_feas": 0,
-            "ufce_flip_filter": 1,
         },
         "bupa": {
             "radius": 70,
             "n_neighbors": 200,
             "min_act": 1,
             "min_feas": 1,
-            "ufce_flip_filter": 1,
         },
         "grad": {
             "radius": 16,
             "n_neighbors": 400,
             "min_act": 0,
             "min_feas": 0,
-            "ufce_flip_filter": 1,
         },
         "movie": {
             "radius": 160,
             "n_neighbors": 50,
             "min_act": 1,
             "min_feas": 1,
-            "ufce_flip_filter": 1,
         },
         "wine": {
             "radius": 15,
             "n_neighbors": 1000,
             "min_act": 0,
             "min_feas": 0,
-            "ufce_flip_filter": 1,
         },
     }
 
     for dataset, cfg_expected in expected.items():
         args = runner.build_arg_parser().parse_args(["--runtime_profile", "new_best_params", "--dataset", dataset])
         cfg = runner.resolve_effective_cfg(dataset, args)
-        assert cfg == cfg_expected
+        assert {key: cfg[key] for key in ["radius", "n_neighbors", "min_act", "min_feas"]} == cfg_expected
+        assert cfg["ufce_flip_filter"] == 0
+        assert cfg["core_variant"] == "ufce_core"
 
 
 def test_bundle_mode_accepts_hyphen_and_underscore_aliases() -> None:

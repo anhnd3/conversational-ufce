@@ -6,6 +6,18 @@ from typing import Any
 
 from llm.src.adapters.lmstudio_client import call_lm_studio, extract_response_data
 from llm.src.conversation.types import ParserAdapterResult
+from llm.src.parser.bank_profile_parse_v2 import (
+    BANK_PROFILE_PARSE_V2_EXTRACTION_SCHEMA_NAME,
+    BANK_PROFILE_PARSE_V2_EXTRACTION_STAGE,
+    BANK_PROFILE_PARSE_V2_NORMALIZATION_STAGE,
+    BANK_PROFILE_PARSE_V2_SCHEMA_NAME,
+    BANK_PROFILE_PARSE_V2_VERIFIER_SCHEMA_NAME,
+    build_bank_profile_parse_v2_extraction_schema,
+    build_bank_profile_parse_v2_prompt,
+    build_bank_profile_parse_v2_schema,
+    build_bank_profile_parse_v2_verifier_prompt,
+    build_bank_profile_parse_v2_verifier_schema,
+)
 from llm.src.parser.prompt_builder import (
     DEFAULT_REFINEMENT_SCHEMA_NAME,
     build_live_refinement_response_schema,
@@ -51,6 +63,7 @@ class LiveLmStudioParserAdapter:
         refinement_schema_path: Path | None = None,
         parse_max_tokens: int = DEFAULT_PARSE_MAX_TOKENS,
         repair_max_tokens: int = DEFAULT_REPAIR_MAX_TOKENS,
+        stream: bool = False,
     ) -> None:
         self.model_alias = model_alias
         self.api_base = api_base.rstrip("/")
@@ -65,6 +78,7 @@ class LiveLmStudioParserAdapter:
         self.parser_schema_version = normalize_parser_schema_version(self.schema_path.stem)
         self.parse_max_tokens = int(parse_max_tokens)
         self.repair_max_tokens = int(repair_max_tokens)
+        self.stream = bool(stream)
         self.structured_output_mode = DEFAULT_STRUCTURED_OUTPUT_MODE
 
     def load_benchmark(self):
@@ -127,6 +141,119 @@ class LiveLmStudioParserAdapter:
                 schema_version=schema_version,
             ),
             schema_name=_primary_schema_name(dataset_package, schema_version=schema_version),
+            dataset_package=dataset_package,
+        )
+
+    def parse_bank_profile_v2(
+        self,
+        *,
+        user_text: str,
+        benchmark=None,
+        dataset_package=None,
+        stage: str = BANK_PROFILE_PARSE_V2_EXTRACTION_STAGE,
+        extracted_evidence: dict[str, Any] | None = None,
+    ) -> ParserAdapterResult:
+        active_benchmark = benchmark or self.load_benchmark()
+        if stage == BANK_PROFILE_PARSE_V2_EXTRACTION_STAGE:
+            user_prompt = build_bank_profile_parse_v2_prompt(
+                active_benchmark,
+                user_text=user_text,
+                dataset_label=_primary_subject_label(dataset_package),
+                stage=stage,
+            )
+            response_schema = build_bank_profile_parse_v2_extraction_schema(active_benchmark)
+            schema_name = BANK_PROFILE_PARSE_V2_EXTRACTION_SCHEMA_NAME
+            task_type = "bank_profile_parse_v2_extraction"
+        else:
+            user_prompt = build_bank_profile_parse_v2_prompt(
+                active_benchmark,
+                user_text=user_text,
+                dataset_label=_primary_subject_label(dataset_package),
+                extracted_evidence=extracted_evidence,
+                stage=stage,
+            )
+            response_schema = build_bank_profile_parse_v2_schema(active_benchmark)
+            schema_name = BANK_PROFILE_PARSE_V2_SCHEMA_NAME
+            task_type = "bank_profile_parse_v2_normalization"
+        return self._invoke(
+            user_prompt=user_prompt,
+            task_type=task_type,
+            max_tokens=self.parse_max_tokens,
+            response_schema=response_schema,
+            schema_name=schema_name,
+            dataset_package=dataset_package,
+        )
+
+    def retry_bank_profile_v2(
+        self,
+        *,
+        user_text: str,
+        previous_output: str,
+        errors: list[str],
+        benchmark=None,
+        dataset_package=None,
+        stage: str = BANK_PROFILE_PARSE_V2_NORMALIZATION_STAGE,
+        extracted_evidence: dict[str, Any] | None = None,
+        extraction_hints: dict[str, Any] | None = None,
+    ) -> ParserAdapterResult:
+        active_benchmark = benchmark or self.load_benchmark()
+        if stage == BANK_PROFILE_PARSE_V2_EXTRACTION_STAGE:
+            user_prompt = build_bank_profile_parse_v2_prompt(
+                active_benchmark,
+                user_text=user_text,
+                dataset_label=_primary_subject_label(dataset_package),
+                retry_errors=errors,
+                previous_output=previous_output,
+                extraction_hints=extraction_hints,
+                stage=stage,
+            )
+            response_schema = build_bank_profile_parse_v2_extraction_schema(active_benchmark)
+            schema_name = BANK_PROFILE_PARSE_V2_EXTRACTION_SCHEMA_NAME
+            task_type = "bank_profile_parse_v2_extraction_retry"
+        else:
+            user_prompt = build_bank_profile_parse_v2_prompt(
+                active_benchmark,
+                user_text=user_text,
+                dataset_label=_primary_subject_label(dataset_package),
+                extracted_evidence=extracted_evidence,
+                retry_errors=errors,
+                previous_output=previous_output,
+                stage=stage,
+            )
+            response_schema = build_bank_profile_parse_v2_schema(active_benchmark)
+            schema_name = BANK_PROFILE_PARSE_V2_SCHEMA_NAME
+            task_type = "bank_profile_parse_v2_normalization_retry"
+        return self._invoke(
+            user_prompt=user_prompt,
+            task_type=task_type,
+            max_tokens=self.repair_max_tokens,
+            response_schema=response_schema,
+            schema_name=schema_name,
+            dataset_package=dataset_package,
+        )
+
+    def verify_bank_profile_v2(
+        self,
+        *,
+        user_text: str,
+        candidate: dict[str, Any],
+        validation_errors: list[str] | None = None,
+        benchmark=None,
+        dataset_package=None,
+    ) -> ParserAdapterResult:
+        active_benchmark = benchmark or self.load_benchmark()
+        user_prompt = build_bank_profile_parse_v2_verifier_prompt(
+            active_benchmark,
+            user_text=user_text,
+            candidate=candidate,
+            validation_errors=validation_errors or [],
+        )
+        return self._invoke(
+            user_prompt=user_prompt,
+            task_type="bank_profile_parse_v2_verifier",
+            max_tokens=self.repair_max_tokens,
+            response_schema=build_bank_profile_parse_v2_verifier_schema(active_benchmark),
+            schema_name=BANK_PROFILE_PARSE_V2_VERIFIER_SCHEMA_NAME,
             dataset_package=dataset_package,
         )
 
@@ -207,7 +334,7 @@ class LiveLmStudioParserAdapter:
             max_tokens=max_tokens,
             response_schema=response_schema,
             schema_name=schema_name,
-            stream=False,
+            stream=self.stream,
         )
         api_result = call_lm_studio(
             api_base=self.api_base,
@@ -253,7 +380,7 @@ class LiveLmStudioParserAdapter:
             "model": self.model_alias,
             "temperature": 0.4,
             "top_p": 0.95,
-            "stream": False,
+            "stream": self.stream,
         }
         if max_tokens:
             request_payload["max_tokens"] = int(max_tokens)
@@ -296,7 +423,7 @@ class LiveLmStudioParserAdapter:
             "temperature": 0.0,
             "top_p": 1.0,
             "max_tokens": int(max_tokens),
-            "stream": False,
+            "stream": self.stream,
             "structured_output_mode": self.structured_output_mode,
             "response_schema_name": schema_name,
         }

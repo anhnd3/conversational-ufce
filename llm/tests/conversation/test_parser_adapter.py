@@ -32,3 +32,21 @@ def test_parser_adapter_request_profiles_are_task_specific(tmp_path):
     assert parse_profile["structured_output_mode"] == "json_schema_strict"
     assert refinement_parse_profile["response_schema_name"] == "ufce_bank_refinement_feedback_output_v1"
     assert token_policy["future_negotiation"]["min"] == 2048
+
+
+def test_parser_adapter_profile_reports_streaming_when_enabled(tmp_path):
+    prompt_path = tmp_path / "prompt.txt"
+    schema_path = tmp_path / "schema.json"
+    refinement_schema_path = tmp_path / "refinement_schema.json"
+    prompt_path.write_text("system prompt", encoding="utf-8")
+    schema_path.write_text(json.dumps({"type": "object"}), encoding="utf-8")
+    refinement_schema_path.write_text(json.dumps({"type": "object"}), encoding="utf-8")
+
+    adapter = LiveLmStudioParserAdapter(
+        system_prompt_path=prompt_path,
+        schema_path=schema_path,
+        refinement_schema_path=refinement_schema_path,
+        stream=True,
+    )
+
+    assert adapter.describe_request_profile("parse")["stream"] is True

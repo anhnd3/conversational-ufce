@@ -1,14 +1,28 @@
 from __future__ import annotations
 
+import json
 import time
 from typing import Any
+import urllib.error
+import urllib.request
 
-import requests
+try:
+    import requests  # type: ignore
+except ModuleNotFoundError:  # pragma: no cover - exercised in bundled runtime smoke path
+    requests = None
 
 
 def call_lm_studio(api_base: str, payload: dict[str, object], timeout_s: float) -> dict[str, Any]:
     url = f"{api_base}/v1/chat/completions"
     request_payload = adapt_chat_completions_payload(payload)
+    if requests is None:
+        return _call_lm_studio_with_urllib(url=url, request_payload=request_payload, timeout_s=timeout_s)
+    if bool(request_payload.get("stream")):
+        return _call_lm_studio_streaming_with_requests(
+            url=url,
+            request_payload=request_payload,
+            timeout_s=timeout_s,
+        )
     started = time.perf_counter()
     try:
         response = requests.post(url, json=request_payload, timeout=timeout_s)
@@ -39,6 +53,247 @@ def call_lm_studio(api_base: str, payload: dict[str, object], timeout_s: float) 
         "response_text": response.text,
         "elapsed_ms": elapsed_ms,
     }
+
+
+def _call_lm_studio_streaming_with_requests(
+    *,
+    url: str,
+    request_payload: dict[str, object],
+    timeout_s: float,
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    response_text = ""
+    try:
+        with requests.post(url, json=request_payload, timeout=timeout_s, stream=True) as response:
+            if not response.ok:
+                elapsed_ms = (time.perf_counter() - started) * 1000.0
+                response_text = response.text
+                try:
+                    response_json = response.json()
+                except ValueError:
+                    response_json = None
+                return {
+                    "ok": False,
+                    "status_code": response.status_code,
+                    "error": format_http_error(response.status_code, response_json, response_text),
+                    "response_json": response_json,
+                    "response_text": response_text,
+                    "elapsed_ms": elapsed_ms,
+                }
+
+            stream_lines: list[str] = []
+            for raw_line in response.iter_lines(decode_unicode=True):
+                if raw_line is None:
+                    continue
+                if isinstance(raw_line, bytes):
+                    raw_line = raw_line.decode("utf-8", errors="replace")
+                line = raw_line.strip()
+                if not line:
+                    continue
+                stream_lines.append(line)
+            elapsed_ms = (time.perf_counter() - started) * 1000.0
+            response_text = "\n".join(stream_lines)
+            response_json = response_json_from_sse_lines(stream_lines)
+            return {
+                "ok": True,
+                "status_code": response.status_code,
+                "error": None,
+                "response_json": response_json,
+                "response_text": response_text,
+                "elapsed_ms": elapsed_ms,
+            }
+    except requests.RequestException as exc:
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        return {
+            "ok": False,
+            "status_code": None,
+            "error": f"{type(exc).__name__}: {exc}",
+            "response_json": None,
+            "response_text": response_text or None,
+            "elapsed_ms": elapsed_ms,
+        }
+
+
+def _call_lm_studio_with_urllib(*, url: str, request_payload: dict[str, object], timeout_s: float) -> dict[str, Any]:
+    data = json.dumps(request_payload).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    started = time.perf_counter()
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+            response_text = response.read().decode("utf-8", errors="replace")
+            status_code = int(response.getcode())
+            elapsed_ms = (time.perf_counter() - started) * 1000.0
+    except urllib.error.HTTPError as exc:
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        response_text = exc.read().decode("utf-8", errors="replace")
+        try:
+            response_json = json.loads(response_text)
+        except ValueError:
+            response_json = None
+        return {
+            "ok": False,
+            "status_code": int(exc.code),
+            "error": format_http_error(int(exc.code), response_json, response_text),
+            "response_json": response_json,
+            "response_text": response_text,
+            "elapsed_ms": elapsed_ms,
+        }
+    except Exception as exc:
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        return {
+            "ok": False,
+            "status_code": None,
+            "error": f"{type(exc).__name__}: {exc}",
+            "response_json": None,
+            "response_text": None,
+            "elapsed_ms": elapsed_ms,
+        }
+
+    try:
+        if bool(request_payload.get("stream")):
+            response_json = response_json_from_sse_lines(response_text.splitlines())
+        else:
+            response_json = json.loads(response_text)
+    except ValueError:
+        response_json = None
+    ok = 200 <= status_code < 300
+    error = None if ok else format_http_error(status_code, response_json, response_text)
+    return {
+        "ok": ok,
+        "status_code": status_code,
+        "error": error,
+        "response_json": response_json,
+        "response_text": response_text,
+        "elapsed_ms": elapsed_ms,
+    }
+
+
+def response_json_from_sse_lines(lines: list[str]) -> dict[str, Any]:
+    chunks = []
+    malformed_lines = []
+    for line in lines:
+        data = line.strip()
+        if not data or data.startswith(":") or data.startswith("event:"):
+            continue
+        if data.startswith("data:"):
+            data = data[len("data:") :].strip()
+        if not data or data == "[DONE]":
+            continue
+        try:
+            chunk = json.loads(data)
+        except ValueError:
+            malformed_lines.append(data)
+            continue
+        if isinstance(chunk, dict):
+            chunks.append(chunk)
+
+    response_json = synthesize_chat_completion_from_stream(chunks)
+    if malformed_lines:
+        response_json["stream_parse_warnings"] = [
+            f"Malformed SSE data line ignored: {line[:160]}" for line in malformed_lines[:5]
+        ]
+    return response_json
+
+
+def synthesize_chat_completion_from_stream(chunks: list[dict[str, Any]]) -> dict[str, Any]:
+    content_parts: list[str] = []
+    reasoning_parts: list[str] = []
+    finish_reason = None
+    role = "assistant"
+    usage: dict[str, Any] = {}
+    stats: dict[str, Any] = {}
+    response_id = None
+    model = None
+
+    for chunk in chunks:
+        response_id = response_id or chunk.get("id")
+        model = model or chunk.get("model")
+        chunk_usage = chunk.get("usage")
+        if isinstance(chunk_usage, dict):
+            usage.update(chunk_usage)
+        chunk_stats = chunk.get("stats")
+        if isinstance(chunk_stats, dict):
+            stats.update(chunk_stats)
+        chunk_timings = chunk.get("timings")
+        if isinstance(chunk_timings, dict):
+            stats.update(chunk_timings)
+
+        choices = chunk.get("choices")
+        if not isinstance(choices, list):
+            continue
+        for choice in choices:
+            if not isinstance(choice, dict):
+                continue
+            delta = choice.get("delta")
+            if isinstance(delta, dict):
+                role = str(delta.get("role") or role)
+                content = flatten_stream_text(delta.get("content"))
+                if content is not None:
+                    content_parts.append(content)
+                reasoning = flatten_stream_text(delta.get("reasoning") or delta.get("reasoning_content"))
+                if reasoning is not None:
+                    reasoning_parts.append(reasoning)
+
+            message = choice.get("message")
+            if isinstance(message, dict):
+                content = flatten_stream_text(message.get("content"))
+                if content is not None:
+                    content_parts.append(content)
+                reasoning = flatten_stream_text(message.get("reasoning") or message.get("reasoning_content"))
+                if reasoning is not None:
+                    reasoning_parts.append(reasoning)
+
+            text = flatten_stream_text(choice.get("text"))
+            if text is not None:
+                content_parts.append(text)
+            finish_reason = choice.get("finish_reason") or finish_reason
+
+    message: dict[str, Any] = {"role": role, "content": "".join(content_parts).strip()}
+    if reasoning_parts:
+        message["reasoning"] = "".join(reasoning_parts).strip()
+
+    response_json: dict[str, Any] = {
+        "choices": [
+            {
+                "index": 0,
+                "message": message,
+                "finish_reason": finish_reason,
+            }
+        ],
+        "usage": usage,
+        "stats": stats,
+        "stream_chunk_count": len(chunks),
+    }
+    if response_id:
+        response_json["id"] = response_id
+    if model:
+        response_json["model"] = model
+    return response_json
+
+
+def flatten_stream_text(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    if isinstance(value, list):
+        parts = []
+        for item in value:
+            text = flatten_stream_text(item)
+            if text is not None:
+                parts.append(text)
+        return "".join(parts)
+    if isinstance(value, dict):
+        for key in ("text", "content", "summary"):
+            text = flatten_stream_text(value.get(key))
+            if text is not None:
+                return text
+    return None
 
 
 def adapt_chat_completions_payload(payload: dict[str, object]) -> dict[str, object]:

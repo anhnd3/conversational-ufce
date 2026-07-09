@@ -1,0 +1,17 @@
+{
+  "core_variant": "core_author",
+  "purpose": "Raw upstream UFCE mirror for thesis author-reproduction column.",
+  "upstream_repository": "https://github.com/msnizami/UFCE",
+  "checked_date": "2026-07-05",
+  "notes": [
+    "This package is treated as the unmodified author-code replay surface.",
+    "Do not apply thesis Movie fixes, final-freeze fixes, post-hoc filtering, or UFCE-FF candidate validity gates here."
+  ],
+  "local_mirror_hashes": {
+    "cfmethods.py": "e53b8cd0c8368c6c28aa9283349d97e9f8d651c3775391ce51a3dc591e34a734",
+    "ufce.py": "aea00e5d376d4547cde0f054b8ca0da76061796d7d16a5a208f8e3b5a60ab1a6",
+    "data_processing.py": "44e67f91e467df4209e225a3104ff8ade37046528df113f9b5811e497353e53b",
+    "evaluations.py": "10aeedd877b2f42d25bda9e441683572a7d7bd5c8a8150ad712b6eb9eaac9c51",
+    "README.md": "ac0907461f1a627419ceb7d6b422533d1d0c9f5db42052007d105eec46a1e096"
+  }
+}

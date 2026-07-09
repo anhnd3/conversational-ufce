@@ -87,6 +87,9 @@ class QueryEval:
     effective_min_act: int
     effective_min_feas: int
     effective_force_flip: int
+    selection_policy: str
+    validity_gate_stage: str
+    author_compat_fallback: str
     raw_candidate_count: int
     unique_candidate_count: int
     flip_candidate_count: int
@@ -135,7 +138,13 @@ def finite_float(value: Any) -> Optional[float]:
     return number
 
 
-def resolve_trace_config(mod01b, dataset: str, config_profile: str, flip_filter_enabled: bool) -> Dict[str, int]:
+def resolve_trace_config(
+    mod01b,
+    dataset: str,
+    config_profile: str,
+    flip_filter_enabled: bool,
+    selection_policy: str,
+) -> Dict[str, Any]:
     profile = str(config_profile).strip().lower()
     if profile == "public_github_source":
         cfg = dict(PUBLIC_GITHUB_SOURCE_CONFIG)
@@ -148,13 +157,18 @@ def resolve_trace_config(mod01b, dataset: str, config_profile: str, flip_filter_
             "Unsupported config_profile "
             f"'{config_profile}'. Allowed: public_github_source, final_freeze, new_best_params."
         )
-    cfg["ufce_flip_filter"] = int(1 if flip_filter_enabled else 0)
+    policy = mod01b.cfmethods.resolve_selection_policy(selection_policy, flip_filter_enabled)
+    cfg["ufce_flip_filter"] = int(mod01b.cfmethods.effective_force_flip_for_policy(policy))
+    cfg["selection_policy"] = policy
+    cfg["validity_gate_stage"] = mod01b.cfmethods.validity_gate_stage_for_policy(policy)
     return {
         "radius": int(cfg["radius"]),
         "n_neighbors": int(cfg["n_neighbors"]),
         "min_act": int(cfg["min_act"]),
         "min_feas": int(cfg["min_feas"]),
         "ufce_flip_filter": int(cfg["ufce_flip_filter"]),
+        "selection_policy": str(cfg["selection_policy"]),
+        "validity_gate_stage": str(cfg["validity_gate_stage"]),
     }
 
 
@@ -435,6 +449,8 @@ def summarize_queries(df: pd.DataFrame) -> pd.DataFrame:
                 "effective_min_act",
                 "effective_min_feas",
                 "effective_force_flip",
+                "selection_policy",
+                "validity_gate_stage",
                 "query_count",
                 "raw_candidate_count",
                 "unique_candidate_count",
@@ -472,6 +488,8 @@ def summarize_queries(df: pd.DataFrame) -> pd.DataFrame:
         "effective_min_act",
         "effective_min_feas",
         "effective_force_flip",
+        "selection_policy",
+        "validity_gate_stage",
     ]
     for key, group in df.groupby(group_cols, dropna=False):
         (
@@ -487,6 +505,8 @@ def summarize_queries(df: pd.DataFrame) -> pd.DataFrame:
             effective_min_act,
             effective_min_feas,
             effective_force_flip,
+            selection_policy,
+            validity_gate_stage,
         ) = key
         query_count = int(len(group))
         strict_valid = (
@@ -527,6 +547,8 @@ def summarize_queries(df: pd.DataFrame) -> pd.DataFrame:
                 "effective_min_act": int(effective_min_act),
                 "effective_min_feas": int(effective_min_feas),
                 "effective_force_flip": int(effective_force_flip),
+                "selection_policy": str(selection_policy),
+                "validity_gate_stage": str(validity_gate_stage),
                 "query_count": query_count,
                 "raw_candidate_count": int(group["raw_candidate_count"].sum()),
                 "unique_candidate_count": int(group["unique_candidate_count"].sum()),
@@ -581,6 +603,7 @@ def run_dataset_traces(
     config_profile: str,
     bundle_mode: str,
     flip_filter_enabled: bool,
+    selection_policy: str,
     no_cf: int,
     max_folds: int,
     fold_file: Optional[str],
@@ -624,6 +647,7 @@ def run_dataset_traces(
         dataset=dataset,
         config_profile=config_profile,
         flip_filter_enabled=flip_filter_enabled,
+        selection_policy=selection_policy,
     )
 
     mi_fp_raw = mod01b.normalize_mi_feature_pairs(mod01b.ufc.get_top_MI_features(x_all, features), features)
@@ -697,6 +721,7 @@ def run_dataset_traces(
             fold_name=fold_path.name,
             scaler=scaler,
             flip_filter_enabled=bool(cfg["ufce_flip_filter"]),
+            selection_policy=str(cfg["selection_policy"]),
             movie_distance_scaler=movie_distance_scaler,
             fold_index=fold_idx,
             debug=0,
@@ -724,6 +749,8 @@ def run_dataset_traces(
         "dataset": dataset,
         "config_profile": str(config_profile),
         "bundle_mode": str(bundle.effective_bundle_mode),
+        "selection_policy": str(cfg["selection_policy"]),
+        "validity_gate_stage": str(cfg["validity_gate_stage"]),
         "effective_cfg": dict(cfg),
         "features": list(features),
         "numf": list(numf),
@@ -757,6 +784,9 @@ def evaluate_mode_from_cache(
     config_profile = str(cache_obj.get("config_profile", "unknown"))
     bundle_mode = str(cache_obj.get("bundle_mode", "unknown"))
     effective_cfg = dict(cache_obj.get("effective_cfg", {}))
+    selection_policy = str(cache_obj.get("selection_policy", effective_cfg.get("selection_policy", "unknown")))
+    trace_validity_gate_stage = str(cache_obj.get("validity_gate_stage", effective_cfg.get("validity_gate_stage", "unknown")))
+    mode_validity_gate_stage = "posthoc_after_selection" if str(mode) == "public_posthoc" else trace_validity_gate_stage
     features = list(cache_obj["features"])
     numf = list(cache_obj["numf"])
     catf = list(cache_obj["catf"])
@@ -860,6 +890,9 @@ def evaluate_mode_from_cache(
                         effective_min_act=int(effective_cfg.get("min_act", 0)),
                         effective_min_feas=int(effective_cfg.get("min_feas", 0)),
                         effective_force_flip=int(effective_cfg.get("ufce_flip_filter", 0)),
+                        selection_policy=selection_policy,
+                        validity_gate_stage=mode_validity_gate_stage,
+                        author_compat_fallback=str(trace_row.get("author_compat_fallback", "none")),
                         raw_candidate_count=raw_count,
                         unique_candidate_count=unique_count,
                         flip_candidate_count=flip_count,
@@ -907,6 +940,37 @@ def build_claim_check(summary_df: pd.DataFrame) -> Dict[str, Any]:
         "forceflip_vs_posthoc_pairs_ge_5pp": int(len(improved_pairs)),
         "evaluated_rows": int(len(merged)),
     }
+
+
+def validate_route_separation(query_df: pd.DataFrame) -> None:
+    if query_df.empty:
+        raise RuntimeError("Route separation validation failed: empty query_df.")
+    required = {"mode", "selection_policy", "validity_gate_stage", "effective_force_flip"}
+    missing = sorted(required - set(query_df.columns))
+    if missing:
+        raise RuntimeError(f"Route separation validation failed: missing columns {missing}.")
+
+    errors: List[str] = []
+    posthoc = query_df[query_df["mode"] == "public_posthoc"]
+    if not posthoc.empty:
+        if set(posthoc["selection_policy"].astype(str)) != {"public_author"}:
+            errors.append("public_posthoc must use selection_policy=public_author")
+        if set(posthoc["validity_gate_stage"].astype(str)) != {"posthoc_after_selection"}:
+            errors.append("public_posthoc must report validity_gate_stage=posthoc_after_selection")
+        if set(posthoc["effective_force_flip"].astype(int)) != {0}:
+            errors.append("public_posthoc must report effective_force_flip=0")
+
+    forceflip = query_df[query_df["mode"] == "public_forceflip"]
+    if not forceflip.empty:
+        if set(forceflip["selection_policy"].astype(str)) != {"force_flip"}:
+            errors.append("public_forceflip must use selection_policy=force_flip")
+        if set(forceflip["validity_gate_stage"].astype(str)) != {"pre_find_best_row"}:
+            errors.append("public_forceflip must report validity_gate_stage=pre_find_best_row")
+        if set(forceflip["effective_force_flip"].astype(int)) != {1}:
+            errors.append("public_forceflip must report effective_force_flip=1")
+
+    if errors:
+        raise RuntimeError("Route separation validation failed: " + "; ".join(errors))
 
 
 def _safe_delta(new_value: Any, old_value: Any) -> Optional[float]:
@@ -1198,6 +1262,8 @@ def render_summary_md(
         "effective_min_act",
         "effective_min_feas",
         "effective_force_flip",
+        "selection_policy",
+        "validity_gate_stage",
         "mi_k",
         "top_n",
         "strict_valid_rate",
@@ -1322,7 +1388,7 @@ def main() -> int:
 
     mod01b = load_runner_01b()
     query_rows: List[QueryEval] = []
-    run_cache: Dict[Tuple[str, str, str, str, int], Dict[str, Any]] = {}
+    run_cache: Dict[Tuple[str, str, str, str, int, str], Dict[str, Any]] = {}
 
     dataset_iter = tqdm_wrap(
         datasets,
@@ -1333,7 +1399,7 @@ def main() -> int:
     )
     for dataset in dataset_iter:
         if "public_posthoc" in modes:
-            key = (dataset, config_profile, bundle_mode, "5", 0)
+            key = (dataset, config_profile, bundle_mode, "5", 0, "public_author")
             if key not in run_cache:
                 run_cache[key] = run_dataset_traces(
                     mod01b=mod01b,
@@ -1342,6 +1408,7 @@ def main() -> int:
                     config_profile=config_profile,
                     bundle_mode=bundle_mode,
                     flip_filter_enabled=False,
+                    selection_policy="public_author",
                     no_cf=int(args.no_cf),
                     max_folds=int(args.max_folds),
                     fold_file=args.fold_file,
@@ -1362,7 +1429,7 @@ def main() -> int:
             )
 
         if "public_forceflip" in modes:
-            key = (dataset, config_profile, bundle_mode, "5", 1)
+            key = (dataset, config_profile, bundle_mode, "5", 1, "force_flip")
             if key not in run_cache:
                 run_cache[key] = run_dataset_traces(
                     mod01b=mod01b,
@@ -1371,6 +1438,7 @@ def main() -> int:
                     config_profile=config_profile,
                     bundle_mode=bundle_mode,
                     flip_filter_enabled=True,
+                    selection_policy="force_flip",
                     no_cf=int(args.no_cf),
                     max_folds=int(args.max_folds),
                     fold_file=args.fold_file,
@@ -1393,7 +1461,7 @@ def main() -> int:
         if "pool_expansion_forceflip" in modes:
             for token in mi_k_tokens:
                 mi_k = None if token == "all" else int(token)
-                key = (dataset, config_profile, bundle_mode, str(token), 1)
+                key = (dataset, config_profile, bundle_mode, str(token), 1, "force_flip")
                 if key not in run_cache:
                     run_cache[key] = run_dataset_traces(
                         mod01b=mod01b,
@@ -1402,6 +1470,7 @@ def main() -> int:
                         config_profile=config_profile,
                         bundle_mode=bundle_mode,
                         flip_filter_enabled=True,
+                        selection_policy="force_flip",
                         no_cf=int(args.no_cf),
                         max_folds=int(args.max_folds),
                         fold_file=args.fold_file,
@@ -1424,6 +1493,7 @@ def main() -> int:
     dataset_iter.close()
 
     query_df = pd.DataFrame([row.__dict__ for row in query_rows])
+    validate_route_separation(query_df)
     summary_df = summarize_queries(query_df)
     final_comparison_df = build_final_comparison_table(summary_df)
     stage_comparison_df = build_stage_comparison_table(summary_df)
@@ -1444,6 +1514,9 @@ def main() -> int:
             "effective_min_act",
             "effective_min_feas",
             "effective_force_flip",
+            "selection_policy",
+            "validity_gate_stage",
+            "author_compat_fallback",
             "fold_id",
             "query_pos",
             "raw_candidate_count",
@@ -1476,6 +1549,8 @@ def main() -> int:
             "effective_min_act",
             "effective_min_feas",
             "effective_force_flip",
+            "selection_policy",
+            "validity_gate_stage",
             "query_count",
             "mean_runtime_ms",
             "runtime_ratio",
@@ -1506,6 +1581,7 @@ def main() -> int:
         "config_profile": config_profile,
         "bundle_mode": bundle_mode,
         "mi_feature_scope": str(args.mi_feature_scope),
+        "route_separation_status": "validated",
         "public_github_source_config": dict(PUBLIC_GITHUB_SOURCE_CONFIG),
         "ff_failure_taxonomy_csv": str(output_root / "ff_failure_taxonomy.csv"),
         "ff_selector_comparison_csv": str(output_root / "ff_selector_comparison.csv"),

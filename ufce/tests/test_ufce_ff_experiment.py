@@ -92,6 +92,8 @@ def test_summary_uses_public_selected_flip_for_forceflip() -> None:
                 "effective_min_act": 3,
                 "effective_min_feas": 2,
                 "effective_force_flip": 1,
+                "selection_policy": "force_flip",
+                "validity_gate_stage": "pre_find_best_row",
                 "fold_id": "fold0.csv",
                 "raw_candidate_count": 2,
                 "unique_candidate_count": 2,

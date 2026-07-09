@@ -4,9 +4,16 @@
 import time
 import random
 import pandas as pd
-import dice_ml
-import recourse as rs
-from dice_ml.utils import helpers # helper functions
+try:
+    import dice_ml
+    from dice_ml.utils import helpers  # helper functions
+except ModuleNotFoundError:
+    dice_ml = None
+    helpers = None
+try:
+    import recourse as rs
+except ModuleNotFoundError:
+    rs = None
 from sklearn.model_selection import train_test_split
 
 from ufce import UFCE
@@ -41,6 +48,20 @@ def initUFCE(
         min_actionable_feasible_other=min_feas,
         atol=atol,
     )
+
+
+def _require_dice_ml():
+    if dice_ml is None:
+        raise ModuleNotFoundError(
+            "dice_ml is required for DiCE/DiCE-UF paths, but it is not installed in the active Python environment."
+        )
+
+
+def _require_recourse():
+    if rs is None:
+        raise ModuleNotFoundError(
+            "recourse is required for AR paths, but it is not installed in the active Python environment."
+        )
 
 # calculate the Euclidean distance between two points
 def euclidean_distance(point1, point2):
@@ -97,26 +118,22 @@ def find_best_row(df, test_instance, continuous_features, distance_scaler=None):
     return best_row
 
 
-def _filter_flipping_candidates(candidates, model, desired_outcome, order, apply_filter=True):
-    """
-    UFCE-FF verification gate.
-
-    When enabled, this is applied before the final nearest-row selector in
-    sfexp/dfexp/tfexp. It filters the generated candidate pool to rows whose
-    predicted label equals desired_outcome. Hard/actionability constraints are
-    still enforced by the candidate-generation intervals and later metric
-    evaluation; there is no separate C_hard post-prediction gate here.
-    """
+def _filter_desired_outcome_rows(candidates, model, desired_outcome, order):
+    """Author UFCE2 compatibility fallback over the exploratory pool."""
     if not isinstance(candidates, pd.DataFrame) or candidates.empty:
         return pd.DataFrame()
-    if not apply_filter:
-        return candidates.reset_index(drop=True)
     if all(col in candidates.columns for col in order):
         pred_input = candidates[order]
     else:
         pred_input = candidates
     preds = np.asarray(model.predict(pred_input)).reshape(-1)
     return candidates.loc[preds == int(desired_outcome)].reset_index(drop=True)
+
+
+def _candidate_frame(candidates):
+    if not isinstance(candidates, pd.DataFrame) or candidates.empty:
+        return pd.DataFrame()
+    return candidates.reset_index(drop=True)
 
 
 def _init_method_stats(n_instances):
@@ -233,6 +250,7 @@ def dice_cfexp(df, X_test, numf, f2change, no_cf, bb, uf, outcome_label):
     :return dice_cfs: dice counterfactuals
     """
     start = time.perf_counter()
+    _require_dice_ml()
     d = dice_ml.Data(dataframe=df, continuous_features=numf, outcome_name= outcome_label)
     m = dice_ml.Model(model=bb, backend="sklearn")
     exp = dice_ml.Dice(d, m, method="random")
@@ -283,6 +301,7 @@ def dice_cfexp_in(df, X_test, numf, f2change, no_cf, bb, uf, outcome_label):
     :return dice_cfs: dice counterfactuals
     """
     start = time.perf_counter()
+    _require_dice_ml()
     d = dice_ml.Data(dataframe=df, continuous_features=numf, outcome_name= outcome_label)
     m = dice_ml.Model(model=bb, backend="sklearn")
     exp = dice_ml.Dice(d, m, method="random")
@@ -335,6 +354,7 @@ def dice_cfexp_in(df, X_test, numf, f2change, no_cf, bb, uf, outcome_label):
     return dice_cfs, idx, dicetime, flag
 
 def ar_cfexp(X, numf, bb, X_test, uf, scaler, X_train, f2change):
+    _require_recourse()
     """
     :param X: X data
     :param numf: numerical features
@@ -401,12 +421,12 @@ def sfexp(
     k,
     order,
     return_stats=False,
-    flip_filter_enabled=True,
     distance_data_lab1=None,
     distance_X_test=None,
     distance_scaler=None,
     debug_ctx=None,
     return_trace=False,
+    **_legacy_kwargs,
 ):
     """
     :param X:
@@ -491,13 +511,7 @@ def sfexp(
                             )
                         finally:
                             random.setstate(random_state)
-                        cc_probe = _filter_flipping_candidates(
-                            cc_probe,
-                            bb,
-                            desired_outcome,
-                            order,
-                            apply_filter=flip_filter_enabled,
-                        )
+                        cc_probe = _candidate_frame(cc_probe)
                         if isinstance(cc_probe, pd.DataFrame) and cc_probe.empty != True:
                             if len(cc_probe) > 1:
                                 best_probe = find_best_row(
@@ -564,14 +578,7 @@ def sfexp(
             raw_count = len(cc) if isinstance(cc, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_count)
 
-            # Gate UFCE1 with the same flipping-candidate filter used by UFCE2/UFCE3.
-            cc = _filter_flipping_candidates(
-                cc,
-                bb,
-                desired_outcome,
-                order,
-                apply_filter=flip_filter_enabled,
-            )
+            cc = _candidate_frame(cc)
             instance_flip_candidates = _trace_frame(cc, order)
             flip_count = len(cc) if isinstance(cc, pd.DataFrame) else 0
             method_stats["n_candidates_flip_total"] += int(flip_count)
@@ -636,11 +643,11 @@ def dfexp(
     k,
     order,
     return_stats=False,
-    flip_filter_enabled=True,
     distance_data_lab1=None,
     distance_X_test=None,
     distance_scaler=None,
     return_trace=False,
+    **_legacy_kwargs,
 ):
     start = time.perf_counter()
     desired_outcome = desired_outcome
@@ -665,6 +672,7 @@ def dfexp(
         instance_selected = pd.DataFrame(columns=list(order))
         raw_primary = 0
         raw_explore = 0
+        author_compat_fallback = "none"
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1])
             cc2, cfsexp2 = ufc.Double_F(X, X_test[t:t+1], protectedf, F[:], catf, numf, intervals, features, bb, desired_outcome, order, k)
@@ -673,19 +681,12 @@ def dfexp(
             raw_explore = len(cfsexp2) if isinstance(cfsexp2, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_primary + raw_explore)
 
-            cc2 = _filter_flipping_candidates(
-                cc2,
-                bb,
-                desired_outcome,
-                order,
-                apply_filter=flip_filter_enabled,
-            )
-            selected_rows = _filter_flipping_candidates(
+            cc2 = _candidate_frame(cc2)
+            selected_rows = _filter_desired_outcome_rows(
                 cfsexp2,
                 bb,
                 desired_outcome,
                 order,
-                apply_filter=flip_filter_enabled,
             )
             instance_flip_candidates = _concat_candidate_frames([cc2, selected_rows], order)
             flip_primary = len(cc2) if isinstance(cc2, pd.DataFrame) else 0
@@ -717,18 +718,8 @@ def dfexp(
                     twoF_cfdf = pd.concat([twoF_cfdf, cc2[:1]], ignore_index=True, axis=0)
             else:
                 if selected_rows.empty != True:
-                    if len(selected_rows) > 1:
-                        best_row = find_best_row(
-                            selected_rows.copy(),
-                            X_test[t:t+1],
-                            numf,
-                            distance_scaler=distance_scaler,
-                        )
-                        selected = best_row.to_frame().T
-                        if 'proximity' in selected.columns:
-                            selected = selected.drop(['proximity'], axis=1)
-                    else:
-                        selected = selected_rows[:1]
+                    selected = selected_rows[:1]
+                    author_compat_fallback = "ufce2_explore_label_fallback"
                     instance_selected = _trace_frame(selected, order)
                     foundidx.append(t)
                     twoF_cfdf = pd.concat([twoF_cfdf, selected], ignore_index=True, axis=0)
@@ -753,6 +744,7 @@ def dfexp(
                     "source_path": "double_feature",
                     "raw_primary_count": int(raw_primary),
                     "raw_explore_count": int(raw_explore),
+                    "author_compat_fallback": str(author_compat_fallback),
                 }
             )
     end = time.perf_counter()
@@ -783,11 +775,11 @@ def tfexp(
     k,
     order,
     return_stats=False,
-    flip_filter_enabled=True,
     distance_data_lab1=None,
     distance_X_test=None,
     distance_scaler=None,
     return_trace=False,
+    **_legacy_kwargs,
 ):
     """
     :param X:
@@ -824,6 +816,7 @@ def tfexp(
         instance_selected = pd.DataFrame(columns=list(order))
         raw_primary = 0
         raw_explore = 0
+        author_compat_fallback = "none"
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1]) 
             cc3, cfsexp2 = ufc.Triple_F(X, X_test[t:t+1], protectdf, F[:], catf, numf, intervals, feature2change, bb, desired_outcome, order, k) 
@@ -832,14 +825,8 @@ def tfexp(
             raw_explore = len(cfsexp2) if isinstance(cfsexp2, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_primary + raw_explore)
 
-            cc3 = _filter_flipping_candidates(cc3, bb, desired_outcome, order, apply_filter=flip_filter_enabled)
-            selected_rows = _filter_flipping_candidates(
-                cfsexp2,
-                bb,
-                desired_outcome,
-                order,
-                apply_filter=flip_filter_enabled,
-            )
+            cc3 = _candidate_frame(cc3)
+            selected_rows = pd.DataFrame()
             instance_flip_candidates = _concat_candidate_frames([cc3, selected_rows], order)
             flip_primary = len(cc3) if isinstance(cc3, pd.DataFrame) else 0
             flip_explore = len(selected_rows) if isinstance(selected_rows, pd.DataFrame) else 0
@@ -868,23 +855,8 @@ def tfexp(
                     instance_selected = _trace_frame(cc3[:1], order)
                     foundidx.append(t)
                     threeF_cfdf = pd.concat([threeF_cfdf, cc3[:1]], ignore_index=True, axis=0)
-            else:
-                if selected_rows.empty != True:
-                    if len(selected_rows) > 1:
-                        best_row = find_best_row(
-                            selected_rows.copy(),
-                            X_test[t:t+1],
-                            numf,
-                            distance_scaler=distance_scaler,
-                        )
-                        selected = best_row.to_frame().T
-                        if 'proximity' in selected.columns:
-                            selected = selected.drop(['proximity'], axis=1)
-                    else:
-                        selected = selected_rows[:1]
-                    instance_selected = _trace_frame(selected, order)
-                    foundidx.append(t)
-                    threeF_cfdf = pd.concat([threeF_cfdf, selected], ignore_index=True, axis=0)
+            elif raw_explore > 0:
+                author_compat_fallback = "ufce3_explore_fallback_disabled_to_match_author"
         if return_trace:
             trace_rows.append(
                 {
@@ -906,6 +878,7 @@ def tfexp(
                     "source_path": "triple_feature",
                     "raw_primary_count": int(raw_primary),
                     "raw_explore_count": int(raw_explore),
+                    "author_compat_fallback": str(author_compat_fallback),
                 }
             )
     end = time.perf_counter()

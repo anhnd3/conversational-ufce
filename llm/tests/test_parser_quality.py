@@ -473,3 +473,22 @@ def test_serialize_normalized_parse_payload_uses_stable_parser_quality_structure
         },
     }
     assert serialize_normalized_parse_payload(None, None, None) is None
+
+
+def test_run_parser_quality_skips_bank_v2_deterministic_recovery(sample_benchmark):
+    quality_result = run_parser_quality(
+        message_text=(
+            '{"task":"extract_bank_profile_v2","stage":"value_normalization","status":"partial","fields":'
+            '{"Income":{"value":40,"evidence_quote":"Income 40","confidence":1.0,"normalization_note":"digits"}},'
+            '"missing_fields":["CCAvg","Family","Education","Mortgage","CDAccount","Online","SecuritiesAccount","CreditCard"],'
+            '"conflicts":[],"notes":[]}'
+        ),
+        benchmark_spec=sample_benchmark,
+        user_text=FULL_PROFILE_TEXT,
+        dataset_id="bank",
+    )
+
+    assert quality_result.metadata.deterministic_recovery_applied is False
+    assert quality_result.normalized.parsed_json["task"] == "extract_bank_profile_v2"
+    assert quality_result.normalized.parsed_json["fields"]["Income"]["value"] == 40
+    assert quality_result.schema_validation.is_valid is False
