@@ -29,7 +29,8 @@ Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 - `llm/`: parser, validation, runtime, and product code
 - `llm_eval/`: parser benchmark support
 - `ufce/`: UFCE cores and datasets
-- `outputs/`: generated artifacts, ignored and local-only
+- `outputs/`: generated artifacts, ignored and local-only except the compact
+  thesis-final summary at `outputs/final/thesis_canonical/summary.json`
 - `docs/`: runbook, evidence map, and thesis-facing notes
 
 ## Publication Boundary
@@ -37,7 +38,8 @@ Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 The GitHub-facing repo keeps source, small frozen inputs, tests, and compact
 thesis-facing documentation. Generated outputs, logs, temporary workspaces,
 archived process notes, and exploratory thesis drafts stay local-only through
-`.gitignore`.
+`.gitignore`. The only committed output is the thesis-final canonical summary
+used to align the source release with Final_v7.6.
 
 ## Setup
 
@@ -250,30 +252,34 @@ Route 2 bridge:
 - final-vs-full250 table: `impact_check_7_failed_cases/route2_final_vs_full250.md`
 - failed-case impact: `impact_check_7_failed_cases/failed_cases_impact_summary.md`
 
-## Result Snapshots
+## Final Thesis Snapshot
 
-### Route 1 snapshot
+Canonical Final_v7.6 headline file:
 
-Representative local Part I snapshot:
+- `outputs/final/thesis_canonical/summary.json`
 
-- Path: `outputs/final/part1/09_author_pool_finalfreeze_20260624`
-- Dataset: Bank Loan
-- Query count: `250`
-- Config: `final_freeze`
-- Bundle mode: `table7_author_public`
+Bank Loan UFCE-FF counts used by the final thesis:
 
-| Method | Raw selected | Post-hoc valid | UFCE-FF valid |
-| --- | ---: | ---: | ---: |
-| UFCE1 | 80 | 80 | 80 |
-| UFCE2 | 250 | 20 | 44 |
-| UFCE3 | 237 | 19 | 27 |
+| Variant | Direct verification, 250 cases | After NL handoff, 243 accepted / 250 source |
+| --- | ---: | ---: |
+| UFCE-FF1 | 80 | 79 |
+| UFCE-FF2 | 44 | 44 |
+| UFCE-FF3 | 26 | 26 |
 
-Source artifacts:
+Parser handoff gate:
 
-- `author_pool_selector_summary.csv`
-- `author_pool_metric_summary.csv`
+- source cases: `250`
+- runtime-ready cases: `247`
+- accepted exact reconstructions: `243`
+- dropped parser cases: `7`
+- dropped case ids: `bank_fold00_q21_g2`, `bank_fold00_q31_g2`, `bank_fold01_q00_g2`, `bank_fold02_q37_g1`, `bank_fold03_q45_g2`, `bank_fold04_q13_g2`, `bank_fold04_q44_g2`
 
-### Route 2 snapshot
+The committed canonical summary is the release-facing source for the final
+README and thesis evidence maps. Historical local output directories remain
+useful for diagnostics, but they are not the Final_v7.6 headline source when
+their UFCE-FF2/UFCE-FF3 counts differ from the summary above.
+
+### Route 2 Parser Baseline
 
 Historical local bridge baseline:
 
@@ -308,27 +314,14 @@ Current completed parser snapshot:
 - Strict all-case target met: `no`
 - Operational `< 0.10` gate met: `yes`
 
-Final accepted-subset NL -> UFCE-FF snapshot:
+Final accepted-subset NL -> UFCE-FF headline:
 
-- Path: `outputs/final/part2/nl_bank_bridge_20260704_200630_latest_ufceff_accepted_20260707`
 - Evaluation scope: parser-accepted cases
 - Included cases: `243`
 - Dropped parser cases: `7`
-- Accepted direct equals NL-first: `true`
-- Accepted-scope released CF counts: `UFCE1 = 79`, `UFCE2 = 43`, `UFCE3 = 27`
-- Effective strict match over the original 250 source cases: `0.972`
-- Invalid release count: `0`
-
-Full-250 direct UFCE-FF comparator:
-
-- Path: `outputs/final/part2/nl_bank_bridge_20260704_200630_latest_ufceff_all250_20260707`
-- Direct released CF counts: `UFCE1 = 80`, `UFCE2 = 43`, `UFCE3 = 27`
-
-Failed-case impact check:
-
-- Path: `outputs/final/part2/nl_bank_bridge_20260704_200630_latest_ufceff_accepted_20260707/impact_check_7_failed_cases`
-- Lost released CF count from the 7 dropped parser cases: `UFCE1 = 1`, `UFCE2 = 0`, `UFCE3 = 0`
-- Final table artifact: `route2_final_vs_full250.md`
+- Accepted-scope released CF counts: `UFCE-FF1 = 79`, `UFCE-FF2 = 44`, `UFCE-FF3 = 26`
+- Full-250 direct comparator released CF counts: `UFCE-FF1 = 80`, `UFCE-FF2 = 44`, `UFCE-FF3 = 26`
+- Lost released CF count from the 7 dropped parser cases: `UFCE-FF1 = 1`, `UFCE-FF2 = 0`, `UFCE-FF3 = 0`
 
 Do not cite an active or partial parser rerun as final until it writes
 `parse_acceptance.json` for all 250 cases.

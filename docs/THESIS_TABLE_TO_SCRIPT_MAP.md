@@ -1,6 +1,11 @@
 # Thesis Table To Script Map
 
-This map records the source workflow for the Chapter 4 numbers in thesis v3.8.
+Target thesis version: Final_v7.6 / Final.
+PDF export timestamp: 2026-07-12T16:49:19+07:00.
+
+This map records the source workflow for the Chapter 4 numbers in the final
+thesis. The committed headline summary is
+`outputs/final/thesis_canonical/summary.json`.
 The script names are semantic; old numeric prefixes were only process-order
 bookkeeping.
 
@@ -15,6 +20,7 @@ bookkeeping.
 | Tables 4.2-4.6 | UFCE-FF validity-gated reproduction | `04_ufce_ff.py --dataset all --runtime-profile final_freeze --bundle-mode table7_author_public` | `ufce/ufce_ff`, final-freeze bundle, thesis folds | UFCE-FF summary CSV/JSON |
 | Tables 4.2-4.6 | Tuned/final-freeze config provenance | `ufce_parameter_tuning.py --dataset all --run_stage all` plus profiles consumed by `02_ufce_core_final_freeze.py` and `04_ufce_ff.py` | UFCE datasets/folds | tuning summaries and locked profile records |
 | Tables 4.7-4.11 | DiCE, AR, and UFCE comparator values | `table7_full_reproduction.py --dataset all` | UFCE datasets/folds | dataset summaries for UFCE, DiCE, DiCE-UF, AR |
+| Figure 4.1 | Selected-output flip validity check | `01_author_raw_reproduction.py`, `03_ufce_post_hoc.py`, `04_ufce_ff.py` | UFCE public folds and final-freeze Bank/Graduate/Wine/BUPA/Movie configs | raw/post-hoc/UFCE-FF summaries |
 | Red Wine discussion | Prox-Euc sensitivity by distance space | `red_wine_proximity_sensitivity.py` | emitted pairs from `author_pool_selector_audit.py`, Wine metadata/data | distance-space sensitivity CSV/Markdown |
 
 Important: the thesis raw/final-freeze reproduction uses tuned profiles. Do not
@@ -24,10 +30,12 @@ replace these commands with the author's default runtime settings.
 
 | Thesis Table | Evidence | Script And Config | Inputs | Expected Artifact |
 |---|---|---|---|---|
-| Table 4.12 | Local LLM/parser model selection | `parser_benchmark_metrics.py` | `llm_eval/benchmarks`, prompt docs, model config | parser benchmark metrics JSON/Markdown |
-| Table 4.13 | Presented CF invariant checks | `conversation_quality_metrics.py` | frozen Bank Loan conversation corpora and runtime validators | conversation metrics summary |
-| Table 4.14 | 200-session outcomes, safe stops, no-recourse counts | `conversation_quality_metrics.py` plus `no_valid_counterfactual_diagnostics.py` | Tier-B Bank sessions and runtime diagnostics | session outcome summaries and diagnostic reports |
-| Table 4.14 support | Constraint/policy behavior | `policy_control_evaluation.py` | Bank runtime context and policy registry | policy-control evaluation summary |
+| Table 4.12 | UFCE-FF valid-solution coverage over five datasets | `scripts/final/part1/04_ufce_ff.py` plus the release summary for thesis-final Bank counts | UFCE folds, `final_freeze`, `table7_author_public` | UFCE-FF coverage summary; Bank headline in `outputs/final/thesis_canonical/summary.json` |
+| Table 4.13 | Local LLM parser configuration benchmark | `llm_eval/scripts/run_bank_cf_llm_eval.py` and `llm_eval/reporting.py` | `llm_eval/benchmarks`, prompt docs, model config | `llm_eval/reports/part2_phase1_local_llm_evaluation_report.md` plus `llm_eval/outputs/*/{summary.json,config_snapshot.json}` |
+| Figure 4.5 | Parser handoff gate on the 250-case Bank Loan set | `scripts/final/part2/run_nl_bank_parse_only_v2.sh` or `nl_bank_bridge_experiment.py --stage eval_parse` | 250 NL Bank cases derived from the 5 original Bank Loan test folds | `parse_acceptance.json`, `parse_quality_progress.json`, `record_reconstruction.csv` |
+| Figure 4.6 | Parser error distribution after the handoff gate | `scripts/final/part2/run_nl_bank_parse_only_v2.sh` or `nl_bank_bridge_experiment.py --stage eval_parse` | Completed parser-only artifact | `parse_acceptance.json`, `parse_errors.jsonl`, `record_reconstruction.csv` |
+| Figure 4.7 | Bank Loan released-solution counts before and after NL handoff | `scripts/final/part2/nl_bank_bridge_experiment.py`, `scripts/final/part2/failed_cases_impact_check.py` | Completed parser artifact and locked UFCE-FF backend | Canonical counts in `outputs/final/thesis_canonical/summary.json` |
+| Table 4.14 | UFCE-FF metric delta after handoff versus the direct full-250 comparator | `scripts/final/part2/nl_bank_bridge_experiment.py`, `scripts/final/part2/failed_cases_impact_check.py` | Accepted 243-case parser subset and direct 250-case comparator | Canonical final-vs-full250 counts in `outputs/final/thesis_canonical/summary.json`; detailed rerun artifacts stay local-only |
 
 ## Appendix-Oriented Route 2 Additions
 

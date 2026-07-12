@@ -306,19 +306,31 @@ Primary artifacts:
 - `impact_check_7_failed_cases/route2_final_vs_full250.md`
 - `impact_check_7_failed_cases/failed_cases_impact_summary.md`
 
-## Current Local Snapshots
+## Final Thesis Snapshot
 
-### Route 1 snapshot
+Canonical Final_v7.6 headline file:
 
-Representative Route 1 directory:
+- `outputs/final/thesis_canonical/summary.json`
 
-- `outputs/final/part1/09_author_pool_finalfreeze_20260624`
+Bank Loan UFCE-FF counts used by the final thesis:
 
-Useful files there:
+| Variant | Direct verification, 250 cases | After NL handoff, 243 accepted / 250 source |
+| --- | ---: | ---: |
+| UFCE-FF1 | 80 | 79 |
+| UFCE-FF2 | 44 | 44 |
+| UFCE-FF3 | 26 | 26 |
 
-- `author_pool_selector_summary.csv`
-- `author_pool_metric_summary.csv`
-- `summary.json`
+Parser handoff gate:
+
+- source cases: `250`
+- runtime-ready cases: `247`
+- accepted exact reconstructions: `243`
+- dropped parser cases: `7`
+- dropped case ids: `bank_fold00_q21_g2`, `bank_fold00_q31_g2`, `bank_fold01_q00_g2`, `bank_fold02_q37_g1`, `bank_fold03_q45_g2`, `bank_fold04_q13_g2`, `bank_fold04_q44_g2`
+
+Historical local output directories remain useful for diagnostics, but they are
+not the Final_v7.6 headline source when their UFCE-FF2/UFCE-FF3 counts differ
+from the committed canonical summary.
 
 ### Route 2 historical bridge baseline
 
@@ -349,31 +361,15 @@ Summary from `parse_acceptance.json`:
 - strict all-case target met: `no`
 - operational `< 0.10` gate met: `yes`
 
-### Route 2 accepted-subset final diagnostic
-
-Representative accepted-subset directory:
-
-- `outputs/final/part2/nl_bank_bridge_20260704_200630_latest_ufceff_accepted_20260707`
-
-Useful files there:
-
-- `evaluation_case_selection.csv`
-- `direct_ufce_ff_results.csv`
-- `nl_first_ufce_ff_results.csv`
-- `summary.json`
-- `parse_acceptance.json`
-- `impact_check_7_failed_cases/route2_final_vs_full250.md`
-- `impact_check_7_failed_cases/failed_cases_impact_summary.md`
+### Route 2 accepted-subset final headline
 
 Scope:
 
 - included parser-accepted cases: `243`
 - dropped parser cases: `7`
-- accepted direct equals NL-first: `true`
-- accepted-scope released CF counts: `UFCE1 = 79`, `UFCE2 = 43`, `UFCE3 = 27`
-- effective strict match over the original 250 source cases: `0.972`
-- full-250 direct comparator released CF counts: `UFCE1 = 80`, `UFCE2 = 43`, `UFCE3 = 27`
-- lost released CF count from the 7 dropped parser cases: `UFCE1 = 1`, `UFCE2 = 0`, `UFCE3 = 0`
+- accepted-scope released CF counts: `UFCE-FF1 = 79`, `UFCE-FF2 = 44`, `UFCE-FF3 = 26`
+- full-250 direct comparator released CF counts: `UFCE-FF1 = 80`, `UFCE-FF2 = 44`, `UFCE-FF3 = 26`
+- lost released CF count from the 7 dropped parser cases: `UFCE-FF1 = 1`, `UFCE-FF2 = 0`, `UFCE-FF3 = 0`
 
 ### Route 2 active or partial reruns
 

@@ -185,6 +185,10 @@ archive
 logs
 .vscode
 outputs/*
+!outputs/final/
+outputs/final/*
+!outputs/final/thesis_canonical/
+!outputs/final/thesis_canonical/summary.json
 docs/thesis/*
 docs/reports/*
 

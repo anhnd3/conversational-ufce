@@ -3,6 +3,10 @@
 This file maps thesis claims to the GitHub-facing scripts retained after the
 cleanup. Detailed table-level provenance is in `docs/THESIS_TABLE_TO_SCRIPT_MAP.md`.
 
+Target thesis version: Final_v7.6 / Final.
+PDF export timestamp: 2026-07-12T16:49:19+07:00.
+Committed headline summary: `outputs/final/thesis_canonical/summary.json`.
+
 ## Part I: UFCE Reproduction And UFCE-FF
 
 | Thesis Area | Claim | Evidence Script | Notes |
@@ -19,13 +23,13 @@ cleanup. Detailed table-level provenance is in `docs/THESIS_TABLE_TO_SCRIPT_MAP.
 
 | Thesis Area | Claim | Evidence Script | Notes |
 |---|---|---|---|
-| Table 4.12 | Local parser/model selection can be measured by schema validity, field accuracy, status accuracy, stability, and latency. | `scripts/final/part2/parser_benchmark_metrics.py` | Uses frozen `llm_eval/benchmarks` inputs and lightweight reports. |
-| Tables 4.13-4.14 | Bank Loan conversations preserve validated outputs and safe terminal states. | `scripts/final/part2/conversation_quality_metrics.py` | Primary 200-session conversation evidence. |
-| Table 4.14 diagnostics | No-valid-CF/safe-stop cases can be separated from valid CF presentations. | `scripts/final/part2/no_valid_counterfactual_diagnostics.py` | Supports the safe-stop and no-recourse counts. |
+| Table 4.12 | UFCE-FF valid-solution coverage is reported separately from conditional metric quality. | `scripts/final/part1/04_ufce_ff.py` | Final Bank Loan headline coverage is locked in `outputs/final/thesis_canonical/summary.json`: direct `80/44/26`. |
+| Table 4.13 | Local parser/model selection can be measured by schema validity, field accuracy, status accuracy, stability, and latency. | `llm_eval/scripts/run_bank_cf_llm_eval.py` and `llm_eval/reporting.py` | Uses frozen `llm_eval/benchmarks`; the metric contract is `22 cases x 3 repeats = 66` requests/model and field accuracy over 9 fields. |
+| Figure 4.5 | Bank natural-language requests can be evaluated on runtime readiness and exact reconstruction before UFCE-FF execution. | `scripts/final/part2/run_nl_bank_parse_only_v2.sh` and `scripts/final/part2/nl_bank_bridge_experiment.py --stage eval_parse` | Uses the 250-case Bank set derived from the original 5 test folds; final parser gate is `247` runtime-ready and `243` accepted. |
+| Figure 4.6 | Parser errors are retained as handoff-gate loss rather than hidden by downstream UFCE-FF evaluation. | `scripts/final/part2/run_nl_bank_parse_only_v2.sh` and `scripts/final/part2/nl_bank_bridge_experiment.py --stage eval_parse` | The seven excluded case IDs are listed in the committed canonical summary. |
+| Figure 4.7 | Parser-accepted Bank natural-language requests can be handed to the locked UFCE-FF backend without changing backend authority. | `scripts/final/part2/nl_bank_bridge_experiment.py` | Final headline counts are direct `80/44/26` and after handoff `79/44/26`. |
+| Table 4.14 | The parser handoff gate has a measured cost relative to the full-250 UFCE-FF direct comparator. | `scripts/final/part2/failed_cases_impact_check.py` | Final released-count loss is one UFCE-FF1 solution and zero UFCE-FF2/UFCE-FF3 solutions; detailed rerun artifacts stay local-only. |
 | Policy controls | Constraint policy behavior can be evaluated deterministically. | `scripts/final/part2/policy_control_evaluation.py` | Supports the policy-control side of Part II methodology. |
-| Appendix Route 2 parser gate | Bank natural-language requests can be evaluated on runtime readiness and exact reconstruction before UFCE-FF execution. | `scripts/final/part2/run_nl_bank_parse_only_v2.sh` and `scripts/final/part2/nl_bank_bridge_experiment.py --stage eval_parse` | Uses the 250-case Bank set derived from the original 5 test folds. |
-| Appendix Route 2 bridge | Parser-accepted Bank natural-language requests can be handed to the locked UFCE-FF backend without changing the backend authority. | `scripts/final/part2/nl_bank_bridge_experiment.py` | Use `--parse-eval-scope accepted` and report excluded parser cases unless strict parser acceptance is 250/250. |
-| Appendix Route 2 coverage cost | The parser handoff gate has a measurable, explicitly reported cost relative to the full-250 UFCE-FF direct comparator. | `scripts/final/part2/failed_cases_impact_check.py` | Generates `route2_final_vs_full250` and failed-case impact artifacts from accepted-subset and full-250 direct outputs. |
 
 ## Local-Only Evidence
 

@@ -1,0 +1,56 @@
+{
+  "target_thesis_version": "Final_v7.6",
+  "pdf_file": "24C15002_NguyenDuyAnh_LuanVanThacSi_UFCE_Final_v7.6.pdf",
+  "pdf_export_timestamp": "2026-07-12T16:49:19+07:00",
+  "scope": "Bank Loan Route 2 parser handoff and UFCE-FF final-vs-direct headline counts",
+  "source_count": 250,
+  "runtime_ready_count": 247,
+  "accepted_count": 243,
+  "dropped_count": 7,
+  "direct_released_counts": {
+    "UFCE-FF1": 80,
+    "UFCE-FF2": 44,
+    "UFCE-FF3": 26
+  },
+  "accepted_released_counts": {
+    "UFCE-FF1": 79,
+    "UFCE-FF2": 44,
+    "UFCE-FF3": 26
+  },
+  "excluded_case_ids": [
+    "bank_fold00_q21_g2",
+    "bank_fold00_q31_g2",
+    "bank_fold01_q00_g2",
+    "bank_fold02_q37_g1",
+    "bank_fold03_q45_g2",
+    "bank_fold04_q13_g2",
+    "bank_fold04_q44_g2"
+  ],
+  "parser_artifact": {
+    "path": "outputs/final/part2/nl_bank_bridge_20260704_200630/parse_acceptance.json",
+    "completed_cases": 250,
+    "ready_for_runtime_count": 247,
+    "exact_reconstruction_count": 243,
+    "error_count": 7,
+    "error_rate": 0.028
+  },
+  "thesis_metric_contract": {
+    "direct_released_counts": "Full 250-case direct UFCE-FF verification denominator.",
+    "accepted_released_counts": "NL -> parser -> UFCE-FF after the exact-reconstruction acceptance gate; source denominator remains 250 and accepted denominator is 243.",
+    "table_4_12": "Coverage n/N where n is the number of Bank Loan queries with at least one valid released UFCE-FF solution.",
+    "table_4_14": "Metric deltas after handoff versus the direct 250-case verification route."
+  },
+  "config": {
+    "config_profile": "final_freeze",
+    "bundle_mode": "table7_author_public",
+    "mi_k": 5,
+    "no_cf": 10,
+    "contprox_metric": "euclidean",
+    "mi_feature_scope": "configured_actionable",
+    "parser_model_alias": "qwen3-14b",
+    "api_base": "http://127.0.0.1:1234"
+  },
+  "config_hash": "sha256:c7d38efb86a103b4ba4b5ce68a2ccdc4ccb4b5625051ea4b9fcb8a89893e5754",
+  "commit_hash": "5f66f30647ad9d4cb556ebf07fa28d3d262435de",
+  "audit_note": "This is the Final_v7.6 release summary. Earlier local Route 2 snapshots that report UFCE-FF2=43 or UFCE-FF3=27 are historical/non-canonical for the thesis-final headline numbers."
+}
