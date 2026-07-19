@@ -1,4 +1,4 @@
-# UFCE Agent
+# UFCE Deep Analysis
 
 Code and experiment runners for a thesis on UFCE reproduction and a bank-loan natural-language interface to UFCE.
 
