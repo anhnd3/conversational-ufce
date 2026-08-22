@@ -56,6 +56,9 @@ def _install_ufce_ff_core() -> None:
                 "ufce_flip_filter": 1,
                 "selection_policy": "ufce_ff",
                 "validity_gate_stage": "pre_find_best_row",
+                "post_selection_validation": 1,
+                "post_selection_validation_stage": "post_find_best_row",
+                "effective_validity_gate_count": 2,
                 "core_variant": "ufce_ff",
             }
         )

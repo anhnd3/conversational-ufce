@@ -21,6 +21,15 @@ class FakeModel:
         return pd.Series(df["flip"]).astype(int).to_numpy()
 
 
+class RejectAfterFilterModel:
+    """Accepts the candidate pool, then rejects the single final selection."""
+
+    def predict(self, df):
+        if len(df) > 1:
+            return pd.Series(df["flip"]).astype(int).to_numpy()
+        return pd.Series([0] * len(df)).astype(int).to_numpy()
+
+
 class FakeUFC:
     radius = 500
     n_neighbors = 100
@@ -213,6 +222,44 @@ def test_ufce_ff_ufce3_filters_before_nearest_selection(monkeypatch) -> None:
     assert trace[0]["core_variant"] == "ufce_ff"
     assert trace[0]["validity_gate_stage"] == "pre_find_best_row"
     assert trace[0]["effective_validity_gate"] == 1
+
+
+def test_ufce_ff_post_selection_gate_fails_closed(monkeypatch) -> None:
+    explore = pd.DataFrame(
+        [
+            {"x": 10.0, "flip": 1},
+            {"x": 1.0, "flip": 1},
+        ]
+    )
+    monkeypatch.setattr(ff_cfmethods, "ufc", FakeUFC(primary=pd.DataFrame(columns=FEATURES), explore=explore))
+
+    cfs, _time, idx, stats, trace = ff_cfmethods.tfexp(
+        pd.DataFrame(columns=FEATURES),
+        pd.DataFrame(columns=FEATURES),
+        pd.DataFrame([{"x": 0.0, "flip": 0}]),
+        {},
+        [["x", "flip"]],
+        ["x"],
+        [],
+        FEATURES,
+        [],
+        RejectAfterFilterModel(),
+        1,
+        10,
+        FEATURES,
+        return_stats=True,
+        return_trace=True,
+    )
+
+    assert cfs.empty
+    assert idx == []
+    assert stats["n_post_selection_checked"] == 1
+    assert stats["n_post_selection_rejected"] == 1
+    assert stats["coverage"] == 0.0
+    assert trace[0]["post_selection_validation"] == 1
+    assert trace[0]["post_selection_validation_checked"] is True
+    assert trace[0]["post_selection_validation_passed"] is False
+    assert trace[0]["selected_candidates_df"].empty
 
 
 def test_route2_counterfactual_service_uses_ufce_ff_core() -> None:

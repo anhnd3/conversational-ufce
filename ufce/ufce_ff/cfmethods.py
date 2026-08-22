@@ -25,6 +25,7 @@ import numpy as np
 
 CORE_VARIANT = "ufce_ff"
 VALIDITY_GATE_STAGE = "pre_find_best_row"
+POST_SELECTION_VALIDATION_STAGE = "post_find_best_row"
 
 # 1. Initialize the global variable as None
 ufc = None
@@ -141,6 +142,28 @@ def _filter_flipping_candidates(candidates, model, desired_outcome, order):
     return candidates.loc[preds == int(desired_outcome)].reset_index(drop=True)
 
 
+def _post_validate_selected_candidate(candidate, model, desired_outcome, order, method_stats):
+    """Fail closed unless the final selected row still predicts the target label."""
+    if not isinstance(candidate, pd.DataFrame) or candidate.empty:
+        return pd.DataFrame(), False, None
+
+    selected = candidate.iloc[[0]].copy().reset_index(drop=True)
+    method_stats["n_post_selection_checked"] += 1
+    try:
+        pred_input = selected[order] if all(col in selected.columns for col in order) else selected
+        preds = np.asarray(model.predict(pred_input)).reshape(-1)
+        passed = bool(preds.size > 0 and int(preds[0]) == int(desired_outcome))
+    except Exception:
+        passed = False
+
+    if not passed:
+        method_stats["n_post_selection_rejected"] += 1
+        return pd.DataFrame(), True, False
+
+    method_stats["n_instances_with_post_validated_cf"] += 1
+    return selected, True, True
+
+
 def _candidate_frame(candidates):
     if not isinstance(candidates, pd.DataFrame) or candidates.empty:
         return pd.DataFrame()
@@ -152,6 +175,9 @@ def _trace_selection_fields(author_compat_fallback="none"):
         "core_variant": CORE_VARIANT,
         "validity_gate_stage": VALIDITY_GATE_STAGE,
         "effective_validity_gate": 1,
+        "effective_validity_gate_count": 2,
+        "post_selection_validation": 1,
+        "post_selection_validation_stage": POST_SELECTION_VALIDATION_STAGE,
         "author_compat_fallback": str(author_compat_fallback or "none"),
     }
 
@@ -162,14 +188,17 @@ def _init_method_stats(n_instances):
         "n_candidates_raw_total": 0,
         "n_candidates_flip_total": 0,
         "n_instances_with_flip_cf": 0,
+        "n_instances_with_post_validated_cf": 0,
         "n_empty_after_filter": 0,
+        "n_post_selection_checked": 0,
+        "n_post_selection_rejected": 0,
         "coverage": 0.0,
     }
 
 
 def _finalize_method_stats(stats):
     denom = int(stats.get("n_instances", 0))
-    num = int(stats.get("n_instances_with_flip_cf", 0))
+    num = int(stats.get("n_instances_with_post_validated_cf", 0))
     stats["coverage"] = float(num / denom) if denom > 0 else 0.0
     return stats
 
@@ -576,6 +605,8 @@ def sfexp(
         instance_raw_candidates = pd.DataFrame(columns=list(order))
         instance_flip_candidates = pd.DataFrame(columns=list(order))
         instance_selected = pd.DataFrame(columns=list(order))
+        post_selection_validation_checked = False
+        post_selection_validation_passed = None
         nn_meta_summary = {
             "within_radius_count": int(len(idx)),
             "radius": float(getattr(ufc, "radius", 0.0)),
@@ -621,15 +652,18 @@ def sfexp(
             if cc.empty != True:
                 if len(cc) > 1:
                     best_row = find_best_row(cc, X_test[t:t+1], numf, distance_scaler=distance_scaler)
-                    cf = best_row.to_frame().T
-                    instance_selected = _trace_frame(cf, order)
-                    found_indexes.append(t)
-                    oneF_cfdf = pd.concat([oneF_cfdf, cf], ignore_index=True, axis=0)
-                    oneF_cfdf = oneF_cfdf.drop(['proximity'], axis=1)
+                    selected = best_row.to_frame().T
                 else:
-                    instance_selected = _trace_frame(cc[:1], order)
+                    selected = cc[:1]
+                selected, post_selection_validation_checked, post_selection_validation_passed = (
+                    _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+                )
+                if not selected.empty:
+                    instance_selected = _trace_frame(selected, order)
                     found_indexes.append(t)
-                    oneF_cfdf = pd.concat([oneF_cfdf, cc[:1]], ignore_index=True, axis=0)
+                    oneF_cfdf = pd.concat([oneF_cfdf, selected], ignore_index=True, axis=0)
+                    if 'proximity' in oneF_cfdf.columns:
+                        oneF_cfdf = oneF_cfdf.drop(['proximity'], axis=1)
         if return_trace:
             trace_rows.append(
                 {
@@ -644,6 +678,8 @@ def sfexp(
                         "n_neighbors": int(getattr(ufc, "n_neighbors", 0)),
                     },
                     "source_path": "single_feature",
+                    "post_selection_validation_checked": bool(post_selection_validation_checked),
+                    "post_selection_validation_passed": post_selection_validation_passed,
                     **_trace_selection_fields(),
                 }
             )
@@ -704,6 +740,8 @@ def dfexp(
         instance_selected = pd.DataFrame(columns=list(order))
         raw_primary = 0
         raw_explore = 0
+        post_selection_validation_checked = False
+        post_selection_validation_passed = None
         author_compat_fallback = "none"
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1])
@@ -735,6 +773,7 @@ def dfexp(
                 method_stats["n_instances_with_flip_cf"] += 1
 
             # print("[DBG][UFCE2] returned best rows:", len(cc2), "explore rows:", len(cfsexp2))
+            selected = pd.DataFrame()
             if cc2.empty != True:
                 if len(cc2) > 1:
                     best_row = find_best_row(
@@ -743,16 +782,9 @@ def dfexp(
                         numf,
                         distance_scaler=distance_scaler,
                     )
-                    cf = best_row.to_frame().T
-                    instance_selected = _trace_frame(cf, order)
-                    foundidx.append(t)
-                    twoF_cfdf = pd.concat([twoF_cfdf, cf], ignore_index=True, axis=0)
-                    if 'proximity' in twoF_cfdf.columns:
-                        twoF_cfdf = twoF_cfdf.drop(['proximity'], axis=1)
+                    selected = best_row.to_frame().T
                 else:
-                    instance_selected = _trace_frame(cc2[:1], order)
-                    foundidx.append(t)
-                    twoF_cfdf = pd.concat([twoF_cfdf, cc2[:1]], ignore_index=True, axis=0)
+                    selected = cc2[:1]
             else:
                 if selected_rows.empty != True:
                     if len(selected_rows) > 1:
@@ -763,13 +795,18 @@ def dfexp(
                             distance_scaler=distance_scaler,
                         )
                         selected = best_row.to_frame().T
-                        if 'proximity' in selected.columns:
-                            selected = selected.drop(['proximity'], axis=1)
                     else:
                         selected = selected_rows[:1]
-                    instance_selected = _trace_frame(selected, order)
-                    foundidx.append(t)
-                    twoF_cfdf = pd.concat([twoF_cfdf, selected], ignore_index=True, axis=0)
+
+            selected, post_selection_validation_checked, post_selection_validation_passed = (
+                _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+            )
+            if not selected.empty:
+                if 'proximity' in selected.columns:
+                    selected = selected.drop(['proximity'], axis=1)
+                instance_selected = _trace_frame(selected, order)
+                foundidx.append(t)
+                twoF_cfdf = pd.concat([twoF_cfdf, selected], ignore_index=True, axis=0)
         if return_trace:
             trace_rows.append(
                 {
@@ -791,6 +828,8 @@ def dfexp(
                     "source_path": "double_feature",
                     "raw_primary_count": int(raw_primary),
                     "raw_explore_count": int(raw_explore),
+                    "post_selection_validation_checked": bool(post_selection_validation_checked),
+                    "post_selection_validation_passed": post_selection_validation_passed,
                     **_trace_selection_fields(author_compat_fallback=author_compat_fallback),
                 }
             )
@@ -863,6 +902,8 @@ def tfexp(
         instance_selected = pd.DataFrame(columns=list(order))
         raw_primary = 0
         raw_explore = 0
+        post_selection_validation_checked = False
+        post_selection_validation_passed = None
         author_compat_fallback = "none"
         if nn.empty != True:
             intervals = ufc.make_uf_nn_interval(nn, uf, F[:], X_test[t:t+1])
@@ -889,6 +930,7 @@ def tfexp(
                 method_stats["n_instances_with_flip_cf"] += 1
 
             # print("[DBG][UFCE3] returned best rows:", len(cc3), "explore rows:", len(cfsexp2))
+            selected = pd.DataFrame()
             if cc3.empty != True:
                 if len(cc3) > 1:
                     best_row = find_best_row(
@@ -897,16 +939,9 @@ def tfexp(
                         numf,
                         distance_scaler=distance_scaler,
                     )
-                    cf = best_row.to_frame().T
-                    instance_selected = _trace_frame(cf, order)
-                    foundidx.append(t)
-                    threeF_cfdf = pd.concat([threeF_cfdf, cf], ignore_index=True, axis=0)
-                    if 'proximity' in threeF_cfdf.columns:
-                        threeF_cfdf = threeF_cfdf.drop(['proximity'], axis=1)
+                    selected = best_row.to_frame().T
                 else:
-                    instance_selected = _trace_frame(cc3[:1], order)
-                    foundidx.append(t)
-                    threeF_cfdf = pd.concat([threeF_cfdf, cc3[:1]], ignore_index=True, axis=0)
+                    selected = cc3[:1]
             else:
                 if selected_rows.empty != True:
                     if len(selected_rows) > 1:
@@ -917,13 +952,18 @@ def tfexp(
                             distance_scaler=distance_scaler,
                         )
                         selected = best_row.to_frame().T
-                        if 'proximity' in selected.columns:
-                            selected = selected.drop(['proximity'], axis=1)
                     else:
                         selected = selected_rows[:1]
-                    instance_selected = _trace_frame(selected, order)
-                    foundidx.append(t)
-                    threeF_cfdf = pd.concat([threeF_cfdf, selected], ignore_index=True, axis=0)
+
+            selected, post_selection_validation_checked, post_selection_validation_passed = (
+                _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+            )
+            if not selected.empty:
+                if 'proximity' in selected.columns:
+                    selected = selected.drop(['proximity'], axis=1)
+                instance_selected = _trace_frame(selected, order)
+                foundidx.append(t)
+                threeF_cfdf = pd.concat([threeF_cfdf, selected], ignore_index=True, axis=0)
         if return_trace:
             trace_rows.append(
                 {
@@ -945,6 +985,8 @@ def tfexp(
                     "source_path": "triple_feature",
                     "raw_primary_count": int(raw_primary),
                     "raw_explore_count": int(raw_explore),
+                    "post_selection_validation_checked": bool(post_selection_validation_checked),
+                    "post_selection_validation_passed": post_selection_validation_passed,
                     **_trace_selection_fields(author_compat_fallback=author_compat_fallback),
                 }
             )
