@@ -8,6 +8,7 @@ REFINEMENT_STATUS_APPLIED = "applied"
 REFINEMENT_STATUS_CLARIFICATION_REQUIRED = "clarification_required"
 REFINEMENT_STATUS_UNSUPPORTED_FEEDBACK = "unsupported_feedback"
 REFINEMENT_STATUS_LIMIT_REACHED = "limit_reached"
+REFINEMENT_STATUS_PENDING_CONFIRMATION = "pending_confirmation"
 REFINEMENT_PARSER_TASK = "extract_constraint_feedback"
 
 
@@ -49,4 +50,3 @@ class PendingRefinementClarification:
             "parent_terminal_turn_id": self.parent_terminal_turn_id,
             "parent_refinement_revision_index": self.parent_refinement_revision_index,
         }
-

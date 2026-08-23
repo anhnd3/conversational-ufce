@@ -366,6 +366,7 @@ def build_in_process_service(
             app_version=app_version,
             parser_schema_version=DEFAULT_SCHEMA_PATH.stem,
             bank_policy_version=BANK_POLICY_VERSION,
+            confirmation_required=False,
         )
         repository = SessionRepository(config.sqlite_path, app_version=config.app_version)
         orchestrator = BankConversationOrchestrator(

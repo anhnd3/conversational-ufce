@@ -56,6 +56,8 @@ class SessionSummary(ProductBaseModel):
     refinement_rounds_used: int
     refinement_round_limit: int
     has_pending_refinement_clarification: bool
+    has_pending_confirmation: bool = False
+    pending_confirmation: Optional[Dict[str, Any]] = None
     refinement_allowed: bool
     latest_runtime_backed_turn_id: Optional[str]
 
