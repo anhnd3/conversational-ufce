@@ -50,6 +50,7 @@ def handle_session_turn(
     dataset_id: str | None = None,
     constraint_spec: dict[str, Any] | None = None,
     policy_override: dict[str, Any] | None = None,
+    require_confirmation: bool = False,
 ):
     started = time.perf_counter()
     if state.is_case_complete:
@@ -74,6 +75,7 @@ def handle_session_turn(
         dataset_id=state.dataset_id,
         constraint_spec=constraint_spec,
         policy_override=policy_override,
+        require_confirmation=require_confirmation,
     )
     state.clarification_turns_used = result.clarification_turns_used
     state.is_case_complete = bool(result.is_case_complete)

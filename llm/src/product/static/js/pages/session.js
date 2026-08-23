@@ -43,6 +43,11 @@
     dom.composerHelp = document.getElementById("composer-help");
     dom.composerInput = document.getElementById("composer-input");
     dom.composerSubmit = document.getElementById("composer-submit");
+    dom.composerActions = dom.composerSubmit ? dom.composerSubmit.closest(".composer-actions") : null;
+    dom.confirmationPanel = document.getElementById("confirmation-panel");
+    dom.confirmationPreview = document.getElementById("confirmation-preview");
+    dom.confirmInterpretation = document.getElementById("confirm-interpretation");
+    dom.editInterpretation = document.getElementById("edit-interpretation");
     dom.newCaseButton = document.getElementById("new-case");
     dom.closeButton = document.getElementById("close-session");
     dom.stateRail = document.getElementById("state-rail");
@@ -200,7 +205,7 @@
   }
 
   function markerToneFromActionType(actionType) {
-    if (["provide_missing_fields", "clarify_refinement"].includes(actionType)) {
+    if (["provide_missing_fields", "clarify_refinement", "confirm_interpretation"].includes(actionType)) {
       return "info";
     }
     if (actionType === "no_action_required") {
@@ -225,6 +230,9 @@
     if (pageState === "refinement_clarification") {
       return "refinement clarification";
     }
+    if (pageState === "confirmation") {
+      return "awaiting confirmation";
+    }
     if (pageState === "restart_required") {
       return "restart required";
     }
@@ -238,7 +246,7 @@
     if (["RUNTIME_REJECT", "runtime_reject_view", "runtime_reject", "restart_required", "warning"].includes(state)) {
       return "warning";
     }
-    if (["NEEDS_CLARIFICATION", "needs_clarification_input", "refinement_clarification_view", "clarification", "refinement_clarification", "info"].includes(state)) {
+    if (["AWAITING_CONFIRMATION", "NEEDS_CLARIFICATION", "needs_clarification_input", "refinement_clarification_view", "clarification", "refinement_clarification", "confirmation", "info"].includes(state)) {
       return "info";
     }
     if (["CONFLICT", "UNSUPPORTED_REQUEST", "PARSER_FAILURE", "danger"].includes(state)) {
@@ -456,6 +464,9 @@
   }
 
   function resolvePageState(session, latestVisibleTurn, latestRuntimeSummary) {
+    if (session.has_pending_confirmation || (session.pending_confirmation && typeof session.pending_confirmation === "object")) {
+      return "confirmation";
+    }
     const sameCaseContinuationAllowed = Boolean(session.refinement_allowed);
     if (session.restart_required && !sameCaseContinuationAllowed) {
       return "restart_required";
@@ -496,6 +507,9 @@
   }
 
   function resolveComposerMode(session, pageState) {
+    if (pageState === "confirmation") {
+      return "confirmation";
+    }
     if (session.is_read_only || pageState === "restart_required") {
       return "disabled";
     }
@@ -512,6 +526,20 @@
       : null;
     if (serverComposerContext) {
       return serverComposerContext;
+    }
+    if (composerMode === "confirmation") {
+      return {
+        mode: "confirmation",
+        submit_target: null,
+        mode_chip_text: "Confirmation required",
+        title: "Review interpreted information",
+        help_text: "Confirm the preview or edit the original request before processing continues.",
+        placeholder: null,
+        button_label: null,
+        advanced_controls_relevant: false,
+        hidden: false,
+        disabled: true,
+      };
     }
     if (composerMode === "disabled") {
       return {
@@ -1485,11 +1513,52 @@
     }
   }
 
+  function renderConfirmationPanel() {
+    if (!dom.confirmationPanel || !dom.confirmationPreview) {
+      return;
+    }
+    const pending = currentSession().pending_confirmation;
+    const visible = currentPageData.pageState === "confirmation" && pending && typeof pending === "object";
+    dom.confirmationPanel.hidden = !visible;
+    if (!visible) {
+      dom.confirmationPreview.innerHTML = "";
+      return;
+    }
+    const profile = pending.proposed_profile && typeof pending.proposed_profile === "object"
+      ? pending.proposed_profile
+      : {};
+    const before = pending.active_constraint_spec_before && typeof pending.active_constraint_spec_before === "object"
+      ? pending.active_constraint_spec_before
+      : {};
+    const after = pending.proposed_constraint_spec && typeof pending.proposed_constraint_spec === "object"
+      ? pending.proposed_constraint_spec
+      : {};
+    const kindLabel = pending.kind === "refinement" ? "Proposed refinement" : "Interpreted request";
+    const profileRows = FIELD_ORDER
+      .filter((fieldName) => Object.prototype.hasOwnProperty.call(profile, fieldName))
+      .map((fieldName) => `<div class="confirmation-field"><strong>${escapeHtml(fieldName)}</strong><span>${escapeHtml(String(profile[fieldName]))}</span></div>`)
+      .join("");
+    const beforeBlock = pending.kind === "refinement"
+      ? `<div class="confirmation-block"><span class="section-label">Current constraints</span><pre>${renderJsonBlock(before)}</pre></div>`
+      : "";
+    dom.confirmationPreview.innerHTML = `
+      <div class="confirmation-heading">
+        <span class="pill pill-info">${escapeHtml(kindLabel)}</span>
+        <strong>Check that this matches what you meant</strong>
+        <p>${escapeHtml(String(pending.original_text || ""))}</p>
+      </div>
+      ${profileRows ? `<div class="confirmation-block"><span class="section-label">Profile</span><div class="confirmation-grid">${profileRows}</div></div>` : ""}
+      ${beforeBlock}
+      <div class="confirmation-block"><span class="section-label">Constraints after confirmation</span><pre>${renderJsonBlock(after)}</pre></div>
+    `;
+  }
+
   function applyComposerContext() {
     if (!dom.composerBar || !dom.composerInput || !dom.composerSubmit) {
       return;
     }
     const context = currentComposerContext();
+    const confirmationMode = currentPageData.pageState === "confirmation";
     dom.composerBar.dataset.composerMode = currentPageData.composerMode || context.mode || "";
     dom.composerBar.dataset.submitTarget = context.submit_target || "";
     dom.composerBar.hidden = Boolean(context.hidden);
@@ -1505,6 +1574,10 @@
       dom.composerHelp.textContent = context.help_text || "";
     }
     dom.composerInput.placeholder = context.placeholder || "";
+    dom.composerInput.hidden = confirmationMode;
+    if (dom.composerActions) {
+      dom.composerActions.hidden = confirmationMode;
+    }
     dom.composerInput.disabled = Boolean(context.disabled || isComposerBusy);
     dom.composerSubmit.disabled = Boolean(context.disabled || isComposerBusy);
     dom.composerSubmit.textContent = isComposerBusy
@@ -1538,6 +1611,7 @@
     renderTranscript();
     renderContextRail();
     bindElements();
+    renderConfirmationPanel();
     applyComposerContext();
     syncActiveTabUI();
     syncContextSectionLabels();
@@ -1799,6 +1873,52 @@
     await submitComposer(generated);
   }
 
+  async function resolvePendingConfirmation(action) {
+    clearError();
+    const pending = currentSession().pending_confirmation;
+    if (!pending || !pending.confirmation_id || isComposerBusy) {
+      return;
+    }
+    const originalText = String(pending.original_text || "");
+    const endpoint = `${apiPrefix}/sessions/${sessionId}/confirmations/${encodeURIComponent(pending.confirmation_id)}`;
+    isComposerBusy = true;
+    if (dom.confirmInterpretation) {
+      dom.confirmInterpretation.disabled = true;
+    }
+    if (dom.editInterpretation) {
+      dom.editInterpretation.disabled = true;
+    }
+    try {
+      const requestUrl = action === "confirm" ? `${endpoint}/confirm` : endpoint;
+      const { response, payload } = await UFCEClient.fetchJson(requestUrl, {
+        method: action === "confirm" ? "POST" : "DELETE",
+      });
+      if (!response.ok) {
+        showError(payload.detail || "The pending interpretation could not be resolved.");
+        return;
+      }
+      if (action === "confirm" && payload && payload.turn_id) {
+        currentPageData.turns = [
+          payload,
+          ...currentPageData.turns.filter((turn) => turn.turn_id !== payload.turn_id),
+        ];
+        currentPageData.latestTurn = payload;
+      }
+      await refreshFromSessionJson({ originatedFromUserAction: true });
+      if (action === "edit" && dom.composerInput) {
+        dom.composerInput.value = originalText;
+        dom.composerInput.focus();
+      }
+    } catch (error) {
+      showError(error instanceof Error ? error.message : "The pending interpretation could not be resolved.");
+    } finally {
+      isComposerBusy = false;
+      bindElements();
+      renderConfirmationPanel();
+      applyComposerContext();
+    }
+  }
+
   async function createSession() {
     clearError();
     const { response, payload } = await UFCEClient.fetchJson(`${apiPrefix}/sessions`, {
@@ -1874,6 +1994,14 @@
     }
     if (target.id === "apply-structured-refinement") {
       submitStructuredRefinement();
+      return;
+    }
+    if (target.id === "confirm-interpretation") {
+      resolvePendingConfirmation("confirm");
+      return;
+    }
+    if (target.id === "edit-interpretation") {
+      resolvePendingConfirmation("edit");
       return;
     }
     if (target.classList.contains("quick-binary")) {

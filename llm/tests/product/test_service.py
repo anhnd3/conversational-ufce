@@ -22,6 +22,7 @@ def build_config(tmp_path: Path) -> ProductConfig:
         app_version="phase3_2_test",
         parser_schema_version="parser_schema_v1",
         bank_policy_version="bank_policy_v1",
+        confirmation_required=False,
         host="127.0.0.1",
         port=8000,
     )

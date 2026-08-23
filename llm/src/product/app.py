@@ -12,6 +12,7 @@ from llm.src.conversation.canonical_session_state import split_constraint_bucket
 from llm.src.conversation.orchestrator import BankConversationOrchestrator
 from llm.src.conversation.parser_adapter import LiveLmStudioParserAdapter
 from llm.src.conversation.session import SessionCaseCompleteError
+from llm.src.conversation.types import ConversationStage
 from llm.src.product.config import ProductConfig
 from llm.src.product.persistence import SessionRepository
 from llm.src.product.schemas import (
@@ -41,6 +42,7 @@ from llm.src.product.schemas import (
 )
 from llm.src.product.service import (
     ProductSessionService,
+    PendingConfirmationError,
     RefinementLimitReachedError,
     RefinementNotAllowedError,
     SessionArchivedError,
@@ -63,6 +65,7 @@ PRIMARY_ACTION_PROVIDE_MISSING_FIELDS = "provide_missing_fields"
 PRIMARY_ACTION_NO_ACTION_REQUIRED = "no_action_required"
 PRIMARY_ACTION_RELAX_CONSTRAINTS_OR_RESTART = "relax_constraints_or_restart"
 PRIMARY_ACTION_CLARIFY_REFINEMENT = "clarify_refinement"
+PRIMARY_ACTION_CONFIRM_INTERPRETATION = "confirm_interpretation"
 PRIMARY_ACTION_START_NEW_CASE = "start_new_case"
 PRIMARY_ACTION_NONE = "none"
 RIGHT_RAIL_REVIEW = "review-card"
@@ -71,6 +74,7 @@ RIGHT_RAIL_ADVANCED_CONTROLS = "advanced-refinement-controls"
 RIGHT_RAIL_TECHNICAL = "technical-drawer"
 COMPOSER_MODE_MESSAGE = "message"
 COMPOSER_MODE_REFINEMENT = "refinement"
+COMPOSER_MODE_CONFIRMATION = "confirmation"
 COMPOSER_MODE_DISABLED = "disabled"
 SESSION_PAGE_STATE_LABELS = {
     "fresh": "fresh",
@@ -78,6 +82,7 @@ SESSION_PAGE_STATE_LABELS = {
     "runtime_success": "runtime success",
     "runtime_reject": "runtime reject",
     "refinement_clarification": "refinement clarification",
+    "confirmation": "awaiting confirmation",
     "restart_required": "restart required",
 }
 
@@ -200,6 +205,18 @@ def create_app(
                     restart_required=session.restart_required,
                 ).model_dump(),
             )
+        except PendingConfirmationError as exc:
+            session = app.state.service.get_session(session_id)
+            return JSONResponse(
+                status_code=409,
+                content=SessionBlockedResponse(
+                    error_code="pending_confirmation",
+                    detail=str(exc),
+                    current_public_state=session.current_public_state,
+                    case_completion_reason=session.case_completion_reason,
+                    restart_required=session.restart_required,
+                ).model_dump(),
+            )
         return serialize_turn_response(app.state.service.build_turn_response(turn))
 
     @app.post(
@@ -244,7 +261,55 @@ def create_app(
                     restart_required=True,
                 ).model_dump(),
             )
+        except PendingConfirmationError as exc:
+            session = app.state.service.get_session(session_id)
+            return JSONResponse(
+                status_code=409,
+                content=build_refinement_blocked_response(
+                    session,
+                    error_code="pending_confirmation",
+                    detail=str(exc),
+                    refinement_status="pending_confirmation",
+                ).model_dump(),
+            )
         return serialize_turn_response(app.state.service.build_turn_response(turn))
+
+    @app.post(
+        f"{api_prefix}/sessions/{{session_id}}/confirmations/{{confirmation_id}}/confirm",
+        response_model=TurnResponse,
+        responses={409: {"model": SessionBlockedResponse}},
+    )
+    async def confirm_interpretation(session_id: str, confirmation_id: str):
+        try:
+            turn = app.state.service.confirm_pending_confirmation(session_id, confirmation_id)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
+        except (PendingConfirmationError, SessionArchivedError) as exc:
+            session = app.state.service.get_session(session_id)
+            return JSONResponse(
+                status_code=409,
+                content=SessionBlockedResponse(
+                    error_code="pending_confirmation_unavailable",
+                    detail=str(exc),
+                    current_public_state=session.current_public_state,
+                    case_completion_reason=session.case_completion_reason,
+                    restart_required=session.restart_required,
+                ).model_dump(),
+            )
+        return serialize_turn_response(app.state.service.build_turn_response(turn))
+
+    @app.delete(
+        f"{api_prefix}/sessions/{{session_id}}/confirmations/{{confirmation_id}}",
+        response_model=SessionSummary,
+    )
+    async def cancel_interpretation(session_id: str, confirmation_id: str):
+        try:
+            session = app.state.service.cancel_pending_confirmation(session_id, confirmation_id)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
+        except (PendingConfirmationError, SessionArchivedError) as exc:
+            raise HTTPException(status_code=409, detail=str(exc))
+        return serialize_session_summary(session)
 
     @app.post(f"{api_prefix}/sessions/{{session_id}}/archive", response_model=SessionSummary)
     async def archive_session(session_id: str):
@@ -381,6 +446,8 @@ def serialize_session_summary(session) -> SessionSummary:
         refinement_rounds_used=session.refinement_rounds_used,
         refinement_round_limit=session.refinement_round_limit,
         has_pending_refinement_clarification=session.pending_refinement_clarification_json is not None,
+        has_pending_confirmation=session.pending_confirmation_json is not None,
+        pending_confirmation=_serialize_pending_confirmation(session.pending_confirmation_json),
         refinement_allowed=_serialize_refinement_allowed(session),
         latest_runtime_backed_turn_id=session.latest_runtime_backed_turn_id,
     )
@@ -458,6 +525,8 @@ def serialize_session_detail(
         refinement_rounds_used=session.refinement_rounds_used,
         refinement_round_limit=session.refinement_round_limit,
         has_pending_refinement_clarification=session.pending_refinement_clarification_json is not None,
+        has_pending_confirmation=session.pending_confirmation_json is not None,
+        pending_confirmation=_serialize_pending_confirmation(session.pending_confirmation_json),
         refinement_allowed=_serialize_refinement_allowed(session),
         latest_runtime_backed_turn_id=session.latest_runtime_backed_turn_id,
         turn_count=turn_count,
@@ -727,6 +796,12 @@ def _build_turn_render_hints(
     ):
         runtime_summary = _build_latest_runtime_summary(payload)
 
+    if payload.get("public_state") == ConversationStage.AWAITING_CONFIRMATION:
+        return _build_confirmation_render_hints(
+            assistant_text=assistant_text,
+            kind="refinement" if refinement_status == "pending_confirmation" else "message",
+        )
+
     if clarification_type == "clarification_limit_reached":
         return _build_restart_required_render_hints(
             case_completion_reason=_string_or_none(payload.get("case_completion_reason")),
@@ -782,7 +857,12 @@ def _build_session_render_hints(
     explanation_payload = None
     assistant_text = ""
     refinement_status = None
-    if isinstance(latest_turn_payload, dict):
+    latest_turn_is_cancelled_confirmation = bool(
+        isinstance(latest_turn_payload, dict)
+        and latest_turn_payload.get("public_state") == ConversationStage.AWAITING_CONFIRMATION
+        and getattr(session, "pending_confirmation_json", None) is None
+    )
+    if isinstance(latest_turn_payload, dict) and not latest_turn_is_cancelled_confirmation:
         clarification_payload = latest_turn_payload.get("clarification_payload")
         explanation_payload = latest_turn_payload.get("explanation_payload")
         assistant_text = str(latest_turn_payload.get("assistant_text") or "").strip()
@@ -800,6 +880,13 @@ def _build_session_render_hints(
             supporting_detail_facts=[],
             state_marker_label=None,
             right_rail_anchor=None,
+        )
+    elif page_state == "confirmation":
+        pending = getattr(session, "pending_confirmation", None)
+        pending_kind = pending.get("kind") if isinstance(pending, dict) else "message"
+        hints = _build_confirmation_render_hints(
+            assistant_text=assistant_text,
+            kind=str(pending_kind or "message"),
         )
     elif page_state == "restart_required":
         hints = _build_restart_required_render_hints(
@@ -959,6 +1046,40 @@ def _build_runtime_success_render_hints(explanation_fragments: dict[str, Any]) -
         supporting_detail_facts=list(explanation_fragments.get("expanded_fact_rows") or []),
         state_marker_label="Recommendation found",
         right_rail_anchor=RIGHT_RAIL_RESULT,
+    )
+
+
+def _serialize_pending_confirmation(value: Any) -> dict[str, Any] | None:
+    if not isinstance(value, dict):
+        return None
+    return {
+        "confirmation_id": value.get("confirmation_id"),
+        "kind": value.get("kind"),
+        "original_text": value.get("original_text"),
+        "proposed_profile": dict(value.get("proposed_profile") or {}),
+        "active_constraint_spec_before": dict(value.get("active_constraint_spec_before") or {}),
+        "proposed_constraint_spec": dict(value.get("proposed_constraint_spec") or {}),
+        "constraint_feedback_delta": (
+            None
+            if value.get("constraint_feedback_delta") is None
+            else dict(value.get("constraint_feedback_delta") or {})
+        ),
+    }
+
+
+def _build_confirmation_render_hints(*, assistant_text: str, kind: str) -> TurnRenderHints:
+    subject = "constraint changes" if kind == "refinement" else "profile and constraints"
+    return TurnRenderHints(
+        primary_chat_text=assistant_text or f"Review the interpreted {subject} before processing continues.",
+        primary_action_type=PRIMARY_ACTION_CONFIRM_INTERPRETATION,
+        primary_action_items=["Confirm", "Edit request"],
+        supporting_detail_title="Nothing has been processed yet",
+        supporting_detail_body=(
+            f"The interpreted {subject} are pending. UFCE-FF runs only after explicit confirmation."
+        ),
+        supporting_detail_facts=[],
+        state_marker_label="Awaiting confirmation",
+        right_rail_anchor=RIGHT_RAIL_REVIEW,
     )
 
 
@@ -1235,6 +1356,14 @@ def _resolve_page_state_from_sources(
     turn_count: int,
     ui_review: UiReviewPayload | None,
 ) -> str:
+    if bool(
+        getattr(
+            session,
+            "has_pending_confirmation",
+            getattr(session, "pending_confirmation_json", None) is not None,
+        )
+    ):
+        return "confirmation"
     same_case_continuation_allowed = bool(
         getattr(session, "refinement_allowed", _serialize_refinement_allowed(session))
     )
@@ -1262,7 +1391,11 @@ def _resolve_page_state_from_sources(
             return "runtime_reject"
     if latest_runtime_summary is not None:
         return "runtime_success" if latest_runtime_summary["kind"] == "success" else "runtime_reject"
-    if turn_count == 0:
+    if turn_count == 0 or (
+        session.current_public_state is None
+        and latest_runtime_summary is None
+        and not _has_pending_original_clarification_source(session, ui_review=ui_review)
+    ):
         return "fresh"
     if session.current_public_state == "RUNTIME_SUCCESS":
         return "runtime_success"
@@ -1274,6 +1407,8 @@ def _resolve_page_state_from_sources(
 
 
 def _resolve_composer_mode_from_page_state(session, *, page_state: str) -> str:
+    if page_state == "confirmation":
+        return COMPOSER_MODE_CONFIRMATION
     if session.lifecycle_status == "archived" or page_state == "restart_required":
         return COMPOSER_MODE_DISABLED
     if page_state in {"runtime_success", "runtime_reject", "refinement_clarification"}:
@@ -1423,6 +1558,12 @@ def _build_page_banner(
     page_state: str,
     latest_runtime_summary: dict[str, Any] | None,
 ) -> dict[str, str] | None:
+    if page_state == "confirmation":
+        return {
+            "tone": "info",
+            "headline": "Review before processing",
+            "copy": "UFCE-FF has not run. Confirm or edit the interpreted information below.",
+        }
     if page_state == "clarification":
         return {
             "tone": "info",
@@ -1473,6 +1614,19 @@ def _build_composer_context(
     refinement_allowed = bool(
         getattr(session, "refinement_allowed", _serialize_refinement_allowed(session))
     )
+    if composer_mode == COMPOSER_MODE_CONFIRMATION:
+        return ComposerContextPayload(
+            mode=COMPOSER_MODE_CONFIRMATION,
+            submit_target=None,
+            mode_chip_text="Confirmation required",
+            title="Review interpreted information",
+            help_text="Confirm the preview below or edit the request before processing continues.",
+            placeholder=None,
+            button_label=None,
+            advanced_controls_relevant=False,
+            hidden=False,
+            disabled=True,
+        )
     if composer_mode == COMPOSER_MODE_DISABLED:
         return ComposerContextPayload(
             mode=COMPOSER_MODE_DISABLED,
@@ -1978,7 +2132,12 @@ def _build_session_ui_review(session, *, latest_turn_payload: dict[str, Any] | N
     active_constraint_spec = session.active_constraint_spec_json
     last_updated_turn_id = session.latest_turn_id
 
-    if isinstance(latest_turn_payload, dict):
+    latest_turn_is_cancelled_confirmation = bool(
+        isinstance(latest_turn_payload, dict)
+        and latest_turn_payload.get("public_state") == ConversationStage.AWAITING_CONFIRMATION
+        and getattr(session, "pending_confirmation_json", None) is None
+    )
+    if isinstance(latest_turn_payload, dict) and not latest_turn_is_cancelled_confirmation:
         public_state = latest_turn_payload.get("public_state", public_state)
         turn_kind = latest_turn_payload.get("turn_kind", turn_kind)
         refinement_status = latest_turn_payload.get("refinement_status", refinement_status)
@@ -2464,6 +2623,10 @@ def _serialize_refinement_allowed(session) -> bool:
     if isinstance(existing, bool):
         return existing
     if session.lifecycle_status == "archived":
+        return False
+    if getattr(session, "pending_confirmation_json", None) is not None or getattr(
+        session, "has_pending_confirmation", False
+    ):
         return False
     if session.refinement_rounds_used >= session.refinement_round_limit:
         return False
