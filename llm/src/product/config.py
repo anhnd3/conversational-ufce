@@ -35,6 +35,7 @@ class ProductConfig:
     app_version: str
     parser_schema_version: str
     bank_policy_version: str
+    confirmation_required: bool = True
     host: str = "127.0.0.1"
     port: int = 8000
 
@@ -53,6 +54,8 @@ class ProductConfig:
             app_version=os.getenv("APP_VERSION", DEFAULT_APP_VERSION),
             parser_schema_version=DEFAULT_SCHEMA_PATH.stem,
             bank_policy_version=BANK_POLICY_VERSION,
+            confirmation_required=os.getenv("USER_CONFIRMATION_REQUIRED", "true").strip().lower()
+            not in {"0", "false", "no", "off"},
             host=os.getenv("HOST", "127.0.0.1"),
             port=int(os.getenv("PORT", "8000")),
         )

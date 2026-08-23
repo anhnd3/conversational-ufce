@@ -15,7 +15,7 @@ from llm.src.conversation.canonical_session_state import (
     build_canonical_session_state_for_turn_result,
     split_constraint_buckets,
 )
-from llm.src.conversation.types import PendingClarification
+from llm.src.conversation.types import ConversationStage, ParserAdapterResult, PendingClarification
 from llm.src.product.catalog import build_dataset_catalog
 from llm.src.product.config import ProductConfig, try_get_git_commit
 from llm.src.product.persistence import SessionRepository, StoredSession, StoredTurn
@@ -24,6 +24,7 @@ from llm.src.refinement.delta import build_active_constraint_spec
 from llm.src.refinement.types import (
     PendingRefinementClarification,
 )
+from llm.src.parser.parser_quality import finalize_parser_quality_metadata
 from llm.src.runtime.orchestrator import RuntimeOrchestrator
 from llm.src.runtime.state.session_state_builder import build_session_state_from_turn
 from llm.src.runtime.reason_codes import INVALID_COUNTERFACTUAL_BLOCKED
@@ -49,6 +50,10 @@ class RefinementNotAllowedError(RuntimeError):
 
 
 class RefinementLimitReachedError(RuntimeError):
+    pass
+
+
+class PendingConfirmationError(RuntimeError):
     pass
 
 
@@ -102,6 +107,10 @@ class ProductSessionService:
         stored_session = self.repository.get_session(session_id)
         if stored_session.lifecycle_status == "archived":
             raise SessionArchivedError(f"Session {session_id} is archived and read-only.")
+        if stored_session.pending_confirmation_json is not None:
+            raise PendingConfirmationError(
+                "Review, confirm, or cancel the pending interpretation before sending another message."
+            )
         if stored_session.is_case_complete:
             raise SessionCaseCompleteError(
                 "This case is complete. Start a new case before sending another message."
@@ -128,17 +137,33 @@ class ProductSessionService:
             dataset_id=stored_session.dataset_key,
             constraint_spec=constraint_spec,
             policy_override=policy_override or stored_session.active_policy_override_json,
+            require_confirmation=self.config.confirmation_required,
+        )
+        awaiting_confirmation = result.stage == ConversationStage.AWAITING_CONFIRMATION
+        pending_confirmation = (
+            _build_message_confirmation_payload(
+                result=result,
+                stored_session=stored_session,
+                constraint_spec=constraint_spec,
+                policy_override=policy_override or stored_session.active_policy_override_json,
+            )
+            if awaiting_confirmation
+            else None
         )
         public_state = _extract_public_state(result)
         debug_summary = build_debug_summary(result)
         debug_summary["user_response_payload"] = _normalize_user_response_payload(getattr(result, "user_response_payload", None))
-        updated_runtime_request = _extract_runtime_request_for_session_update(result, stored_session)
+        updated_runtime_request = (
+            stored_session.last_runtime_request_json
+            if awaiting_confirmation
+            else _extract_runtime_request_for_session_update(result, stored_session)
+        )
         active_constraint_spec_session = _extract_active_constraint_spec_for_session_update(
             updated_runtime_request,
             result,
             stored_session,
         )
-        if constraint_spec is not None:
+        if constraint_spec is not None and not awaiting_confirmation:
             active_constraint_spec_session = dict(constraint_spec)
         active_policy_override_session = _extract_active_policy_override_for_session_update(
             updated_runtime_request,
@@ -149,13 +174,25 @@ class ProductSessionService:
         if isinstance(updated_runtime_request, dict) and active_policy_override_session is not None:
             updated_runtime_request = dict(updated_runtime_request)
             updated_runtime_request["policy_override"] = dict(active_policy_override_session)
-        canonical_session_state = _build_canonical_session_state_for_turn(
-            result=result,
-            stored_session=stored_session,
-            runtime_request=updated_runtime_request,
-            active_constraint_spec=active_constraint_spec_session,
-            default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
-        )
+        if awaiting_confirmation:
+            active_constraint_spec_session = stored_session.active_constraint_spec_json
+            active_policy_override_session = stored_session.active_policy_override_json
+            canonical_session_state = {
+                "state": stored_session.canonical_session_state_json,
+                "source": stored_session.canonical_state_source,
+                "mirror_ok": stored_session.canonical_mirror_ok,
+            }
+        else:
+            canonical_session_state = _build_canonical_session_state_for_turn(
+                result=result,
+                stored_session=stored_session,
+                runtime_request=updated_runtime_request,
+                active_constraint_spec=active_constraint_spec_session,
+                default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
+            )
+        turn_constraint_spec = result.active_constraint_spec
+        if awaiting_confirmation and result.builder_result is not None:
+            turn_constraint_spec = result.builder_result.runtime_request.get("constraint_spec")
         stored_turn = self.repository.save_turn(
             session_id=session_id,
             turn_index=state.turn_index,
@@ -190,7 +227,7 @@ class ProductSessionService:
             refinement_revision_index=result.refinement_revision_index,
             parent_terminal_turn_id=result.parent_terminal_turn_id,
             parent_refinement_revision_index=result.parent_refinement_revision_index,
-            active_constraint_spec_json=result.active_constraint_spec,
+            active_constraint_spec_json=turn_constraint_spec,
             active_policy_override_json=active_policy_override_session,
             constraint_feedback_delta_json=result.constraint_feedback_delta,
             refinement_rounds_used=result.refinement_rounds_used or stored_session.refinement_rounds_used,
@@ -202,6 +239,7 @@ class ProductSessionService:
             refinement_rounds_used_session=stored_session.refinement_rounds_used,
             refinement_round_limit_session=stored_session.refinement_round_limit,
             pending_refinement_clarification_json=stored_session.pending_refinement_clarification_json,
+            pending_confirmation_json=pending_confirmation,
             latest_runtime_backed_turn_id=_extract_latest_runtime_backed_turn_id(result, stored_session),
             canonical_runtime_result_json=_extract_canonical_runtime_result(result),
             verification_artifacts_json=_extract_verification_artifacts(result),
@@ -215,6 +253,10 @@ class ProductSessionService:
         stored_session = self.repository.get_session(session_id)
         if stored_session.lifecycle_status == "archived":
             raise SessionArchivedError(f"Session {session_id} is archived and read-only.")
+        if stored_session.pending_confirmation_json is not None:
+            raise PendingConfirmationError(
+                "Review, confirm, or cancel the pending interpretation before sending another refinement."
+            )
         if stored_session.refinement_rounds_used >= stored_session.refinement_round_limit:
             raise RefinementLimitReachedError(
                 "The refinement round limit was reached. Start a new case to continue."
@@ -265,17 +307,36 @@ class ProductSessionService:
                 "carried_constraint_keys": [],
                 "clarification_turns_used": stored_session.clarification_turns_used,
             },
+            require_confirmation=self.config.confirmation_required,
+        )
+        awaiting_confirmation = result.refinement_status == "pending_confirmation"
+        pending_confirmation = (
+            _build_refinement_confirmation_payload(
+                result=result,
+                response_payload=payload,
+                stored_session=stored_session,
+                user_feedback=user_feedback,
+            )
+            if awaiting_confirmation
+            else None
         )
         public_state = payload["public_state"]
         debug_summary = build_debug_summary(result)
         debug_summary["user_response_payload"] = _normalize_user_response_payload(getattr(result, "user_response_payload", None))
-        canonical_session_state = _build_canonical_session_state_for_turn(
-            result=result,
-            stored_session=stored_session,
-            runtime_request=payload["last_runtime_request"] or stored_session.last_runtime_request_json,
-            active_constraint_spec=payload["active_constraint_spec"],
-            default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
-        )
+        if awaiting_confirmation:
+            canonical_session_state = {
+                "state": stored_session.canonical_session_state_json,
+                "source": stored_session.canonical_state_source,
+                "mirror_ok": stored_session.canonical_mirror_ok,
+            }
+        else:
+            canonical_session_state = _build_canonical_session_state_for_turn(
+                result=result,
+                stored_session=stored_session,
+                runtime_request=payload["last_runtime_request"] or stored_session.last_runtime_request_json,
+                active_constraint_spec=payload["active_constraint_spec"],
+                default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
+            )
         active_policy_override = _extract_policy_override_from_runtime_request(
             payload["last_runtime_request"] or stored_session.last_runtime_request_json,
             fallback=stored_session.active_policy_override_json,
@@ -317,14 +378,33 @@ class ProductSessionService:
             constraint_feedback_delta_json=result.constraint_feedback_delta,
             refinement_rounds_used=result.refinement_rounds_used or refinement_rounds_used,
             refinement_round_limit=result.refinement_round_limit,
-            active_constraint_spec_session_json=payload["active_constraint_spec"],
+            active_constraint_spec_session_json=(
+                stored_session.active_constraint_spec_json
+                if awaiting_confirmation
+                else payload["active_constraint_spec"]
+            ),
             active_policy_override_session_json=active_policy_override,
-            last_runtime_request_json=payload["last_runtime_request"] or stored_session.last_runtime_request_json,
-            refinement_revision_index_session=refinement_revision_index,
-            refinement_rounds_used_session=refinement_rounds_used,
+            last_runtime_request_json=(
+                stored_session.last_runtime_request_json
+                if awaiting_confirmation
+                else payload["last_runtime_request"] or stored_session.last_runtime_request_json
+            ),
+            refinement_revision_index_session=(
+                stored_session.refinement_revision_index if awaiting_confirmation else refinement_revision_index
+            ),
+            refinement_rounds_used_session=(
+                stored_session.refinement_rounds_used if awaiting_confirmation else refinement_rounds_used
+            ),
             refinement_round_limit_session=stored_session.refinement_round_limit,
-            pending_refinement_clarification_json=payload["pending_refinement_clarification"],
-            latest_runtime_backed_turn_id=payload["latest_runtime_backed_turn_id"],
+            pending_refinement_clarification_json=(
+                None if awaiting_confirmation else payload["pending_refinement_clarification"]
+            ),
+            pending_confirmation_json=pending_confirmation,
+            latest_runtime_backed_turn_id=(
+                stored_session.latest_runtime_backed_turn_id
+                if awaiting_confirmation
+                else payload["latest_runtime_backed_turn_id"]
+            ),
             canonical_runtime_result_json=_extract_canonical_runtime_result(result),
             verification_artifacts_json=_extract_verification_artifacts(result),
             canonical_session_state_json=canonical_session_state["state"],
@@ -332,6 +412,235 @@ class ProductSessionService:
             canonical_mirror_ok=canonical_session_state["mirror_ok"],
         )
         return stored_turn
+
+    def confirm_pending_confirmation(self, session_id: str, confirmation_id: str) -> StoredTurn:
+        stored_session = self.repository.get_session(session_id)
+        if stored_session.lifecycle_status == "archived":
+            raise SessionArchivedError(f"Session {session_id} is archived and read-only.")
+        pending = _require_pending_confirmation(stored_session, confirmation_id)
+        if pending["kind"] == "message":
+            return self._confirm_message(stored_session, pending)
+        if pending["kind"] == "refinement":
+            return self._confirm_refinement(stored_session, pending)
+        raise PendingConfirmationError("The pending confirmation type is unsupported.")
+
+    def cancel_pending_confirmation(self, session_id: str, confirmation_id: str) -> StoredSession:
+        stored_session = self.repository.get_session(session_id)
+        if stored_session.lifecycle_status == "archived":
+            raise SessionArchivedError(f"Session {session_id} is archived and read-only.")
+        _require_pending_confirmation(stored_session, confirmation_id)
+        return self.repository.cancel_pending_confirmation(session_id, confirmation_id)
+
+    def _confirm_message(self, stored_session: StoredSession, pending: dict[str, Any]) -> StoredTurn:
+        dataset_package = self.orchestrator._resolve_shell_dataset_package(stored_session.dataset_key)
+        benchmark = dataset_package.live_primary_benchmark()
+        parser_result = ParserAdapterResult(**dict(pending["parser_result"]))
+        repair_payload = pending.get("repair_result")
+        repair_result = None if repair_payload is None else ParserAdapterResult(**dict(repair_payload))
+        active_parser_result = repair_result or parser_result
+        normalized_output, parser_quality_metadata, field_provenance, schema_validation, canonical_validation = (
+            self.orchestrator.evaluate_parser_output(
+                user_input=pending["original_text"],
+                message_text=active_parser_result.message_text,
+                api_error=active_parser_result.api_error,
+                dataset_package=dataset_package,
+                benchmark=benchmark,
+            )
+        )
+        result = self.orchestrator.finalize_turn(
+            user_input=pending["original_text"],
+            parser_result=parser_result,
+            repair_result=repair_result,
+            normalized_parse=normalized_output.parsed_json,
+            parser_quality=finalize_parser_quality_metadata(
+                parser_quality_metadata,
+                canonical_pass_after_quality=bool(canonical_validation.ready_for_runtime),
+                repair_invoked=repair_result is not None,
+            ),
+            field_provenance=field_provenance,
+            schema_validation=schema_validation,
+            canonical_validation=canonical_validation,
+            dataset_package=dataset_package,
+            benchmark=benchmark,
+            save_artifacts=True,
+            scenario_slug=f"api_{stored_session.session_id}_confirmation_{stored_session.last_turn_index + 1}",
+            debug_trace_enabled=False,
+            command=f"POST /api/{self.config.api_version}/sessions/{stored_session.session_id}/confirmations",
+            session_trace={
+                "session_id": stored_session.session_id,
+                "dataset_id": stored_session.dataset_key,
+                "turn_index": stored_session.last_turn_index + 1,
+                "parent_turn_id": pending["source_turn_id"],
+                "merge_applied": False,
+                "carried_fields": [],
+                "carried_constraint_keys": [],
+                "clarification_turns_used": int(pending.get("clarification_turns_used") or 0),
+            },
+            pending_clarification=_deserialize_pending(pending.get("prior_pending_clarification_json")),
+            canonical_session_state=pending.get("prior_canonical_session_state_json"),
+            clarification_turns_used=int(pending.get("clarification_turns_used") or 0),
+            dataset_id=stored_session.dataset_key,
+            constraint_spec=pending.get("constraint_spec_override"),
+            policy_override=pending.get("policy_override"),
+            confirmed_runtime_request=pending["runtime_request"],
+        )
+        public_state = _extract_public_state(result)
+        debug_summary = build_debug_summary(result)
+        debug_summary["user_response_payload"] = _normalize_user_response_payload(
+            getattr(result, "user_response_payload", None)
+        )
+        runtime_request = dict(result.builder_result.runtime_request)
+        active_constraint_spec = runtime_request.get("constraint_spec") or {}
+        active_policy_override = _extract_policy_override_from_runtime_request(
+            runtime_request,
+            fallback=stored_session.active_policy_override_json,
+        )
+        canonical_session_state = _build_canonical_session_state_for_turn(
+            result=result,
+            stored_session=stored_session,
+            runtime_request=runtime_request,
+            active_constraint_spec=active_constraint_spec,
+            default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
+        )
+        return self.repository.save_turn(
+            session_id=stored_session.session_id,
+            turn_index=stored_session.last_turn_index + 1,
+            user_input="Confirmed: " + pending["original_text"],
+            assistant_text=result.response_text,
+            public_state=public_state,
+            builder_status=result.builder_result.builder_status,
+            transition_reason=None if result.negotiation_transition is None else result.negotiation_transition.transition_reason,
+            response_decision_json=None if result.response_decision is None else result.response_decision.to_dict(),
+            clarification_payload_json=None,
+            explanation_payload_json=None if result.explanation_payload is None else result.explanation_payload.to_dict(),
+            debug_summary_json=debug_summary,
+            artifact_dir=None if result.artifact_record is None else result.artifact_record.output_dir,
+            parent_turn_id=pending["source_turn_id"],
+            merge_applied=bool(result.builder_result.merge_applied),
+            pending_clarification_json=None,
+            turn_id=result.turn_id,
+            created_at=result.timestamp_utc,
+            clarification_turns_used=result.clarification_turns_used,
+            is_case_complete=result.is_case_complete,
+            case_completion_reason=result.case_completion_reason,
+            restart_required=result.restart_required,
+            timing_metrics_json=result.timing_metrics,
+            turn_kind="confirmation",
+            active_constraint_spec_json=active_constraint_spec,
+            active_policy_override_json=active_policy_override,
+            active_constraint_spec_session_json=active_constraint_spec,
+            active_policy_override_session_json=active_policy_override,
+            last_runtime_request_json=runtime_request,
+            pending_refinement_clarification_json=stored_session.pending_refinement_clarification_json,
+            pending_confirmation_json=None,
+            latest_runtime_backed_turn_id=_extract_latest_runtime_backed_turn_id(result, stored_session),
+            canonical_runtime_result_json=_extract_canonical_runtime_result(result),
+            verification_artifacts_json=_extract_verification_artifacts(result),
+            canonical_session_state_json=canonical_session_state["state"],
+            canonical_state_source=canonical_session_state["source"],
+            canonical_mirror_ok=canonical_session_state["mirror_ok"],
+        )
+
+    def _confirm_refinement(self, stored_session: StoredSession, pending: dict[str, Any]) -> StoredTurn:
+        result, payload = self.refinement_orchestrator.run_turn(
+            user_feedback=pending["original_text"],
+            dataset_id=stored_session.dataset_key,
+            active_constraint_spec=pending.get("active_constraint_spec_before") or {},
+            last_runtime_request=pending["last_runtime_request"],
+            parent_terminal_turn_id=pending["parent_terminal_turn_id"],
+            parent_refinement_revision_index=pending.get("parent_refinement_revision_index"),
+            refinement_revision_index=int(pending["refinement_revision_index"]),
+            refinement_rounds_used=int(pending["refinement_rounds_used"]),
+            refinement_round_limit=stored_session.refinement_round_limit,
+            parent_public_state=pending["prior_public_state"],
+            parent_case_completion_reason=pending.get("prior_case_completion_reason") or "runtime_reject",
+            pending_refinement_clarification=_deserialize_pending_refinement(
+                pending.get("prior_pending_refinement_clarification_json")
+            ),
+            save_artifacts=True,
+            scenario_slug=f"api_{stored_session.session_id}_refinement_confirmation_{pending['refinement_revision_index']}",
+            debug_trace_enabled=False,
+            command=f"POST /api/{self.config.api_version}/sessions/{stored_session.session_id}/confirmations",
+            session_trace={
+                "session_id": stored_session.session_id,
+                "dataset_id": stored_session.dataset_key,
+                "turn_index": stored_session.last_turn_index + 1,
+                "parent_turn_id": pending["source_turn_id"],
+                "merge_applied": False,
+                "carried_fields": [],
+                "carried_constraint_keys": [],
+                "clarification_turns_used": stored_session.clarification_turns_used,
+            },
+            prepared_confirmation={
+                "parser_result": pending["parser_result"],
+                "repair_result": pending.get("repair_result"),
+                "normalized_output": pending["normalized_output"],
+            },
+        )
+        debug_summary = build_debug_summary(result)
+        debug_summary["user_response_payload"] = _normalize_user_response_payload(
+            getattr(result, "user_response_payload", None)
+        )
+        runtime_request = payload["last_runtime_request"] or pending["last_runtime_request"]
+        active_policy_override = _extract_policy_override_from_runtime_request(
+            runtime_request,
+            fallback=stored_session.active_policy_override_json,
+        )
+        canonical_session_state = _build_canonical_session_state_for_turn(
+            result=result,
+            stored_session=stored_session,
+            runtime_request=runtime_request,
+            active_constraint_spec=payload["active_constraint_spec"],
+            default_backend_id=getattr(self.orchestrator.runtime_orchestrator, "counterfactual_backend_name", "ufce"),
+        )
+        return self.repository.save_turn(
+            session_id=stored_session.session_id,
+            turn_index=stored_session.last_turn_index + 1,
+            user_input="Confirmed refinement: " + pending["original_text"],
+            assistant_text=result.response_text,
+            public_state=payload["public_state"],
+            builder_status=None,
+            transition_reason=None,
+            response_decision_json=None if result.response_decision is None else result.response_decision.to_dict(),
+            clarification_payload_json=None,
+            explanation_payload_json=None if result.explanation_payload is None else result.explanation_payload.to_dict(),
+            debug_summary_json=debug_summary,
+            artifact_dir=None if result.artifact_record is None else result.artifact_record.output_dir,
+            parent_turn_id=pending["source_turn_id"],
+            merge_applied=True,
+            pending_clarification_json=stored_session.pending_clarification_json,
+            turn_id=result.turn_id,
+            created_at=result.timestamp_utc,
+            clarification_turns_used=stored_session.clarification_turns_used,
+            is_case_complete=result.is_case_complete,
+            case_completion_reason=result.case_completion_reason,
+            restart_required=result.restart_required,
+            timing_metrics_json=result.timing_metrics,
+            turn_kind="confirmation",
+            refinement_status=result.refinement_status,
+            refinement_revision_index=result.refinement_revision_index,
+            parent_terminal_turn_id=result.parent_terminal_turn_id,
+            parent_refinement_revision_index=result.parent_refinement_revision_index,
+            active_constraint_spec_json=result.active_constraint_spec,
+            active_policy_override_json=active_policy_override,
+            constraint_feedback_delta_json=result.constraint_feedback_delta,
+            refinement_rounds_used=int(pending["refinement_rounds_used"]),
+            refinement_round_limit=result.refinement_round_limit,
+            active_constraint_spec_session_json=payload["active_constraint_spec"],
+            active_policy_override_session_json=active_policy_override,
+            last_runtime_request_json=runtime_request,
+            refinement_revision_index_session=int(pending["refinement_revision_index"]),
+            refinement_rounds_used_session=int(pending["refinement_rounds_used"]),
+            refinement_round_limit_session=stored_session.refinement_round_limit,
+            pending_refinement_clarification_json=payload["pending_refinement_clarification"],
+            pending_confirmation_json=None,
+            latest_runtime_backed_turn_id=payload["latest_runtime_backed_turn_id"],
+            canonical_runtime_result_json=_extract_canonical_runtime_result(result),
+            verification_artifacts_json=_extract_verification_artifacts(result),
+            canonical_session_state_json=canonical_session_state["state"],
+            canonical_state_source=canonical_session_state["source"],
+            canonical_mirror_ok=canonical_session_state["mirror_ok"],
+        )
 
     def list_messages(self, session_id: str, *, order: str = MESSAGE_ORDER_DESC) -> list[StoredTurn]:
         self.repository.get_session(session_id)
@@ -789,6 +1098,99 @@ def _extract_verification_artifacts(result) -> dict[str, Any] | None:
         "backend_id": backend_id,
         "reason_code_version": reason_code_version,
     }
+
+
+def _build_confirmation_base(*, stored_session: StoredSession, confirmation_id: str, kind: str) -> dict[str, Any]:
+    return {
+        "confirmation_id": confirmation_id,
+        "kind": kind,
+        "source_turn_id": confirmation_id,
+        "prior_public_state": stored_session.current_public_state,
+        "prior_is_case_complete": stored_session.is_case_complete,
+        "prior_case_completion_reason": stored_session.case_completion_reason,
+        "prior_restart_required": stored_session.restart_required,
+        "prior_pending_clarification_json": stored_session.pending_clarification_json,
+        "prior_pending_refinement_clarification_json": stored_session.pending_refinement_clarification_json,
+        "prior_canonical_session_state_json": stored_session.canonical_session_state_json,
+    }
+
+
+def _build_message_confirmation_payload(
+    *,
+    result,
+    stored_session: StoredSession,
+    constraint_spec: dict[str, Any] | None,
+    policy_override: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if result.builder_result is None or not isinstance(result.builder_result.runtime_request, dict):
+        raise PendingConfirmationError("A confirmable runtime request was not produced.")
+    runtime_request = dict(result.builder_result.runtime_request)
+    runtime_request["profile"] = dict(result.builder_result.runtime_request["profile"])
+    if isinstance(result.builder_result.runtime_request.get("constraint_spec"), dict):
+        runtime_request["constraint_spec"] = dict(result.builder_result.runtime_request["constraint_spec"])
+    payload = _build_confirmation_base(
+        stored_session=stored_session,
+        confirmation_id=result.turn_id,
+        kind="message",
+    )
+    payload.update(
+        {
+            "original_text": result.user_input,
+            "runtime_request": runtime_request,
+            "proposed_profile": dict(runtime_request["profile"]),
+            "proposed_constraint_spec": dict(runtime_request.get("constraint_spec") or {}),
+            "active_constraint_spec_before": dict(stored_session.active_constraint_spec_json or {}),
+            "constraint_feedback_delta": None,
+            "parser_result": result.parser_result.to_dict(),
+            "repair_result": None if result.repair_result is None else result.repair_result.to_dict(),
+            "normalized_parse": result.normalized_parse,
+            "parser_quality": result.parser_quality_metadata,
+            "field_provenance": result.field_provenance,
+            "constraint_spec_override": constraint_spec,
+            "policy_override": policy_override,
+            "clarification_turns_used": result.clarification_turns_used,
+        }
+    )
+    return payload
+
+
+def _build_refinement_confirmation_payload(
+    *,
+    result,
+    response_payload: dict[str, Any],
+    stored_session: StoredSession,
+    user_feedback: str,
+) -> dict[str, Any]:
+    payload = _build_confirmation_base(
+        stored_session=stored_session,
+        confirmation_id=result.turn_id,
+        kind="refinement",
+    )
+    payload.update(
+        {
+            "original_text": user_feedback,
+            "proposed_profile": dict((stored_session.last_runtime_request_json or {}).get("profile") or {}),
+            "proposed_constraint_spec": dict(response_payload.get("proposed_active_constraint_spec") or {}),
+            "active_constraint_spec_before": dict(stored_session.active_constraint_spec_json or {}),
+            "constraint_feedback_delta": dict(result.constraint_feedback_delta or {}),
+            "parser_result": result.parser_result.to_dict(),
+            "repair_result": None if result.repair_result is None else result.repair_result.to_dict(),
+            "normalized_output": result.normalized_parse,
+            "last_runtime_request": dict(stored_session.last_runtime_request_json or {}),
+            "parent_terminal_turn_id": result.parent_terminal_turn_id,
+            "parent_refinement_revision_index": result.parent_refinement_revision_index,
+            "refinement_revision_index": result.refinement_revision_index,
+            "refinement_rounds_used": result.refinement_rounds_used,
+        }
+    )
+    return payload
+
+
+def _require_pending_confirmation(stored_session: StoredSession, confirmation_id: str) -> dict[str, Any]:
+    pending = stored_session.pending_confirmation_json
+    if not isinstance(pending, dict) or pending.get("confirmation_id") != confirmation_id:
+        raise PendingConfirmationError("The pending confirmation is missing, stale, or belongs to another request.")
+    return dict(pending)
 
 
 def _build_canonical_session_state_for_turn(

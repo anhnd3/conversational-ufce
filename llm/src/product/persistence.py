@@ -11,7 +11,7 @@ from llm.src.utils.hashing import make_run_id
 from llm.src.utils.time import local_now_iso
 
 
-DB_SCHEMA_VERSION = 7
+DB_SCHEMA_VERSION = 8
 SESSION_LIFECYCLE_ACTIVE = "active"
 SESSION_LIFECYCLE_ARCHIVED = "archived"
 _UNSET = object()
@@ -46,6 +46,7 @@ class StoredSession:
     canonical_state_source: str | None
     canonical_mirror_ok: bool
     active_policy_override_json: dict[str, Any] | None = None
+    pending_confirmation_json: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -138,6 +139,7 @@ class SessionRepository:
                     refinement_rounds_used INTEGER NOT NULL DEFAULT 0,
                     refinement_round_limit INTEGER NOT NULL DEFAULT 3,
                     pending_refinement_clarification_json TEXT,
+                    pending_confirmation_json TEXT,
                     latest_runtime_backed_turn_id TEXT,
                     canonical_session_state_json TEXT,
                     canonical_state_source TEXT,
@@ -251,11 +253,12 @@ class SessionRepository:
                     refinement_rounds_used,
                     refinement_round_limit,
                     pending_refinement_clarification_json,
+                    pending_confirmation_json,
                     latest_runtime_backed_turn_id,
                     canonical_session_state_json,
                     canonical_state_source,
                     canonical_mirror_ok
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     session_id,
@@ -280,6 +283,7 @@ class SessionRepository:
                     0,
                     0,
                     3,
+                    None,
                     None,
                     None,
                     None,
@@ -309,6 +313,40 @@ class SessionRepository:
         if row is None:
             raise KeyError(f"Unknown session_id: {session_id}")
         return self._row_to_session(row)
+
+    def cancel_pending_confirmation(self, session_id: str, confirmation_id: str) -> StoredSession:
+        session = self.get_session(session_id)
+        pending = session.pending_confirmation_json
+        if not isinstance(pending, dict) or pending.get("confirmation_id") != confirmation_id:
+            raise KeyError(f"Unknown pending confirmation: {confirmation_id}")
+        created_at = local_now_iso()
+        with self._connect() as connection:
+            connection.execute(
+                """
+                UPDATE sessions
+                SET updated_at = ?,
+                    current_public_state = ?,
+                    pending_clarification_json = ?,
+                    is_case_complete = ?,
+                    case_completion_reason = ?,
+                    restart_required = ?,
+                    pending_refinement_clarification_json = ?,
+                    pending_confirmation_json = NULL
+                WHERE session_id = ?
+                """,
+                (
+                    created_at,
+                    pending.get("prior_public_state"),
+                    _json_dump(pending.get("prior_pending_clarification_json")),
+                    1 if pending.get("prior_is_case_complete") else 0,
+                    pending.get("prior_case_completion_reason"),
+                    1 if pending.get("prior_restart_required") else 0,
+                    _json_dump(pending.get("prior_pending_refinement_clarification_json")),
+                    session_id,
+                ),
+            )
+            connection.commit()
+        return self.get_session(session_id)
 
     def save_turn(
         self,
@@ -352,6 +390,7 @@ class SessionRepository:
         refinement_rounds_used_session: Any = _UNSET,
         refinement_round_limit_session: Any = _UNSET,
         pending_refinement_clarification_json: Any = _UNSET,
+        pending_confirmation_json: Any = _UNSET,
         latest_runtime_backed_turn_id: Any = _UNSET,
         canonical_runtime_result_json: dict[str, Any] | None = None,
         verification_artifacts_json: dict[str, Any] | None = None,
@@ -374,6 +413,8 @@ class SessionRepository:
             last_runtime_request_json = current_session.last_runtime_request_json
         if pending_refinement_clarification_json is _UNSET:
             pending_refinement_clarification_json = current_session.pending_refinement_clarification_json
+        if pending_confirmation_json is _UNSET:
+            pending_confirmation_json = current_session.pending_confirmation_json
         if latest_runtime_backed_turn_id is _UNSET:
             latest_runtime_backed_turn_id = current_session.latest_runtime_backed_turn_id
         if canonical_session_state_json is _UNSET:
@@ -478,6 +519,7 @@ class SessionRepository:
                     refinement_rounds_used = ?,
                     refinement_round_limit = ?,
                     pending_refinement_clarification_json = ?,
+                    pending_confirmation_json = ?,
                     latest_runtime_backed_turn_id = ?,
                     canonical_session_state_json = ?,
                     canonical_state_source = ?,
@@ -501,6 +543,7 @@ class SessionRepository:
                     int(refinement_rounds_used_session or 0),
                     int(refinement_round_limit_session or 3),
                     _json_dump(pending_refinement_clarification_json),
+                    _json_dump(pending_confirmation_json),
                     latest_runtime_backed_turn_id,
                     _json_dump(canonical_session_state_json),
                     canonical_state_source,
@@ -540,7 +583,8 @@ class SessionRepository:
                         lifecycle_status = ?,
                         archived_at = ?,
                         pending_clarification_json = NULL,
-                        pending_refinement_clarification_json = NULL
+                        pending_refinement_clarification_json = NULL,
+                        pending_confirmation_json = NULL
                     WHERE session_id = ?
                     """,
                     (archived_at, SESSION_LIFECYCLE_ARCHIVED, archived_at, session_id),
@@ -585,6 +629,7 @@ class SessionRepository:
             refinement_rounds_used=int(row["refinement_rounds_used"] or 0),
             refinement_round_limit=int(row["refinement_round_limit"] or 3),
             pending_refinement_clarification_json=_json_load(row["pending_refinement_clarification_json"]),
+            pending_confirmation_json=_json_load(row["pending_confirmation_json"]),
             latest_runtime_backed_turn_id=row["latest_runtime_backed_turn_id"],
             canonical_session_state_json=_json_load(row["canonical_session_state_json"]),
             canonical_state_source=row["canonical_state_source"],
@@ -682,6 +727,8 @@ class SessionRepository:
             )
         if "pending_refinement_clarification_json" not in columns:
             connection.execute("ALTER TABLE sessions ADD COLUMN pending_refinement_clarification_json TEXT")
+        if "pending_confirmation_json" not in columns:
+            connection.execute("ALTER TABLE sessions ADD COLUMN pending_confirmation_json TEXT")
         if "latest_runtime_backed_turn_id" not in columns:
             connection.execute("ALTER TABLE sessions ADD COLUMN latest_runtime_backed_turn_id TEXT")
         if "canonical_session_state_json" not in columns:

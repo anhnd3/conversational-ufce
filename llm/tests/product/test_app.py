@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import replace
 from html import unescape
 import json
 from pathlib import Path
@@ -33,6 +34,7 @@ def build_config(tmp_path):
         app_version="phase3_2_test",
         parser_schema_version="parser_schema_v1",
         bank_policy_version="bank_policy_v1",
+        confirmation_required=False,
         host="127.0.0.1",
         port=8000,
     )
@@ -1410,6 +1412,266 @@ def test_app_refinement_apply_updates_active_constraints_and_parent_refs(sample_
     assert session_detail.json()["refinement_rounds_used"] == 1
     assert session_detail.json()["latest_runtime_backed_turn_id"] == payload["turn_id"]
     assert session_detail.json()["refinement_allowed"] is True
+
+
+def test_initial_input_waits_for_confirmation_and_confirm_does_not_reparse(sample_benchmark, tmp_path):
+    adapter = QueueParserAdapter(
+        parse_results=[
+            build_complete_message_result(
+                constraint_spec={"max_changed_features": 2},
+            )
+        ]
+    )
+    orchestrator = build_runtime_backed_orchestrator(
+        adapter=adapter,
+        sample_benchmark=sample_benchmark,
+        tmp_path=tmp_path,
+    )
+    config = replace(build_config(tmp_path), confirmation_required=True)
+    repository = SessionRepository(config.sqlite_path, app_version=config.app_version)
+    app = create_app(config=config, orchestrator=orchestrator, repository=repository)
+
+    session_id = api_request(app, "POST", "/api/v1/sessions").json()["session_id"]
+    preview_response = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": REFINEMENT_BASE_USER_INPUT},
+    )
+    detail_before_confirm = api_request(app, "GET", f"/api/v1/sessions/{session_id}")
+    blocked_message = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": "Try to bypass the pending confirmation."},
+    )
+
+    assert preview_response.status_code == 200
+    preview = preview_response.json()
+    assert preview["public_state"] == "AWAITING_CONFIRMATION"
+    assert preview["debug_summary"]["runtime_summary"]["executed"] is False
+    detail = detail_before_confirm.json()
+    assert detail["has_pending_confirmation"] is True
+    assert detail["pending_confirmation"]["kind"] == "message"
+    assert detail["pending_confirmation"]["proposed_profile"] == REFINEMENT_BASE_PROFILE
+    assert detail["pending_confirmation"]["proposed_constraint_spec"] == {"max_changed_features": 2}
+    assert detail["active_constraint_spec"] in (None, {})
+    assert detail["latest_runtime_backed_turn_id"] is None
+    assert blocked_message.status_code == 409
+    assert blocked_message.json()["error_code"] == "pending_confirmation"
+
+    confirmation_id = detail["pending_confirmation"]["confirmation_id"]
+    confirm_response = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/confirmations/{confirmation_id}/confirm",
+    )
+    detail_after_confirm = api_request(app, "GET", f"/api/v1/sessions/{session_id}")
+
+    assert confirm_response.status_code == 200
+    confirmed = confirm_response.json()
+    assert confirmed["public_state"] == "RUNTIME_SUCCESS"
+    assert confirmed["turn_kind"] == "confirmation"
+    assert confirmed["debug_summary"]["runtime_summary"]["executed"] is True
+    assert adapter.parse_results == []
+    confirmed_detail = detail_after_confirm.json()
+    assert confirmed_detail["has_pending_confirmation"] is False
+    assert confirmed_detail["active_constraint_spec"] == {"max_changed_features": 2}
+    assert confirmed_detail["latest_runtime_backed_turn_id"] == confirmed["turn_id"]
+
+
+def test_edit_pending_input_cancels_preview_without_applying_it(sample_benchmark, tmp_path):
+    adapter = QueueParserAdapter(parse_results=[build_complete_message_result()])
+    orchestrator = build_runtime_backed_orchestrator(
+        adapter=adapter,
+        sample_benchmark=sample_benchmark,
+        tmp_path=tmp_path,
+    )
+    config = replace(build_config(tmp_path), confirmation_required=True)
+    repository = SessionRepository(config.sqlite_path, app_version=config.app_version)
+    app = create_app(config=config, orchestrator=orchestrator, repository=repository)
+
+    session_id = api_request(app, "POST", "/api/v1/sessions").json()["session_id"]
+    api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": REFINEMENT_BASE_USER_INPUT},
+    )
+    pending_detail = api_request(app, "GET", f"/api/v1/sessions/{session_id}").json()
+    confirmation_id = pending_detail["pending_confirmation"]["confirmation_id"]
+
+    cancel_response = api_request(
+        app,
+        "DELETE",
+        f"/api/v1/sessions/{session_id}/confirmations/{confirmation_id}",
+    )
+    detail_after_cancel = api_request(app, "GET", f"/api/v1/sessions/{session_id}")
+
+    assert cancel_response.status_code == 200
+    assert cancel_response.json()["has_pending_confirmation"] is False
+    assert detail_after_cancel.status_code == 200
+    detail = detail_after_cancel.json()
+    assert detail["has_pending_confirmation"] is False
+    assert detail["current_public_state"] is None
+    assert detail["latest_runtime_backed_turn_id"] is None
+    assert detail["render_hints"]["page_state"] == "fresh"
+    assert all(field["value"] is None for field in detail["ui_review"]["profile_fields"])
+
+
+def test_completed_clarification_is_confirmed_as_the_merged_request(sample_benchmark, tmp_path):
+    adapter = QueueParserAdapter(
+        parse_results=[
+            StubResult(
+                message_text=(
+                    '{"task":"extract_cf_request","status":"partial","cf_request":'
+                    '{"Income":140,"Family":2,"CCAvg":7.7376709303,"Education":2,"Mortgage":32},'
+                    '"missing_fields":["SecuritiesAccount","CDAccount","Online","CreditCard"],'
+                    '"conflicts":[],"notes":[]}'
+                )
+            ),
+            StubResult(
+                message_text=(
+                    '{"task":"extract_cf_request","status":"partial","cf_request":'
+                    '{"SecuritiesAccount":1,"CDAccount":1,"Online":1,"CreditCard":0},'
+                    '"missing_fields":["Income","Family","CCAvg","Education","Mortgage"],'
+                    '"conflicts":[],"notes":[]}'
+                )
+            ),
+        ]
+    )
+    orchestrator = build_runtime_backed_orchestrator(
+        adapter=adapter,
+        sample_benchmark=sample_benchmark,
+        tmp_path=tmp_path,
+    )
+    config = replace(build_config(tmp_path), confirmation_required=True)
+    repository = SessionRepository(config.sqlite_path, app_version=config.app_version)
+    app = create_app(config=config, orchestrator=orchestrator, repository=repository)
+
+    session_id = api_request(app, "POST", "/api/v1/sessions").json()["session_id"]
+    clarification = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": "Income 140, Family 2, CCAvg 7.7376709303, Education 2, Mortgage 32."},
+    )
+    preview = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": "SecuritiesAccount 1, CDAccount 1, Online 1, CreditCard 0."},
+    )
+    assert preview.status_code == 200
+    assert preview.json()["public_state"] == "AWAITING_CONFIRMATION"
+    pending_detail = api_request(app, "GET", f"/api/v1/sessions/{session_id}").json()
+    confirmation_id = pending_detail["pending_confirmation"]["confirmation_id"]
+    confirmed = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/confirmations/{confirmation_id}/confirm",
+    )
+
+    assert clarification.status_code == 200
+    assert clarification.json()["public_state"] == "NEEDS_CLARIFICATION"
+    assert pending_detail["pending_confirmation"]["proposed_profile"] == {
+        "Income": 140,
+        "Family": 2,
+        "CCAvg": 7.7376709303,
+        "Education": 2,
+        "Mortgage": 32,
+        "SecuritiesAccount": 1,
+        "CDAccount": 1,
+        "Online": 1,
+        "CreditCard": 0,
+    }
+    assert confirmed.status_code == 200
+    assert confirmed.json()["public_state"] == "RUNTIME_SUCCESS"
+    assert confirmed.json()["debug_summary"]["runtime_summary"]["executed"] is True
+    assert adapter.parse_results == []
+
+
+def test_refinement_waits_for_confirmation_and_confirm_does_not_reparse(sample_benchmark, tmp_path):
+    adapter = QueueParserAdapter(
+        parse_results=[build_complete_message_result()],
+        refinement_results=[
+            build_refinement_result(
+                status="apply",
+                delta={"set_max_changed_features": 1},
+            )
+        ],
+    )
+    orchestrator = build_runtime_backed_orchestrator(
+        adapter=adapter,
+        sample_benchmark=sample_benchmark,
+        tmp_path=tmp_path,
+    )
+    config = replace(build_config(tmp_path), confirmation_required=True)
+    repository = SessionRepository(config.sqlite_path, app_version=config.app_version)
+    app = create_app(config=config, orchestrator=orchestrator, repository=repository)
+
+    session_id = api_request(app, "POST", "/api/v1/sessions").json()["session_id"]
+    initial_preview = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/messages",
+        json={"user_input": REFINEMENT_BASE_USER_INPUT},
+    ).json()
+    initial_confirmation_id = api_request(
+        app,
+        "GET",
+        f"/api/v1/sessions/{session_id}",
+    ).json()["pending_confirmation"]["confirmation_id"]
+    initial_confirm = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/confirmations/{initial_confirmation_id}/confirm",
+    )
+    refinement_preview_response = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/refinements",
+        json={"user_feedback": "Allow at most one feature change."},
+    )
+    detail_before_confirm = api_request(app, "GET", f"/api/v1/sessions/{session_id}")
+
+    assert initial_preview["public_state"] == "AWAITING_CONFIRMATION"
+    assert initial_confirm.status_code == 200
+    assert refinement_preview_response.status_code == 200
+    refinement_preview = refinement_preview_response.json()
+    assert refinement_preview["public_state"] == "AWAITING_CONFIRMATION"
+    assert refinement_preview["refinement_status"] == "pending_confirmation"
+    assert refinement_preview["debug_summary"]["runtime_summary"]["executed"] is False
+    detail = detail_before_confirm.json()
+    assert detail["has_pending_confirmation"] is True
+    assert detail["pending_confirmation"]["kind"] == "refinement"
+    assert detail["pending_confirmation"]["active_constraint_spec_before"] == {}
+    assert detail["pending_confirmation"]["proposed_constraint_spec"] == {"max_changed_features": 1}
+    assert detail["active_constraint_spec"] == {}
+    assert detail["refinement_revision_index"] == 0
+    assert detail["refinement_rounds_used"] == 0
+
+    confirmation_id = detail["pending_confirmation"]["confirmation_id"]
+    confirm_response = api_request(
+        app,
+        "POST",
+        f"/api/v1/sessions/{session_id}/confirmations/{confirmation_id}/confirm",
+    )
+    detail_after_confirm = api_request(app, "GET", f"/api/v1/sessions/{session_id}")
+
+    assert confirm_response.status_code == 200
+    confirmed = confirm_response.json()
+    assert confirmed["public_state"] == "RUNTIME_SUCCESS"
+    assert confirmed["turn_kind"] == "confirmation"
+    assert confirmed["refinement_status"] == "applied"
+    assert confirmed["debug_summary"]["runtime_summary"]["executed"] is True
+    assert adapter.refinement_results == []
+    confirmed_detail = detail_after_confirm.json()
+    assert confirmed_detail["has_pending_confirmation"] is False
+    assert confirmed_detail["active_constraint_spec"] == {"max_changed_features": 1}
+    assert confirmed_detail["refinement_revision_index"] == 1
+    assert confirmed_detail["refinement_rounds_used"] == 1
+    assert confirmed_detail["latest_runtime_backed_turn_id"] == confirmed["turn_id"]
 
 
 def test_app_refinement_clarification_followup_allows_multi_delta_resolution(sample_benchmark, tmp_path):

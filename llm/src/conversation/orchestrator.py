@@ -120,6 +120,8 @@ class BankConversationOrchestrator:
         dataset_id: str = "bank",
         constraint_spec: dict[str, Any] | None = None,
         policy_override: dict[str, Any] | None = None,
+        require_confirmation: bool = False,
+        confirmed_runtime_request: dict[str, Any] | None = None,
     ) -> ConversationTurnResult:
         started = time.perf_counter()
         prepared = self.prepare_turn(user_input=user_input, dataset_id=dataset_id)
@@ -146,6 +148,8 @@ class BankConversationOrchestrator:
             dataset_id=dataset_id,
             constraint_spec=constraint_spec,
             policy_override=policy_override,
+            require_confirmation=require_confirmation,
+            confirmed_runtime_request=confirmed_runtime_request,
         )
         timing_metrics = dict(result.timing_metrics or {})
         timing_metrics["end_to_end_latency_ms"] = round((time.perf_counter() - started) * 1000.0, 3)
@@ -268,6 +272,8 @@ class BankConversationOrchestrator:
         dataset_id: str = "bank",
         constraint_spec: dict[str, Any] | None = None,
         policy_override: dict[str, Any] | None = None,
+        require_confirmation: bool = False,
+        confirmed_runtime_request: dict[str, Any] | None = None,
     ) -> ConversationTurnResult:
         turn_id = make_run_id()
         timestamp_utc = utc_now_iso()
@@ -326,18 +332,26 @@ class BankConversationOrchestrator:
                 merge_applied=builder_result.merge_applied,
                 bounded_suggestion_available=False,
             )
-            runtime_payload = builder_result.runtime_request
-            if constraint_spec is not None:
-                runtime_payload = dict(runtime_payload)
-                runtime_payload["constraint_spec"] = dict(constraint_spec)
-            if policy_override is not None:
-                runtime_payload = dict(runtime_payload)
-                runtime_payload["policy_override"] = dict(policy_override)
-            runtime_payload = apply_constraint_policy_override_to_runtime_request(
-                runtime_payload,
-                base_policy=dataset_package.runtime_context().policy,
-                feature_order=list(builder_result.canonical_field_order),
-            )
+            if confirmed_runtime_request is not None:
+                runtime_payload = dict(confirmed_runtime_request)
+                runtime_payload["profile"] = dict(confirmed_runtime_request["profile"])
+                if isinstance(confirmed_runtime_request.get("constraint_spec"), dict):
+                    runtime_payload["constraint_spec"] = dict(confirmed_runtime_request["constraint_spec"])
+                if isinstance(confirmed_runtime_request.get("policy_override"), dict):
+                    runtime_payload["policy_override"] = dict(confirmed_runtime_request["policy_override"])
+            else:
+                runtime_payload = builder_result.runtime_request
+                if constraint_spec is not None:
+                    runtime_payload = dict(runtime_payload)
+                    runtime_payload["constraint_spec"] = dict(constraint_spec)
+                if policy_override is not None:
+                    runtime_payload = dict(runtime_payload)
+                    runtime_payload["policy_override"] = dict(policy_override)
+                runtime_payload = apply_constraint_policy_override_to_runtime_request(
+                    runtime_payload,
+                    base_policy=dataset_package.runtime_context().policy,
+                    feature_order=list(builder_result.canonical_field_order),
+                )
             builder_provenance = dict(builder_result.provenance)
             if isinstance(runtime_payload.get("policy_override"), dict):
                 builder_provenance["policy_override_derivation_version"] = POLICY_OVERRIDE_DERIVATION_VERSION
@@ -346,6 +360,71 @@ class BankConversationOrchestrator:
                 runtime_request=runtime_payload,
                 provenance=builder_provenance,
             )
+            if require_confirmation:
+                final_stage = ConversationStage.AWAITING_CONFIRMATION
+                stage_trace = [ConversationStage.READY_FOR_RUNTIME, final_stage]
+                response_text = (
+                    "Please review the interpreted profile and constraints. "
+                    "Nothing has been sent to the counterfactual runtime yet."
+                )
+                response_decision = ResponseDecision(
+                    final_public_state=final_stage,
+                    template_type="request_confirmation",
+                    included_suggestion_types=[],
+                )
+                turn_result = ConversationTurnResult(
+                    turn_id=turn_id,
+                    timestamp_utc=timestamp_utc,
+                    model_alias=self.model_alias,
+                    user_input=user_input,
+                    stage=final_stage,
+                    stage_trace=stage_trace,
+                    parser_result=parser_result,
+                    repair_result=repair_result,
+                    normalized_parse=effective_normalized_parse,
+                    schema_validation=effective_schema_validation,
+                    canonical_validation=effective_canonical_validation,
+                    builder_result=builder_result,
+                    negotiation_transition=None,
+                    response_decision=response_decision,
+                    runtime_result=None,
+                    runtime_debug_trace=None,
+                    invariant_validation=None,
+                    field_provenance=effective_field_provenance,
+                    parser_quality_metadata=effective_parser_quality,
+                    clarification_payload=None,
+                    explanation_payload=None,
+                    response_text=response_text,
+                    user_response_payload=None,
+                    parser_failure_cause=None,
+                    is_case_complete=False,
+                    case_completion_reason=None,
+                    restart_required=False,
+                    clarification_turns_used=clarification_turns_used_result,
+                    timing_metrics=timing_metrics,
+                )
+                if save_artifacts:
+                    snapshot = self.build_config_snapshot(
+                        command=command or shell_command_from_argv(),
+                        debug_trace_enabled=debug_trace_enabled,
+                        dataset_package=dataset_package,
+                        benchmark=benchmark,
+                    )
+                    resolved_session_trace = merge_session_trace(
+                        base_session_trace=session_trace,
+                        builder_result=builder_result,
+                        pending_clarification=pending_clarification,
+                    )
+                    save_conversation_artifacts(
+                        turn_result,
+                        output_root=self.output_root,
+                        scenario_slug=scenario_slug,
+                        command=command or shell_command_from_argv(),
+                        config_snapshot=snapshot,
+                        debug_trace_enabled=debug_trace_enabled,
+                        session_trace=resolved_session_trace,
+                    )
+                return turn_result
             runtime_started = time.perf_counter()
             runtime_obj = self.runtime_orchestrator.handle(
                 runtime_payload,

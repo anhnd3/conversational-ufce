@@ -32,6 +32,7 @@ from llm.src.refinement.types import (
     PendingRefinementClarification,
     REFINEMENT_STATUS_APPLIED,
     REFINEMENT_STATUS_CLARIFICATION_REQUIRED,
+    REFINEMENT_STATUS_PENDING_CONFIRMATION,
     REFINEMENT_STATUS_UNSUPPORTED_FEEDBACK,
 )
 from llm.src.refinement.validation import validate_refinement_prediction
@@ -82,6 +83,8 @@ class ConstraintRefinementOrchestrator:
         scenario_slug: str | None = None,
         debug_trace_enabled: bool = False,
         command: str | None = None,
+        require_confirmation: bool = False,
+        prepared_confirmation: dict[str, Any] | None = None,
     ) -> tuple[ConversationTurnResult, dict[str, Any]]:
         started = time.perf_counter()
         turn_id = make_run_id()
@@ -90,15 +93,25 @@ class ConstraintRefinementOrchestrator:
         feature_order = list(dataset_package.profile_schema()["field_order"])
         numeric_bound_fields = dataset_package.numeric_bound_fields()
         benchmark = dataset_package.live_primary_benchmark()
-        parse_payload, repair_result, validation = self._prepare_refinement(
-            user_feedback=user_feedback,
-            active_constraint_spec=active_constraint_spec,
-            pending_refinement_clarification=pending_refinement_clarification,
-            dataset_package=dataset_package,
-            benchmark=benchmark,
-            feature_order=feature_order,
-            numeric_bound_fields=numeric_bound_fields,
-        )
+        if prepared_confirmation is None:
+            parse_payload, repair_result, validation = self._prepare_refinement(
+                user_feedback=user_feedback,
+                active_constraint_spec=active_constraint_spec,
+                pending_refinement_clarification=pending_refinement_clarification,
+                dataset_package=dataset_package,
+                benchmark=benchmark,
+                feature_order=feature_order,
+                numeric_bound_fields=numeric_bound_fields,
+            )
+        else:
+            parse_payload = ParserAdapterResult(**dict(prepared_confirmation["parser_result"]))
+            repair_payload = prepared_confirmation.get("repair_result")
+            repair_result = None if repair_payload is None else ParserAdapterResult(**dict(repair_payload))
+            validation = validate_refinement_prediction(
+                prepared_confirmation.get("normalized_output"),
+                feature_order=feature_order,
+                numeric_bound_fields=numeric_bound_fields,
+            )
 
         normalized_output = validation.normalized_output
         normalized_delta = validation.normalized_delta or {}
@@ -201,13 +214,98 @@ class ConstraintRefinementOrchestrator:
             )
             stage_trace = [stage]
         else:
-            refinement_status = REFINEMENT_STATUS_APPLIED
             active_after = apply_refinement_delta_to_active_constraint_spec(
                 active_before,
                 normalized_delta,
                 feature_order=feature_order,
                 numeric_bound_fields=numeric_bound_fields,
             )
+            if require_confirmation:
+                refinement_status = REFINEMENT_STATUS_PENDING_CONFIRMATION
+                stage = ConversationStage.AWAITING_CONFIRMATION
+                public_state = ConversationStage.AWAITING_CONFIRMATION
+                is_case_complete = False
+                case_completion_reason = None
+                restart_required = False
+                assistant_text = (
+                    "Please review the proposed constraint changes. "
+                    "Nothing has been applied and the counterfactual runtime has not been called."
+                )
+                response_decision = ResponseDecision(
+                    final_public_state=public_state,
+                    template_type="refinement_confirmation",
+                    included_suggestion_types=[],
+                )
+                stage_trace = [stage]
+                timing_metrics = {
+                    "end_to_end_latency_ms": round((time.perf_counter() - started) * 1000.0, 3),
+                }
+                result = ConversationTurnResult(
+                    turn_id=turn_id,
+                    timestamp_utc=timestamp_utc,
+                    model_alias=self.model_alias,
+                    user_input=user_feedback,
+                    stage=stage,
+                    stage_trace=stage_trace,
+                    parser_result=parse_payload,
+                    repair_result=repair_result,
+                    normalized_parse=normalized_output,
+                    schema_validation=validation.to_dict(),
+                    canonical_validation={},
+                    builder_result=None,
+                    negotiation_transition=None,
+                    response_decision=response_decision,
+                    runtime_result=None,
+                    runtime_debug_trace=None,
+                    invariant_validation=None,
+                    field_provenance=None,
+                    clarification_payload=None,
+                    explanation_payload=None,
+                    response_text=assistant_text,
+                    user_response_payload=None,
+                    parser_failure_cause=None,
+                    is_case_complete=False,
+                    case_completion_reason=None,
+                    restart_required=False,
+                    clarification_turns_used=0,
+                    timing_metrics=timing_metrics,
+                    turn_kind="refinement",
+                    refinement_status=refinement_status,
+                    refinement_revision_index=refinement_revision_index,
+                    parent_terminal_turn_id=parent_terminal_turn_id,
+                    parent_refinement_revision_index=parent_refinement_revision_index,
+                    active_constraint_spec=active_before,
+                    active_constraint_spec_before=active_before,
+                    constraint_feedback_delta=normalized_delta,
+                    refinement_rounds_used=refinement_rounds_used,
+                    refinement_round_limit=refinement_round_limit,
+                )
+                if save_artifacts:
+                    config_snapshot = self._build_config_snapshot(
+                        parser_result=parse_payload,
+                        repair_result=repair_result,
+                        timing_metrics=timing_metrics,
+                        dataset_package=dataset_package,
+                    )
+                    result.artifact_record = save_conversation_artifacts(
+                        result,
+                        output_root=self.output_root,
+                        scenario_slug=scenario_slug,
+                        command=command or "refinement",
+                        config_snapshot=config_snapshot,
+                        debug_trace_enabled=debug_trace_enabled,
+                        session_trace=session_trace,
+                    )
+                return result, {
+                    "public_state": public_state,
+                    "pending_refinement_clarification": None,
+                    "active_constraint_spec": active_before,
+                    "proposed_active_constraint_spec": active_after,
+                    "last_runtime_request": dict(last_runtime_request),
+                    "latest_runtime_backed_turn_id": parent_terminal_turn_id,
+                }
+
+            refinement_status = REFINEMENT_STATUS_APPLIED
             runtime_payload = dict(last_runtime_request)
             runtime_payload["profile"] = dict(last_runtime_request["profile"])
             if active_after:

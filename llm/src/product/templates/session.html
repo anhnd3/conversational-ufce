@@ -72,6 +72,13 @@
             {% endif %}
             <p id="composer-help" class="composer-help">{{ composer_context.help_text }}</p>
           </div>
+          <div id="confirmation-panel" class="confirmation-panel" hidden>
+            <div id="confirmation-preview" class="confirmation-preview"></div>
+            <div class="confirmation-actions">
+              <button id="confirm-interpretation" class="button" type="button">Confirm and Continue</button>
+              <button id="edit-interpretation" class="button button-ghost" type="button">Edit Request</button>
+            </div>
+          </div>
           <label class="sr-only" for="composer-input">Message</label>
           <textarea
             id="composer-input"

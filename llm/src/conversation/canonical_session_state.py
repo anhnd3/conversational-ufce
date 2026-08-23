@@ -124,7 +124,10 @@ def build_canonical_session_state_for_turn_result(
     builder_status = None if builder_result is None else builder_result.builder_status
     builder_provenance = {} if builder_result is None else dict(builder_result.provenance or {})
     reset_decision = str(builder_provenance.get("reset_decision") or "none")
-    should_mutate = builder_status in USABLE_CANONICAL_STAGES
+    should_mutate = (
+        builder_status in USABLE_CANONICAL_STAGES
+        and getattr(result, "stage", None) != ConversationStage.AWAITING_CONFIRMATION
+    )
 
     if reset_decision == RESET_DECISION_FRESH_REQUEST:
         state.profile_facts = {}
