@@ -1,0 +1,617 @@
+{
+  "configuration": {
+    "actionable_features": [
+      "Curricular units 1st sem (evaluations)",
+      "Curricular units 1st sem (approved)",
+      "Curricular units 1st sem (grade)",
+      "Curricular units 1st sem (without evaluations)",
+      "Curricular units 2nd sem (evaluations)",
+      "Curricular units 2nd sem (approved)",
+      "Curricular units 2nd sem (grade)",
+      "Curricular units 2nd sem (without evaluations)"
+    ],
+    "dataset": {
+      "dataset_id": 697,
+      "n_features": 36,
+      "n_rows": 4424,
+      "source_path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/native_multiclass_eval/uci_students_697.zip",
+      "source_sha256": "e90e55fd65ec462ae283ebeb2cca409319e3460ed898d8754f62fb35cc83a65d",
+      "target_counts": {
+        "Dropout": 1421,
+        "Enrolled": 794,
+        "Graduate": 2209
+      }
+    },
+    "dice_sample_size": 1000,
+    "max_candidates": 5,
+    "methods": [
+      "UFCE-FF1",
+      "UFCE-FF2",
+      "UFCE-FF3",
+      "DiCE"
+    ],
+    "mi_pairs": [
+      [
+        "Curricular units 2nd sem (approved)",
+        "Curricular units 2nd sem (grade)"
+      ],
+      [
+        "Curricular units 1st sem (approved)",
+        "Curricular units 2nd sem (approved)"
+      ],
+      [
+        "Curricular units 1st sem (approved)",
+        "Curricular units 1st sem (grade)"
+      ],
+      [
+        "Curricular units 1st sem (grade)",
+        "Curricular units 2nd sem (grade)"
+      ],
+      [
+        "Curricular units 1st sem (evaluations)",
+        "Curricular units 2nd sem (evaluations)"
+      ],
+      [
+        "Curricular units 1st sem (grade)",
+        "Curricular units 2nd sem (approved)"
+      ],
+      [
+        "Curricular units 1st sem (approved)",
+        "Curricular units 2nd sem (grade)"
+      ],
+      [
+        "Curricular units 1st sem (evaluations)",
+        "Curricular units 1st sem (approved)"
+      ],
+      [
+        "Curricular units 2nd sem (evaluations)",
+        "Curricular units 2nd sem (approved)"
+      ],
+      [
+        "Curricular units 1st sem (evaluations)",
+        "Curricular units 2nd sem (approved)"
+      ]
+    ],
+    "model_bundle_sha256": "2c904fbd9115393aeee1799d1a26e28c62b4fb0a349553e0e8cf3cbd36431256",
+    "pilot_seed": 42,
+    "policy": {
+      "actionable_features": [
+        "Curricular units 1st sem (evaluations)",
+        "Curricular units 1st sem (approved)",
+        "Curricular units 1st sem (grade)",
+        "Curricular units 1st sem (without evaluations)",
+        "Curricular units 2nd sem (evaluations)",
+        "Curricular units 2nd sem (approved)",
+        "Curricular units 2nd sem (grade)",
+        "Curricular units 2nd sem (without evaluations)"
+      ],
+      "categorical_domains": {
+        "Application mode": [
+          "1",
+          "10",
+          "15",
+          "16",
+          "17",
+          "18",
+          "2",
+          "26",
+          "27",
+          "39",
+          "42",
+          "43",
+          "44",
+          "5",
+          "51",
+          "53",
+          "57",
+          "7"
+        ],
+        "Application order": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "9"
+        ],
+        "Course": [
+          "171",
+          "33",
+          "8014",
+          "9003",
+          "9070",
+          "9085",
+          "9119",
+          "9130",
+          "9147",
+          "9238",
+          "9254",
+          "9500",
+          "9556",
+          "9670",
+          "9773",
+          "9853",
+          "9991"
+        ],
+        "Daytime/evening attendance": [
+          "0",
+          "1"
+        ],
+        "Debtor": [
+          "0",
+          "1"
+        ],
+        "Displaced": [
+          "0",
+          "1"
+        ],
+        "Educational special needs": [
+          "0",
+          "1"
+        ],
+        "Father's occupation": [
+          "0",
+          "1",
+          "10",
+          "101",
+          "102",
+          "103",
+          "112",
+          "122",
+          "123",
+          "131",
+          "135",
+          "141",
+          "143",
+          "144",
+          "151",
+          "152",
+          "153",
+          "154",
+          "161",
+          "163",
+          "171",
+          "172",
+          "175",
+          "181",
+          "182",
+          "183",
+          "192",
+          "193",
+          "194",
+          "195",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "90",
+          "99"
+        ],
+        "Father's qualification": [
+          "1",
+          "10",
+          "11",
+          "12",
+          "14",
+          "18",
+          "19",
+          "2",
+          "20",
+          "22",
+          "25",
+          "26",
+          "27",
+          "29",
+          "3",
+          "30",
+          "31",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "4",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "5",
+          "6",
+          "9"
+        ],
+        "Gender": [
+          "0",
+          "1"
+        ],
+        "International": [
+          "0",
+          "1"
+        ],
+        "Marital status": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "Mother's occupation": [
+          "0",
+          "1",
+          "10",
+          "122",
+          "123",
+          "131",
+          "132",
+          "134",
+          "141",
+          "143",
+          "144",
+          "151",
+          "152",
+          "153",
+          "171",
+          "173",
+          "175",
+          "191",
+          "192",
+          "193",
+          "194",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "90",
+          "99"
+        ],
+        "Mother's qualification": [
+          "1",
+          "10",
+          "11",
+          "12",
+          "14",
+          "18",
+          "19",
+          "2",
+          "22",
+          "26",
+          "29",
+          "3",
+          "30",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "4",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "5",
+          "6",
+          "9"
+        ],
+        "Nacionality": [
+          "1",
+          "100",
+          "101",
+          "103",
+          "105",
+          "108",
+          "11",
+          "13",
+          "14",
+          "2",
+          "21",
+          "22",
+          "24",
+          "26",
+          "41",
+          "6",
+          "62"
+        ],
+        "Previous qualification": [
+          "1",
+          "10",
+          "12",
+          "14",
+          "15",
+          "19",
+          "2",
+          "3",
+          "38",
+          "39",
+          "4",
+          "40",
+          "42",
+          "43",
+          "5",
+          "6",
+          "9"
+        ],
+        "Scholarship holder": [
+          "0",
+          "1"
+        ],
+        "Tuition fees up to date": [
+          "0",
+          "1"
+        ]
+      },
+      "immutable_features": [
+        "Marital status",
+        "Application mode",
+        "Application order",
+        "Course",
+        "Daytime/evening attendance",
+        "Previous qualification",
+        "Previous qualification (grade)",
+        "Nacionality",
+        "Mother's qualification",
+        "Father's qualification",
+        "Mother's occupation",
+        "Father's occupation",
+        "Admission grade",
+        "Displaced",
+        "Educational special needs",
+        "Debtor",
+        "Tuition fees up to date",
+        "Gender",
+        "Scholarship holder",
+        "Age at enrollment",
+        "International",
+        "Curricular units 1st sem (credited)",
+        "Curricular units 1st sem (enrolled)",
+        "Curricular units 2nd sem (credited)",
+        "Curricular units 2nd sem (enrolled)",
+        "Unemployment rate",
+        "Inflation rate",
+        "GDP"
+      ],
+      "invariants": [
+        {
+          "enforced": true,
+          "features": [
+            "Curricular units 1st sem (approved)",
+            "Curricular units 1st sem (without evaluations)",
+            "Curricular units 1st sem (enrolled)",
+            "Curricular units 1st sem (evaluations)"
+          ],
+          "name": "approved_le_enrolled_1st_sem",
+          "semantic_rationale": "Approved curricular units are a subset of enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.0,
+          "train_violations": 0
+        },
+        {
+          "enforced": true,
+          "features": [
+            "Curricular units 2nd sem (approved)",
+            "Curricular units 2nd sem (without evaluations)",
+            "Curricular units 2nd sem (enrolled)",
+            "Curricular units 2nd sem (evaluations)"
+          ],
+          "name": "approved_le_enrolled_2nd_sem",
+          "semantic_rationale": "Approved curricular units are a subset of enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.0,
+          "train_violations": 0
+        },
+        {
+          "enforced": true,
+          "features": [
+            "Curricular units 1st sem (approved)",
+            "Curricular units 1st sem (without evaluations)",
+            "Curricular units 1st sem (enrolled)",
+            "Curricular units 1st sem (evaluations)"
+          ],
+          "name": "approved_le_evaluations_1st_sem",
+          "semantic_rationale": "Each unit counted as approved should have at least one evaluation.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.0,
+          "train_violations": 0
+        },
+        {
+          "enforced": true,
+          "features": [
+            "Curricular units 2nd sem (approved)",
+            "Curricular units 2nd sem (without evaluations)",
+            "Curricular units 2nd sem (enrolled)",
+            "Curricular units 2nd sem (evaluations)"
+          ],
+          "name": "approved_le_evaluations_2nd_sem",
+          "semantic_rationale": "Each unit counted as approved should have at least one evaluation.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.0,
+          "train_violations": 0
+        },
+        {
+          "enforced": true,
+          "features": [
+            "Curricular units 1st sem (approved)",
+            "Curricular units 1st sem (without evaluations)",
+            "Curricular units 1st sem (enrolled)",
+            "Curricular units 1st sem (evaluations)"
+          ],
+          "name": "without_eval_le_enrolled_1st_sem",
+          "semantic_rationale": "Units without evaluations are a subset of enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.0,
+          "train_violations": 0
+        },
+        {
+          "enforced": false,
+          "features": [
+            "Curricular units 2nd sem (approved)",
+            "Curricular units 2nd sem (without evaluations)",
+            "Curricular units 2nd sem (enrolled)",
+            "Curricular units 2nd sem (evaluations)"
+          ],
+          "name": "without_eval_le_enrolled_2nd_sem",
+          "semantic_rationale": "Units without evaluations are a subset of enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.00032299741602067185,
+          "train_violations": 1
+        },
+        {
+          "enforced": false,
+          "features": [
+            "Curricular units 1st sem (approved)",
+            "Curricular units 1st sem (without evaluations)",
+            "Curricular units 1st sem (enrolled)",
+            "Curricular units 1st sem (evaluations)"
+          ],
+          "name": "approved_plus_without_eval_le_enrolled_1st_sem",
+          "semantic_rationale": "Approved units and units without evaluations are disjoint statuses among enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.02131782945736434,
+          "train_violations": 66
+        },
+        {
+          "enforced": false,
+          "features": [
+            "Curricular units 2nd sem (approved)",
+            "Curricular units 2nd sem (without evaluations)",
+            "Curricular units 2nd sem (enrolled)",
+            "Curricular units 2nd sem (evaluations)"
+          ],
+          "name": "approved_plus_without_eval_le_enrolled_2nd_sem",
+          "semantic_rationale": "Approved units and units without evaluations are disjoint statuses among enrolled units.",
+          "train_rows": 3096,
+          "train_violation_rate": 0.020671834625323,
+          "train_violations": 64
+        }
+      ],
+      "invariants_enforced": [
+        "approved_le_enrolled_1st_sem",
+        "approved_le_enrolled_2nd_sem",
+        "approved_le_evaluations_1st_sem",
+        "approved_le_evaluations_2nd_sem",
+        "without_eval_le_enrolled_1st_sem"
+      ],
+      "rules": {
+        "Curricular units 1st sem (approved)": {
+          "delta": 1.5,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 3.0,
+          "train_max": 26.0,
+          "train_min": 0.0
+        },
+        "Curricular units 1st sem (evaluations)": {
+          "delta": 2.0,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 4.0,
+          "train_max": 45.0,
+          "train_min": 0.0
+        },
+        "Curricular units 1st sem (grade)": {
+          "delta": 1.2000000000000002,
+          "integer": false,
+          "intrinsic_max": 20.0,
+          "intrinsic_min": 0.0,
+          "train_iqr": 2.4000000000000004,
+          "train_max": 18.875,
+          "train_min": 0.0
+        },
+        "Curricular units 1st sem (without evaluations)": {
+          "delta": 0.0,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 0.0,
+          "train_max": 12.0,
+          "train_min": 0.0
+        },
+        "Curricular units 2nd sem (approved)": {
+          "delta": 2.0,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 4.0,
+          "train_max": 20.0,
+          "train_min": 0.0
+        },
+        "Curricular units 2nd sem (evaluations)": {
+          "delta": 2.0,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 4.0,
+          "train_max": 33.0,
+          "train_min": 0.0
+        },
+        "Curricular units 2nd sem (grade)": {
+          "delta": 1.2916666666666679,
+          "integer": false,
+          "intrinsic_max": 20.0,
+          "intrinsic_min": 0.0,
+          "train_iqr": 2.5833333333333357,
+          "train_max": 18.571428571428573,
+          "train_min": 0.0
+        },
+        "Curricular units 2nd sem (without evaluations)": {
+          "delta": 0.0,
+          "integer": true,
+          "intrinsic_max": null,
+          "intrinsic_min": 0.0,
+          "train_iqr": 0.0,
+          "train_max": 12.0,
+          "train_min": 0.0
+        }
+      }
+    },
+    "source_sha256": {
+      "scripts/native_multiclass_eval/__init__.py": "58edd75d456ab693ed4f0d98616b228e80a8a46aab2046c75d5a4949f1847db3",
+      "scripts/native_multiclass_eval/adapters.py": "711b619a5405b093bb3d1c20b4939dbd0623427bd0748bb102cce9d87e66f918",
+      "scripts/native_multiclass_eval/config.py": "80faa104c1825be3d7ff3941b6758027f48e617b57e27e915654844e5aa99644",
+      "scripts/native_multiclass_eval/dataset.py": "f7101f5073898be1b291c6eb094a6cef0a757f8b45c08d1f8ccc55bbfceb71e0",
+      "scripts/native_multiclass_eval/metrics.py": "b745d2703e634f95e3356366c72d7736310c03798913327bde8d154319dfb4a7",
+      "scripts/native_multiclass_eval/model.py": "62dc2c9c206ffd40ddb7894a655734260083f7505b8dcc707ee6a90af962cb20",
+      "scripts/native_multiclass_eval/policy.py": "3da1ea39a41c9b09ac48d3c20a4d6577e39d22aed55314430a56b7903092590a",
+      "scripts/native_multiclass_eval/runner.py": "523037f6df74042f2b3e6935b4f75ae1195684ead8a93c863279c84acb2cb385",
+      "scripts/native_multiclass_eval/space.py": "9b27a0e7349b51e45b5abb094592e6d0f692a74d42fd18abe7a2782dff861414",
+      "scripts/native_multiclass_eval/test_native_multiclass.py": "e40f1b2fe7529ceec97d33ad2a761f2b03b5b92d2fe810643a1eb496f3bfd114",
+      "scripts/native_multiclass_eval/timeout.py": "00d46ac36e4697c1660e57f0fe7196139e57c3ff9b6912e346bb2bd4d0e49f23",
+      "scripts/native_multiclass_eval/verification.py": "bde146f3e17722aa096002813e64f442a03bb90b77c5e8010774c964fe7c8f07",
+      "ufce/ufce_ff/cfmethods.py": "0ea4a749643671c01a5b3556e4971cced17c8263d27d7787a36c4f60090ef2c0",
+      "ufce/ufce_ff/ufce.py": "f8aab5328ceb4fe9a7f2f387828c7d123bbc6009ea6ee9d9fd5554e05747772e"
+    },
+    "split_seed": 42,
+    "target_mapping": {
+      "0": "Dropout",
+      "1": "Enrolled",
+      "2": "Graduate"
+    },
+    "timeout_seconds": 60.0,
+    "versions": {
+      "dice-ml": "0.7.2",
+      "numpy": "1.21.6",
+      "pandas": "1.1.5",
+      "python": "3.8.20",
+      "scikit-learn": "0.24.2",
+      "scipy": "1.4.1"
+    }
+  },
+  "configuration_sha256": "3db7032eae82606a7970638f045ce7c7825a5bc7a75bcdba36dd71132a28137d",
+  "frozen": true,
+  "frozen_at_unix": 1790255543.1157928
+}

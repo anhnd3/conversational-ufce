@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "all_methods_present": true,
+    "all_query_method_denominators_complete": true,
+    "all_six_transitions_present": true,
+    "availability_denominators_complete": true,
+    "no_runtime_or_schema_errors": true,
+    "no_silent_schema_errors": true,
+    "off_target_ledger_present": true,
+    "verifier_results_present": true
+  },
+  "paired_comparison_rows": 36,
+  "passed": true,
+  "query_pairs": 20,
+  "runtime_error_count": 0,
+  "schema_error_count": 0,
+  "transition_summary_rows": 24
+}

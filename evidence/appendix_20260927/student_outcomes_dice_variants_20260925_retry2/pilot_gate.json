@@ -1,0 +1,18 @@
+{
+  "candidate_rows": 40,
+  "checks": {
+    "40_method_query_rows": true,
+    "all_six_transitions_and_expected_denominators": true,
+    "availability_denominators_present": true,
+    "no_runtime_or_schema_errors": true,
+    "no_silent_schema_errors": true,
+    "proposal_and_model_call_ledgers_present": true,
+    "timeouts_are_recorded_results": true,
+    "verifier_ran": true
+  },
+  "exposed_rows": 19,
+  "passed": true,
+  "query_rows": 40,
+  "runtime_error_count": 0,
+  "schema_error_count": 0
+}

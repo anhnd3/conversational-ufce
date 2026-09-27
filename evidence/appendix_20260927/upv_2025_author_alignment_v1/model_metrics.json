@@ -1,0 +1,36 @@
+{
+  "metrics": {
+    "balanced_accuracy": 0.808054349276746,
+    "confusion_matrix_labels_0_1": [
+      [
+        3550,
+        950
+      ],
+      [
+        11220,
+        53718
+      ]
+    ],
+    "eligible_unique_student_queries": 1000,
+    "f1_dropout_positive_risk": 0.3684483653347172,
+    "pr_auc_dropout_positive_risk": 0.4366608679785328,
+    "precision_dropout_positive_risk": 0.24035206499661477,
+    "predicted_0": 14770,
+    "predicted_1": 54668,
+    "recall_dropout_positive_risk": 0.7888888888888889,
+    "roc_auc": 0.8850673120686057,
+    "test_rows": 69438
+  },
+  "quality_gate": {
+    "convergence_warnings": [
+      "The max_iter was reached which means the coef_ did not converge"
+    ],
+    "failures": [
+      "CONVERGENCE_WARNING"
+    ],
+    "passed": false,
+    "predicted_minority_fraction": 0.21270773927820502,
+    "review_class_collapse": false,
+    "status": "STOP"
+  }
+}

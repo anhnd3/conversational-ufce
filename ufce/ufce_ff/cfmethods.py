@@ -122,15 +122,14 @@ def find_best_row(df, test_instance, continuous_features, distance_scaler=None):
     return best_row
 
 
-def _filter_flipping_candidates(candidates, model, desired_outcome, order):
+def _filter_flipping_candidates(candidates, model, desired_outcome, order, candidate_validator=None):
     """
     UFCE-FF verification gate.
 
     When enabled, this is applied before the final nearest-row selector in
     sfexp/dfexp/tfexp. It filters the generated candidate pool to rows whose
-    predicted label equals desired_outcome. Hard/actionability constraints are
-    still enforced by the candidate-generation intervals and later metric
-    evaluation; there is no separate C_hard post-prediction gate here.
+    predicted label equals desired_outcome. When supplied, candidate_validator
+    applies the dataset-specific hard constraints before nearest-row selection.
     """
     if not isinstance(candidates, pd.DataFrame) or candidates.empty:
         return pd.DataFrame()
@@ -139,10 +138,15 @@ def _filter_flipping_candidates(candidates, model, desired_outcome, order):
     else:
         pred_input = candidates
     preds = np.asarray(model.predict(pred_input)).reshape(-1)
-    return candidates.loc[preds == int(desired_outcome)].reset_index(drop=True)
+    selected = candidates.loc[preds == int(desired_outcome)].reset_index(drop=True)
+    if candidate_validator is not None and not selected.empty:
+        selected = candidate_validator(selected)
+        if not isinstance(selected, pd.DataFrame):
+            return pd.DataFrame()
+    return selected.reset_index(drop=True)
 
 
-def _post_validate_selected_candidate(candidate, model, desired_outcome, order, method_stats):
+def _post_validate_selected_candidate(candidate, model, desired_outcome, order, method_stats, candidate_validator=None):
     """Fail closed unless the final selected row still predicts the target label."""
     if not isinstance(candidate, pd.DataFrame) or candidate.empty:
         return pd.DataFrame(), False, None
@@ -155,6 +159,13 @@ def _post_validate_selected_candidate(candidate, model, desired_outcome, order, 
         passed = bool(preds.size > 0 and int(preds[0]) == int(desired_outcome))
     except Exception:
         passed = False
+
+    if passed and candidate_validator is not None:
+        try:
+            validated = candidate_validator(selected)
+            passed = isinstance(validated, pd.DataFrame) and not validated.empty
+        except Exception:
+            passed = False
 
     if not passed:
         method_stats["n_post_selection_rejected"] += 1
@@ -497,6 +508,7 @@ def sfexp(
     found_indexes = []
     intervald = dict()
     method_stats = _init_method_stats(len(X_test))
+    candidate_validator = _legacy_kwargs.get("candidate_validator")
     trace_enabled = _debug_enabled(debug_ctx)
     trace_positions = _debug_trace_positions(debug_ctx)
     trace_rows = []
@@ -565,6 +577,7 @@ def sfexp(
                             bb,
                             desired_outcome,
                             order,
+                            candidate_validator=candidate_validator,
                         )
                         if isinstance(cc_probe, pd.DataFrame) and cc_probe.empty != True:
                             if len(cc_probe) > 1:
@@ -640,6 +653,7 @@ def sfexp(
                 bb,
                 desired_outcome,
                 order,
+                candidate_validator=candidate_validator,
             )
             instance_flip_candidates = _trace_frame(cc, order)
             flip_count = len(cc) if isinstance(cc, pd.DataFrame) else 0
@@ -656,7 +670,10 @@ def sfexp(
                 else:
                     selected = cc[:1]
                 selected, post_selection_validation_checked, post_selection_validation_passed = (
-                    _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+                    _post_validate_selected_candidate(
+                        selected, bb, desired_outcome, order, method_stats,
+                        candidate_validator=candidate_validator,
+                    )
                 )
                 if not selected.empty:
                     instance_selected = _trace_frame(selected, order)
@@ -728,6 +745,7 @@ def dfexp(
     protectedf = protectf
     method_stats = _init_method_stats(len(X_test))
     trace_rows = []
+    candidate_validator = _legacy_kwargs.get("candidate_validator")
 
     for t in range(len(X_test)):
         search_data = data_lab1 if distance_data_lab1 is None else distance_data_lab1
@@ -756,12 +774,14 @@ def dfexp(
                 bb,
                 desired_outcome,
                 order,
+                candidate_validator=candidate_validator,
             )
             selected_rows = _filter_flipping_candidates(
                 cfsexp2,
                 bb,
                 desired_outcome,
                 order,
+                candidate_validator=candidate_validator,
             )
             instance_flip_candidates = _concat_candidate_frames([cc2, selected_rows], order)
             flip_primary = len(cc2) if isinstance(cc2, pd.DataFrame) else 0
@@ -799,7 +819,10 @@ def dfexp(
                         selected = selected_rows[:1]
 
             selected, post_selection_validation_checked, post_selection_validation_passed = (
-                _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+                _post_validate_selected_candidate(
+                    selected, bb, desired_outcome, order, method_stats,
+                    candidate_validator=candidate_validator,
+                )
             )
             if not selected.empty:
                 if 'proximity' in selected.columns:
@@ -890,6 +913,7 @@ def tfexp(
     testout = pd.DataFrame()
     method_stats = _init_method_stats(len(X_test))
     trace_rows = []
+    candidate_validator = _legacy_kwargs.get("candidate_validator")
     for t in range(len(X_test)):
         n=0
         search_data = data_lab1 if distance_data_lab1 is None else distance_data_lab1
@@ -913,12 +937,16 @@ def tfexp(
             raw_explore = len(cfsexp2) if isinstance(cfsexp2, pd.DataFrame) else 0
             method_stats["n_candidates_raw_total"] += int(raw_primary + raw_explore)
 
-            cc3 = _filter_flipping_candidates(cc3, bb, desired_outcome, order)
+            cc3 = _filter_flipping_candidates(
+                cc3, bb, desired_outcome, order,
+                candidate_validator=candidate_validator,
+            )
             selected_rows = _filter_flipping_candidates(
                 cfsexp2,
                 bb,
                 desired_outcome,
                 order,
+                candidate_validator=candidate_validator,
             )
             instance_flip_candidates = _concat_candidate_frames([cc3, selected_rows], order)
             flip_primary = len(cc3) if isinstance(cc3, pd.DataFrame) else 0
@@ -956,7 +984,10 @@ def tfexp(
                         selected = selected_rows[:1]
 
             selected, post_selection_validation_checked, post_selection_validation_passed = (
-                _post_validate_selected_candidate(selected, bb, desired_outcome, order, method_stats)
+                _post_validate_selected_candidate(
+                    selected, bb, desired_outcome, order, method_stats,
+                    candidate_validator=candidate_validator,
+                )
             )
             if not selected.empty:
                 if 'proximity' in selected.columns:

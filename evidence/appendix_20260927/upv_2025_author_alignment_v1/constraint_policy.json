@@ -1,0 +1,851 @@
+{
+  "categorical_extension": {
+    "actionable_feature": "dedicacion",
+    "allowed_values": [
+      "TC",
+      "TP"
+    ],
+    "missing_query_value": "immutable",
+    "other_categorical_features": "immutable",
+    "semantic_status": "algorithmic capability test only; not a validated educational intervention",
+    "transitions": [
+      "TC->TP",
+      "TP->TC"
+    ]
+  },
+  "numeric_regimes": {
+    "FLEXIBLE": {
+      "actionable_features": [
+        "pft_events_m09",
+        "pft_events_m10",
+        "pft_events_m11",
+        "pft_events_m12",
+        "pft_days_logged_m09",
+        "pft_days_logged_m10",
+        "pft_days_logged_m11",
+        "pft_days_logged_m12",
+        "pft_visits_m09",
+        "pft_visits_m10",
+        "pft_visits_m11",
+        "pft_visits_m12",
+        "pft_assignment_submissions_m09",
+        "pft_assignment_submissions_m10",
+        "pft_assignment_submissions_m11",
+        "pft_assignment_submissions_m12",
+        "pft_test_submissions_m09",
+        "pft_test_submissions_m10",
+        "pft_test_submissions_m11",
+        "pft_test_submissions_m12",
+        "pft_total_minutes_m09",
+        "pft_total_minutes_m10",
+        "pft_total_minutes_m11",
+        "pft_total_minutes_m12",
+        "n_wifi_days_m09",
+        "n_wifi_days_m10",
+        "n_wifi_days_m11",
+        "n_wifi_days_m12",
+        "resource_events_m09",
+        "resource_events_m10",
+        "resource_events_m11",
+        "resource_events_m12",
+        "n_resource_days_m09",
+        "n_resource_days_m10",
+        "n_resource_days_m11",
+        "n_resource_days_m12"
+      ],
+      "all_non_digital_immutable": true,
+      "cap_quantile": 0.99,
+      "delta_iqr": 1.0,
+      "n_actionable_features": 36,
+      "name": "FLEXIBLE",
+      "rules": {
+        "n_resource_days_m09": {
+          "delta": 4.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 13.0,
+          "train_iqr": 4.0
+        },
+        "n_resource_days_m10": {
+          "delta": 5.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 17.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m11": {
+          "delta": 5.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 16.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m12": {
+          "delta": 4.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 14.0,
+          "train_iqr": 4.0
+        },
+        "n_wifi_days_m09": {
+          "delta": 7.0,
+          "direction": "increase_only",
+          "family": "n_wifi_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 20.0,
+          "train_iqr": 7.0
+        },
+        "n_wifi_days_m10": {
+          "delta": 7.0,
+          "direction": "increase_only",
+          "family": "n_wifi_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 24.0,
+          "train_iqr": 7.0
+        },
+        "n_wifi_days_m11": {
+          "delta": 7.0,
+          "direction": "increase_only",
+          "family": "n_wifi_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 24.0,
+          "train_iqr": 7.0
+        },
+        "n_wifi_days_m12": {
+          "delta": 6.0,
+          "direction": "increase_only",
+          "family": "n_wifi_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 20.0,
+          "train_iqr": 6.0
+        },
+        "pft_assignment_submissions_m09": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 9.0,
+          "train_iqr": 1.0
+        },
+        "pft_assignment_submissions_m10": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 10.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m11": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 9.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m12": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 7.0,
+          "train_iqr": 1.0
+        },
+        "pft_days_logged_m09": {
+          "delta": 5.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 17.0,
+          "train_iqr": 5.0
+        },
+        "pft_days_logged_m10": {
+          "delta": 8.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 23.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m11": {
+          "delta": 8.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 22.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m12": {
+          "delta": 7.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 20.0,
+          "train_iqr": 7.0
+        },
+        "pft_events_m09": {
+          "delta": 33.0,
+          "direction": "increase_only",
+          "family": "pft_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 234.0,
+          "train_iqr": 33.0
+        },
+        "pft_events_m10": {
+          "delta": 57.0,
+          "direction": "increase_only",
+          "family": "pft_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 350.0,
+          "train_iqr": 57.0
+        },
+        "pft_events_m11": {
+          "delta": 56.0,
+          "direction": "increase_only",
+          "family": "pft_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 385.0,
+          "train_iqr": 56.0
+        },
+        "pft_events_m12": {
+          "delta": 48.0,
+          "direction": "increase_only",
+          "family": "pft_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 321.0,
+          "train_iqr": 48.0
+        },
+        "pft_test_submissions_m09": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 17.19000000000051,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m10": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 21.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m11": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 22.829999999999927,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m12": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 16.0,
+          "train_iqr": 2.0
+        },
+        "pft_total_minutes_m09": {
+          "delta": 375.89521666666667,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 1576.877033999999,
+          "train_iqr": 375.89521666666667
+        },
+        "pft_total_minutes_m10": {
+          "delta": 655.9906541666667,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 2457.3904208333342,
+          "train_iqr": 655.9906541666667
+        },
+        "pft_total_minutes_m11": {
+          "delta": 611.0859916666667,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 2280.529105333333,
+          "train_iqr": 611.0859916666667
+        },
+        "pft_total_minutes_m12": {
+          "delta": 478.6541833333333,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 2051.5471746666703,
+          "train_iqr": 478.6541833333333
+        },
+        "pft_visits_m09": {
+          "delta": 10.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 38.0,
+          "train_iqr": 10.0
+        },
+        "pft_visits_m10": {
+          "delta": 16.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 58.0,
+          "train_iqr": 16.0
+        },
+        "pft_visits_m11": {
+          "delta": 15.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 56.0,
+          "train_iqr": 15.0
+        },
+        "pft_visits_m12": {
+          "delta": 13.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 50.0,
+          "train_iqr": 13.0
+        },
+        "resource_events_m09": {
+          "delta": 13.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 69.0,
+          "train_iqr": 13.0
+        },
+        "resource_events_m10": {
+          "delta": 22.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 106.0,
+          "train_iqr": 22.0
+        },
+        "resource_events_m11": {
+          "delta": 20.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 106.0,
+          "train_iqr": 20.0
+        },
+        "resource_events_m12": {
+          "delta": 18.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 89.0,
+          "train_iqr": 18.0
+        }
+      }
+    },
+    "MODERATE": {
+      "actionable_features": [
+        "pft_days_logged_m09",
+        "pft_days_logged_m10",
+        "pft_days_logged_m11",
+        "pft_days_logged_m12",
+        "pft_visits_m09",
+        "pft_visits_m10",
+        "pft_visits_m11",
+        "pft_visits_m12",
+        "pft_assignment_submissions_m09",
+        "pft_assignment_submissions_m10",
+        "pft_assignment_submissions_m11",
+        "pft_assignment_submissions_m12",
+        "pft_test_submissions_m09",
+        "pft_test_submissions_m10",
+        "pft_test_submissions_m11",
+        "pft_test_submissions_m12",
+        "pft_total_minutes_m09",
+        "pft_total_minutes_m10",
+        "pft_total_minutes_m11",
+        "pft_total_minutes_m12",
+        "resource_events_m09",
+        "resource_events_m10",
+        "resource_events_m11",
+        "resource_events_m12",
+        "n_resource_days_m09",
+        "n_resource_days_m10",
+        "n_resource_days_m11",
+        "n_resource_days_m12"
+      ],
+      "all_non_digital_immutable": true,
+      "cap_quantile": 0.975,
+      "delta_iqr": 0.5,
+      "n_actionable_features": 28,
+      "name": "MODERATE",
+      "rules": {
+        "n_resource_days_m09": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 11.0,
+          "train_iqr": 4.0
+        },
+        "n_resource_days_m10": {
+          "delta": 2.5,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 15.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m11": {
+          "delta": 2.5,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 14.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m12": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 12.0,
+          "train_iqr": 4.0
+        },
+        "pft_assignment_submissions_m09": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 7.0,
+          "train_iqr": 1.0
+        },
+        "pft_assignment_submissions_m10": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 8.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m11": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 7.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m12": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 6.0,
+          "train_iqr": 1.0
+        },
+        "pft_days_logged_m09": {
+          "delta": 2.5,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 15.0,
+          "train_iqr": 5.0
+        },
+        "pft_days_logged_m10": {
+          "delta": 4.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 20.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m11": {
+          "delta": 4.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 19.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m12": {
+          "delta": 3.5,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 17.0,
+          "train_iqr": 7.0
+        },
+        "pft_test_submissions_m09": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 11.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m10": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 14.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m11": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 14.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m12": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 11.0,
+          "train_iqr": 2.0
+        },
+        "pft_total_minutes_m09": {
+          "delta": 187.94760833333333,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 1235.3313383333298,
+          "train_iqr": 375.89521666666667
+        },
+        "pft_total_minutes_m10": {
+          "delta": 327.99532708333334,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 1975.1603300000002,
+          "train_iqr": 655.9906541666667
+        },
+        "pft_total_minutes_m11": {
+          "delta": 305.54299583333335,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 1838.1494112499995,
+          "train_iqr": 611.0859916666667
+        },
+        "pft_total_minutes_m12": {
+          "delta": 239.32709166666666,
+          "direction": "increase_only",
+          "family": "pft_total_minutes",
+          "integer": false,
+          "step": null,
+          "train_cap": 1614.894909999999,
+          "train_iqr": 478.6541833333333
+        },
+        "pft_visits_m09": {
+          "delta": 5.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 30.0,
+          "train_iqr": 10.0
+        },
+        "pft_visits_m10": {
+          "delta": 8.0,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 48.0,
+          "train_iqr": 16.0
+        },
+        "pft_visits_m11": {
+          "delta": 7.5,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 45.0,
+          "train_iqr": 15.0
+        },
+        "pft_visits_m12": {
+          "delta": 6.5,
+          "direction": "increase_only",
+          "family": "pft_visits",
+          "integer": true,
+          "step": 1,
+          "train_cap": 39.0,
+          "train_iqr": 13.0
+        },
+        "resource_events_m09": {
+          "delta": 6.5,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 49.0,
+          "train_iqr": 13.0
+        },
+        "resource_events_m10": {
+          "delta": 11.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 79.0,
+          "train_iqr": 22.0
+        },
+        "resource_events_m11": {
+          "delta": 10.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 76.0,
+          "train_iqr": 20.0
+        },
+        "resource_events_m12": {
+          "delta": 9.0,
+          "direction": "increase_only",
+          "family": "resource_events",
+          "integer": true,
+          "step": 1,
+          "train_cap": 66.0,
+          "train_iqr": 18.0
+        }
+      }
+    },
+    "STRICT": {
+      "actionable_features": [
+        "pft_days_logged_m09",
+        "pft_days_logged_m10",
+        "pft_days_logged_m11",
+        "pft_days_logged_m12",
+        "pft_assignment_submissions_m09",
+        "pft_assignment_submissions_m10",
+        "pft_assignment_submissions_m11",
+        "pft_assignment_submissions_m12",
+        "pft_test_submissions_m09",
+        "pft_test_submissions_m10",
+        "pft_test_submissions_m11",
+        "pft_test_submissions_m12",
+        "n_resource_days_m09",
+        "n_resource_days_m10",
+        "n_resource_days_m11",
+        "n_resource_days_m12"
+      ],
+      "all_non_digital_immutable": true,
+      "cap_quantile": 0.95,
+      "delta_iqr": 0.25,
+      "n_actionable_features": 16,
+      "name": "STRICT",
+      "rules": {
+        "n_resource_days_m09": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 10.0,
+          "train_iqr": 4.0
+        },
+        "n_resource_days_m10": {
+          "delta": 1.25,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 13.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m11": {
+          "delta": 1.25,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 12.0,
+          "train_iqr": 5.0
+        },
+        "n_resource_days_m12": {
+          "delta": 1.0,
+          "direction": "increase_only",
+          "family": "n_resource_days",
+          "integer": true,
+          "step": 1,
+          "train_cap": 11.0,
+          "train_iqr": 4.0
+        },
+        "pft_assignment_submissions_m09": {
+          "delta": 0.25,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 5.0,
+          "train_iqr": 1.0
+        },
+        "pft_assignment_submissions_m10": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 6.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m11": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 5.0,
+          "train_iqr": 2.0
+        },
+        "pft_assignment_submissions_m12": {
+          "delta": 0.25,
+          "direction": "increase_only",
+          "family": "pft_assignment_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 5.0,
+          "train_iqr": 1.0
+        },
+        "pft_days_logged_m09": {
+          "delta": 1.25,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 13.0,
+          "train_iqr": 5.0
+        },
+        "pft_days_logged_m10": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 18.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m11": {
+          "delta": 2.0,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 17.0,
+          "train_iqr": 8.0
+        },
+        "pft_days_logged_m12": {
+          "delta": 1.75,
+          "direction": "increase_only",
+          "family": "pft_days_logged",
+          "integer": true,
+          "step": 1,
+          "train_cap": 15.0,
+          "train_iqr": 7.0
+        },
+        "pft_test_submissions_m09": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 7.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m10": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 10.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m11": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 9.0,
+          "train_iqr": 2.0
+        },
+        "pft_test_submissions_m12": {
+          "delta": 0.5,
+          "direction": "increase_only",
+          "family": "pft_test_submissions",
+          "integer": true,
+          "step": 1,
+          "train_cap": 7.0,
+          "train_iqr": 2.0
+        }
+      }
+    }
+  }
+}

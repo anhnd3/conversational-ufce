@@ -1,0 +1,58 @@
+{
+  "dataset_checksums": [
+    {
+      "md5": "43fc067c88f09797dacbcd83ee83cc28",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2018_hash.zip",
+      "rows": 152446,
+      "sha256": "06d7edb296560e91080aa3d67276b1b6f6f6ab8ecd3b05fcfedcb36d74d946a4",
+      "year": "2018"
+    },
+    {
+      "md5": "50cfb2d0f0a07bf3460bc259ffa84064",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2021_hash.zip",
+      "rows": 153120,
+      "sha256": "6722c90066bf0eba2a67c83dcbb03e75fc86dffd217363948eab3c97fc3594cc",
+      "year": "2021"
+    },
+    {
+      "md5": "b5f724fde2c33961f07f26e8fa25b4b7",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2022_hash.zip",
+      "rows": 159173,
+      "sha256": "5da43877b53a0efea334360b8d1abc86d04675cb9df706d44c6d53e260cea91f",
+      "year": "2022"
+    }
+  ],
+  "dataset_dir": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025",
+  "feature_counts": {
+    "categorical": 6,
+    "encoded": 146,
+    "numeric": 75,
+    "raw": 81
+  },
+  "git_commit": "d02079ade84e81f7c05d4a4c573ecb65b73df4e9",
+  "libraries": {
+    "actionable-recourse": "1.0.1",
+    "dice-ml": "0.7.2",
+    "joblib": "1.4.2",
+    "numpy": "1.21.6",
+    "pandas": "1.1.5",
+    "scikit-learn": "0.24.2",
+    "scipy": "1.4.1"
+  },
+  "model_artifact": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025/model_bundle.joblib",
+  "model_artifact_sha256": "574026a4873fe446e7edcc12e9a53690d5aaad6363f1ac7261ce7b499a68a4c3",
+  "out_dir": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025",
+  "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.34",
+  "python": "3.8.20",
+  "seeds": {
+    "primary": 0,
+    "robustness": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "split": 42
+  },
+  "timeout_seconds": 60.0
+}

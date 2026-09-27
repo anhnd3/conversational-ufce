@@ -1,0 +1,243 @@
+{
+  "baseline_validation": {
+    "all_406_pair_order_matches_saved": true,
+    "encoded_sha256_matches_saved": true,
+    "estimator_failures": 0,
+    "max_abs_score_diff": 8.326672684688674e-17
+  },
+  "runs": [
+    {
+      "calls": 406,
+      "failures": [],
+      "max_call_seconds": 0.05800624600669835,
+      "median_call_seconds": 0.03190870649268618,
+      "rows": 10007,
+      "sample": "10000",
+      "sum_call_seconds": 13.926993549990584,
+      "wall_seconds": 1.8103244119993178
+    },
+    {
+      "calls": 406,
+      "failures": [],
+      "max_call_seconds": 0.756892464007251,
+      "median_call_seconds": 0.4373356025025714,
+      "rows": 100002,
+      "sample": "100000",
+      "sum_call_seconds": 185.481392765083,
+      "versus_10k": {
+        "combined_105_overlap": 98,
+        "dedicacion_top5_base": [
+          [
+            "dedicacion",
+            "pft_visits_m09"
+          ],
+          [
+            "dedicacion",
+            "resource_events_m09"
+          ],
+          [
+            "dedicacion",
+            "pft_days_logged_m10"
+          ],
+          [
+            "dedicacion",
+            "pft_assignment_submissions_m10"
+          ],
+          [
+            "dedicacion",
+            "pft_test_submissions_m09"
+          ]
+        ],
+        "dedicacion_top5_new": [
+          [
+            "dedicacion",
+            "n_resource_days_m09"
+          ],
+          [
+            "dedicacion",
+            "resource_events_m09"
+          ],
+          [
+            "dedicacion",
+            "pft_days_logged_m09"
+          ],
+          [
+            "dedicacion",
+            "pft_total_minutes_m12"
+          ],
+          [
+            "dedicacion",
+            "n_resource_days_m10"
+          ]
+        ],
+        "dedicacion_top5_overlap": 1,
+        "numeric_top100_overlap": 97,
+        "numeric_top20_overlap": 18,
+        "numeric_top5_base": [
+          [
+            "pft_days_logged_m09",
+            "pft_visits_m09"
+          ],
+          [
+            "pft_days_logged_m10",
+            "pft_visits_m10"
+          ],
+          [
+            "pft_days_logged_m11",
+            "pft_visits_m11"
+          ],
+          [
+            "pft_days_logged_m12",
+            "pft_visits_m12"
+          ],
+          [
+            "pft_visits_m10",
+            "pft_total_minutes_m10"
+          ]
+        ],
+        "numeric_top5_new": [
+          [
+            "pft_days_logged_m10",
+            "pft_visits_m10"
+          ],
+          [
+            "pft_days_logged_m09",
+            "pft_visits_m09"
+          ],
+          [
+            "pft_days_logged_m11",
+            "pft_visits_m11"
+          ],
+          [
+            "pft_days_logged_m12",
+            "pft_visits_m12"
+          ],
+          [
+            "pft_total_minutes_m10",
+            "resource_events_m10"
+          ]
+        ],
+        "numeric_top5_overlap": 4,
+        "spearman_406_ranks": 0.9862974483664139
+      },
+      "wall_seconds": 23.413632764000795
+    },
+    {
+      "calls": 406,
+      "failures": [],
+      "max_call_seconds": 3.637663879999309,
+      "median_call_seconds": 2.5294305755014648,
+      "rows": 325483,
+      "sample": "full_train",
+      "sum_call_seconds": 1040.269050226998,
+      "versus_10k": {
+        "combined_105_overlap": 98,
+        "dedicacion_top5_base": [
+          [
+            "dedicacion",
+            "pft_visits_m09"
+          ],
+          [
+            "dedicacion",
+            "resource_events_m09"
+          ],
+          [
+            "dedicacion",
+            "pft_days_logged_m10"
+          ],
+          [
+            "dedicacion",
+            "pft_assignment_submissions_m10"
+          ],
+          [
+            "dedicacion",
+            "pft_test_submissions_m09"
+          ]
+        ],
+        "dedicacion_top5_new": [
+          [
+            "dedicacion",
+            "n_resource_days_m11"
+          ],
+          [
+            "dedicacion",
+            "resource_events_m11"
+          ],
+          [
+            "dedicacion",
+            "pft_total_minutes_m12"
+          ],
+          [
+            "dedicacion",
+            "resource_events_m09"
+          ],
+          [
+            "dedicacion",
+            "pft_total_minutes_m11"
+          ]
+        ],
+        "dedicacion_top5_overlap": 1,
+        "numeric_top100_overlap": 97,
+        "numeric_top20_overlap": 18,
+        "numeric_top5_base": [
+          [
+            "pft_days_logged_m09",
+            "pft_visits_m09"
+          ],
+          [
+            "pft_days_logged_m10",
+            "pft_visits_m10"
+          ],
+          [
+            "pft_days_logged_m11",
+            "pft_visits_m11"
+          ],
+          [
+            "pft_days_logged_m12",
+            "pft_visits_m12"
+          ],
+          [
+            "pft_visits_m10",
+            "pft_total_minutes_m10"
+          ]
+        ],
+        "numeric_top5_new": [
+          [
+            "pft_days_logged_m10",
+            "pft_visits_m10"
+          ],
+          [
+            "pft_days_logged_m09",
+            "pft_visits_m09"
+          ],
+          [
+            "pft_days_logged_m11",
+            "pft_visits_m11"
+          ],
+          [
+            "pft_total_minutes_m10",
+            "resource_events_m10"
+          ],
+          [
+            "pft_days_logged_m12",
+            "pft_visits_m12"
+          ]
+        ],
+        "numeric_top5_overlap": 4,
+        "spearman_406_ranks": 0.9857957375198756
+      },
+      "wall_seconds": 131.08435896100127
+    }
+  ],
+  "settings": {
+    "data_dir": "data/upv_2025",
+    "out_dir": "outputs/external_binary_eval/upv_2025_mi_sensitivity_20260927",
+    "sizes": [
+      "10000",
+      "100000",
+      "full_train"
+    ],
+    "workers": 8
+  },
+  "sklearn_version": "0.24.2"
+}
