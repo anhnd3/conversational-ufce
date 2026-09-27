@@ -1,0 +1,112 @@
+{
+  "baseline_artifacts": {
+    "adapter_setup.csv": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/adapter_setup.csv",
+      "sha256": "c17503a62a7328d9c7bcb0a9d56c893e7a993a1c0927d03dd30e1d3028e1e228"
+    },
+    "candidate_results.csv": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/candidate_results.csv",
+      "sha256": "c3c75c4f789671a23ae1f0bb1f320434cd6d91c64ccacf34af030f0768cab00c"
+    },
+    "method_summary.csv": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/method_summary.csv",
+      "sha256": "e9615599c0ce963b9d92b88ba6f91748f7eba55dbcdf18867b723a90622cb2a8"
+    },
+    "query_ids.csv": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/query_ids.csv",
+      "sha256": "b840374f85fe54b1d8a5acfe0a8ef9887f9a38428b42647a673941eac73c1f74"
+    },
+    "query_results.csv": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/query_results.csv",
+      "sha256": "658b0c3ac2f3a92c9ec253eaeed87786a8eb633baf54a709c7c8e3982082ace6"
+    },
+    "run_manifest.json": {
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_10pct_5fold/primary/run_manifest.json",
+      "sha256": "de845f1dd957fc9c7b7be2a7737f17369248af71061f4ea8b433bbf52b035ce3"
+    }
+  },
+  "categorical_policy": {
+    "actionable": "dedicacion",
+    "allowed_values": [
+      "TC",
+      "TP"
+    ],
+    "other_categorical_features": "immutable"
+  },
+  "dataset": "UPV-2025",
+  "dataset_checksums": [
+    {
+      "md5": "43fc067c88f09797dacbcd83ee83cc28",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2018_hash.zip",
+      "rows": 152446,
+      "sha256": "06d7edb296560e91080aa3d67276b1b6f6f6ab8ecd3b05fcfedcb36d74d946a4",
+      "year": "2018"
+    },
+    {
+      "md5": "50cfb2d0f0a07bf3460bc259ffa84064",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2021_hash.zip",
+      "rows": 153120,
+      "sha256": "6722c90066bf0eba2a67c83dcbb03e75fc86dffd217363948eab3c97fc3594cc",
+      "year": "2021"
+    },
+    {
+      "md5": "b5f724fde2c33961f07f26e8fa25b4b7",
+      "path": "/mnt/d/workspace/masterai/thesis/ufce_agent/data/upv_2025/dataset_2022_hash.zip",
+      "rows": 159173,
+      "sha256": "5da43877b53a0efea334360b8d1abc86d04675cb9df706d44c6d53e260cea91f",
+      "year": "2022"
+    }
+  ],
+  "desired_class": 1,
+  "experiment": "UPV-2025 UFCE-FF Author-Alignment Experiment",
+  "max_candidates": 5,
+  "methods": [
+    "UFCE-FF1",
+    "UFCE-FF2",
+    "UFCE-FF3"
+  ],
+  "mi_pair_hashes": {
+    "ALL_FEATURE_TOP5": "a07c8576967ef0e1e3a170187c5ae5980bc1c4cec2f4eeb1b2ae91785ffaff5d",
+    "DIGITAL_PAIRS_PLUS_CATEGORY": "980eed7b77ee7488f4f295c5d220cacf7f69de185578f32a79fa965d44539f67"
+  },
+  "mi_rows": 10007,
+  "mi_strategies": [
+    "DIGITAL_PAIRS_PLUS_CATEGORY",
+    "ALL_FEATURE_TOP5"
+  ],
+  "model_checkpoint": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025/model_bundle_checkpoint.joblib",
+  "model_sha256": "4b147158bf9406f507fcea7dc97178365fc0679fea93603455a56cd8af88690f",
+  "paired_bootstrap": {
+    "resamples": 2000,
+    "seed": 42
+  },
+  "paired_query_count": 207,
+  "primary_seed": 0,
+  "query_contract": "saved 207 unique-student queries, model prediction 0, desired class 1",
+  "reference_id_manifests": [
+    {
+      "label": "10k",
+      "ordered_reference_ids_path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_author_alignment_v1/reference_ids_10k.csv",
+      "ordered_reference_ids_sha256": "74ae568a22c76e9bf3daf55dc74f5c76ae11750f23b8e6eca4863cd921ef3c9b",
+      "rows": 10007,
+      "students": 857
+    },
+    {
+      "label": "full_train",
+      "ordered_reference_ids_path": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/external_binary_eval/upv_2025_author_alignment_v1/reference_ids_full_train.csv",
+      "ordered_reference_ids_sha256": "cdc47d7b2d7024dcd82f9c7d87f85126e7bb39bd141ed94185966f85146c757d",
+      "rows": 325483,
+      "students": 27554
+    }
+  ],
+  "reference_sizes": {
+    "10k": 10007,
+    "full_train": 325483
+  },
+  "regime": "MODERATE",
+  "source_class": 0,
+  "split": "saved deterministic student-group 70/15/15 split",
+  "supplementary_tp_query_count": 100,
+  "supplementary_tp_seed": 42,
+  "timeout_seconds": 60.0
+}

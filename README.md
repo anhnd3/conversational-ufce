@@ -10,6 +10,7 @@ The repository has two thesis-facing experiment tracks:
 The deterministic UFCE backend remains the authority. The LLM is used only for structured parsing.
 
 Step-by-step commands are in `docs/FINAL_RUNBOOK.md`.
+The two defense-appendix experiments and their committed evidence are mapped in `docs/APPENDIX_QUICK_EXPERIMENTS.md`.
 Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 
 ## Scope
@@ -29,8 +30,9 @@ Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 - `llm/`: parser, validation, runtime, and product code
 - `llm_eval/`: parser benchmark support
 - `ufce/`: UFCE cores and datasets
-- `outputs/`: generated artifacts, ignored and local-only except the compact
+- `outputs/`: generated local artifacts, ignored except the compact
   thesis-final summary at `outputs/final/thesis_canonical/summary.json`
+- `evidence/appendix_20260927/`: de-identified paired ledger, aggregate reports, and manifests for the two defense-appendix experiments
 - `docs/`: runbook, evidence map, and thesis-facing notes
 
 ## Publication Boundary
@@ -38,8 +40,8 @@ Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 The GitHub-facing repo keeps source, small frozen inputs, tests, and compact
 thesis-facing documentation. Generated outputs, logs, temporary workspaces,
 archived process notes, and exploratory thesis drafts stay local-only through
-`.gitignore`. The only committed output is the thesis-final canonical summary
-used to align the source release with Final_v7.6.
+`.gitignore`. The committed outputs are the thesis-final canonical summary and the curated
+2026-09-27 appendix evidence. Raw datasets, learned model bundles, and interim checkpoints remain local.
 
 ## Setup
 

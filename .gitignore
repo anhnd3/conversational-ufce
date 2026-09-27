@@ -237,3 +237,8 @@ llm/tests/test_phase2_chapter_pack.py
 llm/tests/test_phase3_1_closeout_suite.py
 llm/tests/test_phase3_2_acceptance_report.py
 llm/tests/test_phase3_2_metrics_report.py
+
+# Local raw archives and rejected patch backups for appendix experiments.
+data/
+*.orig
+*.rej

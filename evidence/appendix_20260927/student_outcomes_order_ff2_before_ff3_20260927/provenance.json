@@ -1,0 +1,32 @@
+{
+  "baseline_dir": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/native_multiclass_eval/student_outcomes_20260924_resume1",
+  "baseline_freeze_sha256": "4de171c65a233b51b97cd6080908808c82f3030682c6b0d1f68bc7da42348496",
+  "dataset_sha256": "e90e55fd65ec462ae283ebeb2cca409319e3460ed898d8754f62fb35cc83a65d",
+  "model_sha256": "2c904fbd9115393aeee1799d1a26e28c62b4fb0a349553e0e8cf3cbd36431256",
+  "order_within_transition": [
+    "UFCE-FF2",
+    "UFCE-FF3"
+  ],
+  "post_hoc": true,
+  "query_count": 546,
+  "source_changes_since_baseline": {
+    "scripts/native_multiclass_eval/config.py": {
+      "current_sha256": "a8c81cc995de69235ffbc8b32914c2cb94726e2c2d3049a52224cf731b77b250",
+      "frozen_sha256": "80faa104c1825be3d7ff3941b6758027f48e617b57e27e915654844e5aa99644"
+    },
+    "scripts/native_multiclass_eval/runner.py": {
+      "current_sha256": "bfd93fa1b5fd6a8dcbac84f4fee004395b7b3dd5e2e5c7e1ada39331ac629729",
+      "frozen_sha256": "523037f6df74042f2b3e6935b4f75ae1195684ead8a93c863279c84acb2cb385"
+    },
+    "ufce/ufce_ff/ufce.py": {
+      "current_sha256": "a7c775ccd7393e2688fc7795406f62d83f8aa0d6dd36451e3e4b8bdb22df6f26",
+      "frozen_sha256": "f8aab5328ceb4fe9a7f2f387828c7d123bbc6009ea6ee9d9fd5554e05747772e"
+    }
+  },
+  "started_at_unix": 1790496697.9074974,
+  "transitions": [
+    "dropout_to_enrolled",
+    "dropout_to_graduate",
+    "enrolled_to_graduate"
+  ]
+}

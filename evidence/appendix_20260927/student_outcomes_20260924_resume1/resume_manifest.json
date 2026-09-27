@@ -1,0 +1,46 @@
+{
+  "allowed_source_differences": [
+    "scripts/native_multiclass_eval/config.py",
+    "scripts/native_multiclass_eval/runner.py"
+  ],
+  "checkpoint_compatibility_passed": true,
+  "checkpoint_query_method_rows": 950,
+  "checkpoint_source_run": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/native_multiclass_eval/student_outcomes_20260924_retry3",
+  "checkpoint_source_sha256": {
+    "scripts/native_multiclass_eval/__init__.py": "58edd75d456ab693ed4f0d98616b228e80a8a46aab2046c75d5a4949f1847db3",
+    "scripts/native_multiclass_eval/adapters.py": "711b619a5405b093bb3d1c20b4939dbd0623427bd0748bb102cce9d87e66f918",
+    "scripts/native_multiclass_eval/config.py": "80faa104c1825be3d7ff3941b6758027f48e617b57e27e915654844e5aa99644",
+    "scripts/native_multiclass_eval/dataset.py": "f7101f5073898be1b291c6eb094a6cef0a757f8b45c08d1f8ccc55bbfceb71e0",
+    "scripts/native_multiclass_eval/metrics.py": "b745d2703e634f95e3356366c72d7736310c03798913327bde8d154319dfb4a7",
+    "scripts/native_multiclass_eval/model.py": "62dc2c9c206ffd40ddb7894a655734260083f7505b8dcc707ee6a90af962cb20",
+    "scripts/native_multiclass_eval/policy.py": "3da1ea39a41c9b09ac48d3c20a4d6577e39d22aed55314430a56b7903092590a",
+    "scripts/native_multiclass_eval/runner.py": "523037f6df74042f2b3e6935b4f75ae1195684ead8a93c863279c84acb2cb385",
+    "scripts/native_multiclass_eval/space.py": "9b27a0e7349b51e45b5abb094592e6d0f692a74d42fd18abe7a2782dff861414",
+    "scripts/native_multiclass_eval/test_native_multiclass.py": "e40f1b2fe7529ceec97d33ad2a761f2b03b5b92d2fe810643a1eb496f3bfd114",
+    "scripts/native_multiclass_eval/timeout.py": "00d46ac36e4697c1660e57f0fe7196139e57c3ff9b6912e346bb2bd4d0e49f23",
+    "scripts/native_multiclass_eval/verification.py": "bde146f3e17722aa096002813e64f442a03bb90b77c5e8010774c964fe7c8f07",
+    "ufce/ufce_ff/cfmethods.py": "0ea4a749643671c01a5b3556e4971cced17c8263d27d7787a36c4f60090ef2c0",
+    "ufce/ufce_ff/ufce.py": "f8aab5328ceb4fe9a7f2f387828c7d123bbc6009ea6ee9d9fd5554e05747772e"
+  },
+  "continuation_source_sha256": {
+    "scripts/native_multiclass_eval/__init__.py": "58edd75d456ab693ed4f0d98616b228e80a8a46aab2046c75d5a4949f1847db3",
+    "scripts/native_multiclass_eval/adapters.py": "711b619a5405b093bb3d1c20b4939dbd0623427bd0748bb102cce9d87e66f918",
+    "scripts/native_multiclass_eval/config.py": "a8c81cc995de69235ffbc8b32914c2cb94726e2c2d3049a52224cf731b77b250",
+    "scripts/native_multiclass_eval/dataset.py": "f7101f5073898be1b291c6eb094a6cef0a757f8b45c08d1f8ccc55bbfceb71e0",
+    "scripts/native_multiclass_eval/metrics.py": "b745d2703e634f95e3356366c72d7736310c03798913327bde8d154319dfb4a7",
+    "scripts/native_multiclass_eval/model.py": "62dc2c9c206ffd40ddb7894a655734260083f7505b8dcc707ee6a90af962cb20",
+    "scripts/native_multiclass_eval/policy.py": "3da1ea39a41c9b09ac48d3c20a4d6577e39d22aed55314430a56b7903092590a",
+    "scripts/native_multiclass_eval/runner.py": "a687ddd4641f98b295b1b433c0b9bcfe6f05dfc391841506d9e71e60b937af59",
+    "scripts/native_multiclass_eval/space.py": "9b27a0e7349b51e45b5abb094592e6d0f692a74d42fd18abe7a2782dff861414",
+    "scripts/native_multiclass_eval/test_native_multiclass.py": "e40f1b2fe7529ceec97d33ad2a761f2b03b5b92d2fe810643a1eb496f3bfd114",
+    "scripts/native_multiclass_eval/timeout.py": "00d46ac36e4697c1660e57f0fe7196139e57c3ff9b6912e346bb2bd4d0e49f23",
+    "scripts/native_multiclass_eval/verification.py": "bde146f3e17722aa096002813e64f442a03bb90b77c5e8010774c964fe7c8f07",
+    "ufce/ufce_ff/cfmethods.py": "0ea4a749643671c01a5b3556e4971cced17c8263d27d7787a36c4f60090ef2c0",
+    "ufce/ufce_ff/ufce.py": "f8aab5328ceb4fe9a7f2f387828c7d123bbc6009ea6ee9d9fd5554e05747772e"
+  },
+  "expected_query_method_rows": 5312,
+  "model_and_split_reused": true,
+  "pilot_gate_reused": true,
+  "resumed_at_unix": 1790257923.1278403,
+  "resumed_from": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/native_multiclass_eval/student_outcomes_20260924_checkpoint_760_20260924_204008"
+}

@@ -1,0 +1,20 @@
+{
+  "source_run": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/native_multiclass_eval/student_outcomes_20260924_retry3",
+  "checkpoint_created_at_unix": 1790257208.4510481,
+  "source_pid": 8334,
+  "process_stopped": true,
+  "query_method_rows": 950,
+  "unique_query_target_pairs": 380,
+  "expected_query_method_rows": 5312,
+  "statuses": {
+    "OK": 950
+  },
+  "completed_blocks": {
+    "dropout_to_enrolled|DiCE": 190,
+    "dropout_to_enrolled|UFCE-FF1": 190,
+    "dropout_to_enrolled|UFCE-FF2": 190,
+    "dropout_to_enrolled|UFCE-FF3": 190,
+    "dropout_to_graduate|UFCE-FF1": 190
+  },
+  "usable_as_final_result": false
+}

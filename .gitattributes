@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Preserve exact published appendix evidence bytes and checksum manifests.
+evidence/appendix_20260927/** -text

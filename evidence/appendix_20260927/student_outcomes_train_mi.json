@@ -1,0 +1,104 @@
+{
+  "actionable_features": [
+    "Curricular units 1st sem (evaluations)",
+    "Curricular units 1st sem (approved)",
+    "Curricular units 1st sem (grade)",
+    "Curricular units 1st sem (without evaluations)",
+    "Curricular units 2nd sem (evaluations)",
+    "Curricular units 2nd sem (approved)",
+    "Curricular units 2nd sem (grade)",
+    "Curricular units 2nd sem (without evaluations)"
+  ],
+  "cache_version": 1,
+  "encoded_feature_names": [
+    "Marital status",
+    "Application mode",
+    "Application order",
+    "Course",
+    "Daytime/evening attendance",
+    "Previous qualification",
+    "Previous qualification (grade)",
+    "Nacionality",
+    "Mother's qualification",
+    "Father's qualification",
+    "Mother's occupation",
+    "Father's occupation",
+    "Admission grade",
+    "Displaced",
+    "Educational special needs",
+    "Debtor",
+    "Tuition fees up to date",
+    "Gender",
+    "Scholarship holder",
+    "Age at enrollment",
+    "International",
+    "Curricular units 1st sem (credited)",
+    "Curricular units 1st sem (enrolled)",
+    "Curricular units 1st sem (evaluations)",
+    "Curricular units 1st sem (approved)",
+    "Curricular units 1st sem (grade)",
+    "Curricular units 1st sem (without evaluations)",
+    "Curricular units 2nd sem (credited)",
+    "Curricular units 2nd sem (enrolled)",
+    "Curricular units 2nd sem (evaluations)",
+    "Curricular units 2nd sem (approved)",
+    "Curricular units 2nd sem (grade)",
+    "Curricular units 2nd sem (without evaluations)",
+    "Unemployment rate",
+    "Inflation rate",
+    "GDP"
+  ],
+  "mi_implementation_sha256": "6913714a04f9cdd9d666eec293a3fb9d7fb12b7ceeae1c079f0e35240683e078",
+  "mi_pairs": [
+    [
+      "Curricular units 2nd sem (approved)",
+      "Curricular units 2nd sem (grade)"
+    ],
+    [
+      "Curricular units 1st sem (approved)",
+      "Curricular units 2nd sem (approved)"
+    ],
+    [
+      "Curricular units 1st sem (approved)",
+      "Curricular units 1st sem (grade)"
+    ],
+    [
+      "Curricular units 1st sem (grade)",
+      "Curricular units 2nd sem (grade)"
+    ],
+    [
+      "Curricular units 1st sem (evaluations)",
+      "Curricular units 2nd sem (evaluations)"
+    ],
+    [
+      "Curricular units 1st sem (grade)",
+      "Curricular units 2nd sem (approved)"
+    ],
+    [
+      "Curricular units 1st sem (approved)",
+      "Curricular units 2nd sem (grade)"
+    ],
+    [
+      "Curricular units 1st sem (evaluations)",
+      "Curricular units 1st sem (approved)"
+    ],
+    [
+      "Curricular units 2nd sem (evaluations)",
+      "Curricular units 2nd sem (approved)"
+    ],
+    [
+      "Curricular units 1st sem (evaluations)",
+      "Curricular units 2nd sem (approved)"
+    ]
+  ],
+  "mi_pairs_sha256": "37de41acaa3f2003738031b93cd52c5d5c6b5b2c0b59695340d82e0e7038c663",
+  "mi_seed": 42,
+  "precompute_seconds": 0.2437033990136115,
+  "scope": "train_only",
+  "source_dataset_sha256": "e90e55fd65ec462ae283ebeb2cca409319e3460ed898d8754f62fb35cc83a65d",
+  "split_seed": 42,
+  "top_k": 10,
+  "train_encoded_sha256": "38d7de352a08a7253a4cb3afab34aef7ad7bc38cad21e5040cc678278420efc1",
+  "train_row_count": 3096,
+  "train_row_ids_sha256": "e7fba63b38864d65b476b605c9ee89ff47d5cdabc1431b6ab70f0ab7d7baff1f"
+}

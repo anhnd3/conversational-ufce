@@ -56,3 +56,15 @@ Operational note for the appendix workflow:
 Raw run outputs under `outputs/**` and `llm_eval/outputs/**` are local-only. A
 fresh GitHub clone should rely on the retained scripts, small frozen inputs, and
 this map rather than committed raw output dumps.
+
+## 2026-09-27 Defense Appendix Experiments
+
+| Slide | Experiment | Source | Committed evidence |
+| --- | --- | --- | --- |
+| 24–25 | UPV-2025 train scale and MI sensitivity | `scripts/external_binary_eval/` | `evidence/appendix_20260927/upv_2025_*` |
+| 26–27 | Native multiclass Student Outcomes and DiCE backend supplement | `scripts/native_multiclass_eval/`, `ufce/ufce_ff/` | `evidence/appendix_20260927/student_outcomes_*` |
+
+The claim-by-claim map, quality-gate status, partial-run boundary, and
+recomputation command are in `docs/APPENDIX_QUICK_EXPERIMENTS.md`. These
+curated artifacts are an explicit exception to the earlier local-only output
+policy above; the canonical thesis tables are unaffected.

@@ -1,0 +1,44 @@
+{
+  "dataset": "UPV-2025",
+  "desired_class": 1,
+  "label_mapping": {
+    "A": 0,
+    "B": 1
+  },
+  "max_candidates": 5,
+  "max_queries": 1000,
+  "methods": [
+    "UFCE-FF1",
+    "UFCE-FF2",
+    "UFCE-FF3",
+    "DiCE",
+    "AR"
+  ],
+  "phase": 1,
+  "primary_seed": 0,
+  "reference_sizes": [
+    10000,
+    50000,
+    100000,
+    "full_train"
+  ],
+  "regimes": [
+    "STRICT",
+    "MODERATE",
+    "FLEXIBLE"
+  ],
+  "robustness_seeds": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_class": 0,
+  "statistical_contract": {
+    "paired_bootstrap_resamples": 2000,
+    "paired_bootstrap_seed": 42,
+    "primary_seed_only": true,
+    "wilson": true
+  },
+  "timeout_seconds": 60.0
+}

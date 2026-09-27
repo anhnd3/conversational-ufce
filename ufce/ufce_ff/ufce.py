@@ -74,6 +74,14 @@ class UFCE():
         self.atol = float(atol)
         # Optional runtime debug context injected by caller (e.g., hypertune script).
         self.debug_ctx = None
+        # Reuse immutable reference indexes and pairwise auxiliary models
+        # across queries in external evaluations.
+        self._kdtree_cache = {}
+        self._radius_bounds_cache = {}
+        self._last_neighbor_backend = "scipy.spatial.KDTree"
+        self._categorical_model_cache = {}
+        self._external_categorical_features = set()
+        self._regression_model_cache = {}
         #self.selected_features = user_selected_features
         #self.intervals = user_preferences
         #self.features = ['age', 'Experience', 'Income', 'Family', 'CCAvg', 'Education', 'Mortgage', 'SecuritiesAccount', 'CDAccount', 'Online', 'CreditCard']
@@ -224,9 +232,30 @@ class UFCE():
         :return:
         """
         import numpy as np
-        from scipy.spatial import KDTree
-        tree = KDTree(data_lab1)
+        from scipy.spatial import KDTree, cKDTree
+        cache_key = (id(data_lab1), tuple(data_lab1.shape), tuple(test_inst.columns))
+        radius_result = self._all_rows_inside_radius(data_lab1, test_inst, cache_key)
+        if radius_result is not None:
+            nn, idx, max_distance = radius_result
+            self._last_neighbor_backend = "exact_radius_superset_scan"
+            if return_meta:
+                return nn, idx, {"k_retrieved": "NA(radius-only)", "within_radius_count": int(len(idx)), "radius": float(self.radius), "neighbor_idx_head": [int(i) for i in idx[:5]], "backend": self._last_neighbor_backend, "upper_bound_max_distance": max_distance}
+            return nn, idx
+        tree = self._kdtree_cache.get(cache_key)
+        if tree is None:
+            try:
+                tree = KDTree(data_lab1)
+            except RecursionError:
+                # Older SciPy releases build KDTree in Python recursion. Large,
+                # degenerate tabular references can exceed the interpreter
+                # recursion limit; cKDTree has the same spatial query contract
+                # and avoids that implementation limit.
+                tree = cKDTree(data_lab1)
+            self._kdtree_cache = {cache_key: tree}
         idx = tree.query_ball_point(test_inst.values[0], r=self.radius)
+        if isinstance(tree, cKDTree):
+            idx = np.sort(np.asarray(idx, dtype=np.int64))
+        self._last_neighbor_backend = type(tree).__name__
         nn = pd.DataFrame.from_records(tree.data[idx], columns=test_inst.columns)
         if return_meta:
             meta = {
@@ -237,6 +266,39 @@ class UFCE():
             }
             return nn, idx, meta
         return nn, idx
+
+    def cache_reference_bounds(self, data_lab1):
+        """Cache finite per-feature bounds used by the exact radius fast path."""
+        import numpy as np
+        key = (id(data_lab1), tuple(data_lab1.shape), tuple(data_lab1.columns))
+        if key not in self._radius_bounds_cache:
+            values = np.asarray(data_lab1, dtype=float)
+            if values.ndim != 2 or values.shape[0] == 0 or not np.isfinite(values).all():
+                self._radius_bounds_cache[key] = None
+            else:
+                self._radius_bounds_cache[key] = (values.min(axis=0), values.max(axis=0))
+        return self._radius_bounds_cache[key] is not None
+
+    def _all_rows_inside_radius(self, data_lab1, test_inst, cache_key):
+        """Return all rows when a conservative box-distance bound proves all are neighbors."""
+        import numpy as np
+        if len(data_lab1) <= 10000:
+            return None
+        bounds = self._radius_bounds_cache.get(cache_key)
+        if bounds is None:
+            if not self.cache_reference_bounds(data_lab1):
+                return None
+            bounds = self._radius_bounds_cache.get(cache_key)
+        query = np.asarray(test_inst.values[0], dtype=float)
+        if query.ndim != 1 or len(query) != len(bounds[0]) or not np.isfinite(query).all():
+            return None
+        farthest_delta = np.maximum(np.abs(bounds[0] - query), np.abs(bounds[1] - query))
+        upper_bound = float(np.linalg.norm(farthest_delta))
+        if not np.isfinite(upper_bound) or upper_bound >= float(self.radius):
+            return None
+        indices = np.arange(len(data_lab1), dtype=np.int64)
+        neighbors = data_lab1.reset_index(drop=True)
+        return neighbors, indices, upper_bound
 
     def get_cfs_validated(self, df, model, desired_outcome):
         """
@@ -277,8 +339,27 @@ class UFCE():
         f_end = 0
         for f in feat2change:
             if f in uf.keys():
+                configured = uf[f]
+                if f in self._external_categorical_features:
+                    values = [int(np.ceil(float(configured[0]))), int(np.floor(float(configured[1])))]
+                    if values[0] <= values[1]:
+                        intervals[f] = values
+                    continue
+                # Multiclass counterfactuals may need to move either up or
+                # down. A two-value interval is the explicit, inclusive
+                # feature domain; scalar values retain the historical
+                # non-negative-delta behavior used by the binary runners.
+                if isinstance(configured, (tuple, list, np.ndarray)) and len(configured) == 2:
+                    lower, upper = sorted([float(configured[0]), float(configured[1])])
+                    lower = max(lower, float(nn[f].min()))
+                    upper = min(upper, float(nn[f].max()))
+                    if lower <= upper:
+                        int_lower, int_upper = int(np.ceil(lower)), int(np.floor(upper))
+                        if int_lower <= int_upper:
+                            intervals[f] = [int_lower, int_upper]
+                    continue
                 f_start = test[f].values
-                max_limit = test[f].values + uf[f]
+                max_limit = test[f].values + configured
                 if isinstance(uf[f], float):
                     space = np.arange(test[f].values, max_limit, 0.1)
                     if len(space) != 0:
@@ -311,6 +392,34 @@ class UFCE():
             f2 = featurepair[1]
             f1_start, f1_end, f2_start, f2_end = 0, 0, 0, 0
             f1_start = test[f1].values
+            categorical_features = self._external_categorical_features
+            if f1 in categorical_features or f2 in categorical_features:
+                for feature in (f1, f2):
+                    if feature in categorical_features:
+                        low, high = sorted((float(uf[feature][0]), float(uf[feature][1])))
+                        faithful_interval[feature] = [int(np.ceil(low)), int(np.floor(high))]
+                    else:
+                        start = float(test[feature].iloc[0])
+                        step_size = 0.1 if isinstance(uf[feature], float) else 1
+                        space = np.arange(start, start + uf[feature], step_size)
+                        end = float(space[-1]) if len(space) else start
+                        if end >= float(nn[feature].max()):
+                            end = float(nn[feature].max())
+                        faithful_interval[feature] = [start, end]
+                continue
+            if isinstance(uf[f1], (tuple, list, np.ndarray)) and len(uf[f1]) == 2:
+                f1_low, f1_high = sorted([float(uf[f1][0]), float(uf[f1][1])])
+                f1_low = max(f1_low, float(nn[f1].min()))
+                f1_high = min(f1_high, float(nn[f1].max()))
+                f2_low, f2_high = sorted([float(uf[f2][0]), float(uf[f2][1])])
+                f2_low = max(f2_low, float(nn[f2].min()))
+                f2_high = min(f2_high, float(nn[f2].max()))
+                f1_int = [int(np.ceil(f1_low)), int(np.floor(f1_high))]
+                f2_int = [int(np.ceil(f2_low)), int(np.floor(f2_high))]
+                if f1_int[0] <= f1_int[1] and f2_int[0] <= f2_int[1]:
+                    faithful_interval[f1] = f1_int
+                    faithful_interval[f2] = f2_int
+                continue
             ###
             max_limit1 = f1_start + uf[f1]
             if isinstance(uf[f1], float):
@@ -487,11 +596,43 @@ class UFCE():
                             pass
             else:
                 tempdfcat = test_instance.copy()
-                tempdfcat.loc[:, feature] = 1.0 if tempdfcat.loc[:, feature].values else 1.0
-                pred = model.predict(tempdfcat)
-                if pred == outcome:
-                    cfdfout = pd.concat([cfdfout, tempdfcat], ignore_index=True, axis=0)
+                factual_value = float(tempdfcat[feature].iloc[0])
+                interval = user_term_intervals[feature]
+                for category_value in self._categorical_alternatives(interval, factual_value):
+                    candidate = tempdfcat.copy()
+                    candidate.loc[:, feature] = float(category_value)
+                    pred = model.predict(candidate)
+                    if int(np.asarray(pred).reshape(-1)[0]) == int(outcome):
+                        cfdfout = pd.concat([cfdfout, candidate], ignore_index=True, axis=0)
         return cfdfout
+
+    @staticmethod
+    def _categorical_alternatives(interval, factual_value):
+        """Return allowed ordinal category codes other than the factual code."""
+        if interval is None or len(interval) != 2:
+            return []
+        low, high = sorted((int(np.ceil(float(interval[0]))), int(np.floor(float(interval[1])))))
+        factual = float(factual_value)
+        return [value for value in range(low, high + 1) if not np.isclose(value, factual)]
+
+    @staticmethod
+    def _numeric_interval_values(interval, limit=4):
+        """Choose deterministic values inside an inclusive numeric interval."""
+        if interval is None or len(interval) != 2:
+            return []
+        low, high = sorted((float(interval[0]), float(interval[1])))
+        if np.isclose(low, high):
+            return [low]
+        values = [high, low + 0.75 * (high - low), low + 0.5 * (high - low), low + 0.25 * (high - low)]
+        if np.isclose(low, round(low)) and np.isclose(high, round(high)):
+            values = [float(round(value)) for value in values]
+        result = []
+        for value in values:
+            if not any(np.isclose(value, prior) for prior in result):
+                result.append(value)
+            if len(result) >= limit:
+                break
+        return result
 
     # Double-Feature
     def regressionModel(self, df, f_independent, f_dependent):
@@ -501,6 +642,9 @@ class UFCE():
         :param f_dependent: feature whose value to predict
         :return:
         """
+        cache_key = (id(df), str(f_dependent))
+        if cache_key in self._regression_model_cache:
+            return self._regression_model_cache[cache_key]
         X = np.array(df.loc[:, df.columns != f_dependent])
         y = np.array(df.loc[:, df.columns == f_dependent])
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
@@ -511,7 +655,9 @@ class UFCE():
         import math
         mse = mean_squared_error(y_test, y_pred)
         msse = math.sqrt(mean_squared_error(y_test, y_pred))
-        return linear_reg, mse, msse
+        result = (linear_reg, mse, msse)
+        self._regression_model_cache[cache_key] = result
+        return result
 
     def catclassifyModel(self, df, f_independent, f_dependent):
         """
@@ -520,6 +666,9 @@ class UFCE():
         :param f_dependent:
         :return:
         """
+        cache_key = (id(df), str(f_dependent))
+        if cache_key in self._categorical_model_cache:
+            return self._categorical_model_cache[cache_key]
         X = np.array(df.loc[:, df.columns != f_dependent])
         y = np.array(df.loc[:, df.columns == f_dependent])
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
@@ -527,7 +676,9 @@ class UFCE():
         log_reg.fit(X_train, y_train.ravel())
         y_pred = log_reg.predict(X_test)
         ba = balanced_accuracy_score(y_test, y_pred)
-        return log_reg, ba
+        result = (log_reg, ba)
+        self._categorical_model_cache[cache_key] = result
+        return result
 
     def Double_F(self, df, test_instance, protected_features, feature_pairs, u_cat_f_list, numf, user_term_intervals, features, model, desired_outcome, order, k):
         """
@@ -557,8 +708,33 @@ class UFCE():
             temptempdf = pd.DataFrame()
             tempdf1 = pd.DataFrame()
             tempdf1 = test_instance.copy()
-            if (f1 in numf and f2 in numf) and (f1 not in protected_features and f2 not in protected_features):  # both numerical
-                if f1 and f2 in user_term_intervals.keys():
+            categorical_pair = [name for name in (f1, f2) if name in u_cat_f_list]
+            if len(categorical_pair) == 1:
+                category_feature = categorical_pair[0]
+                numeric_feature = f2 if category_feature == f1 else f1
+                if numeric_feature in user_term_intervals and category_feature in user_term_intervals and numeric_feature not in protected_features:
+                    factual_category = float(test_instance[category_feature].iloc[0])
+                    category_values = self._categorical_alternatives(user_term_intervals[category_feature], factual_category)
+                    numeric_values = self._numeric_interval_values(user_term_intervals[numeric_feature])
+                    for category_value in category_values:
+                        for numeric_value in numeric_values:
+                            candidate = test_instance.copy()
+                            candidate.loc[:, category_feature] = float(category_value)
+                            candidate.loc[:, numeric_feature] = float(numeric_value)
+                            candidate = candidate[order]
+                            two_feature_explore = pd.concat([two_feature_explore, candidate], ignore_index=True, axis=0)
+                            pred = np.asarray(model.predict(candidate)).reshape(-1)
+                            if pred.size and int(pred[0]) == int(desired_outcome):
+                                cfdf = pd.concat([cfdf, candidate], ignore_index=True, axis=0)
+                                if len(cfdf) >= k:
+                                    break
+                        if len(cfdf) >= k:
+                            break
+                if len(cfdf) >= k:
+                    break
+                continue
+            if (f1 in numf and f2 in numf) and (f1 not in protected_features and f2 not in protected_features):
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     interval_term_range1 = user_term_intervals[f1]
                     interval_term_range2 = user_term_intervals[f2]
                     start1 = int(interval_term_range1[0])
@@ -614,7 +790,7 @@ class UFCE():
                             pass
 
             elif (f1 in u_cat_f_list and f2 in u_cat_f_list) and f1 and f2 not in protected_features:  # both categorical
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     tempdfcat = test_instance.copy()
                     tempdfcat.loc[:, f1] = user_term_intervals[f1][1] # 0.0 if tempdfcat.loc[:, f1].values else 1.0
                     tempdfcat.loc[:, f2] = user_term_intervals[f2][1] #0.0 if tempdfcat.loc[:, f2].values else 1.0
@@ -627,7 +803,7 @@ class UFCE():
                         break
 
             elif (f1 in numf and f2 in u_cat_f_list) and f1 and f2 not in protected_features:  # num -> cat (binary classification)
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     interval_term_range1 = user_term_intervals[f1]
                     interval_term_range2 = user_term_intervals[f2]
                     start1 = int(interval_term_range1[0])
@@ -666,7 +842,7 @@ class UFCE():
                         except:
                             pass
             elif (f1 in u_cat_f_list and f2 in numf) and (f1 and f2 not in protected_features): # cat and num
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     temptempdf = tempdf1.copy()
                     tempdf1.loc[:, f1] = user_term_intervals[f1][1]
                     reg_model, mse, rmse = self.regressionModel(df, f1, f2)
@@ -716,8 +892,41 @@ class UFCE():
             temptempdf = pd.DataFrame()
             tempdf1 = pd.DataFrame()
             tempdf1 = test_instance.copy()
-            if (f1 and f2 in numf) and (f1 and f2 not in protected_features):  # both numerical
-                if f1 and f2 in user_term_intervals.keys():
+            categorical_pair = [name for name in (f1, f2) if name in u_cat_f_list]
+            if len(categorical_pair) == 1:
+                category_feature = categorical_pair[0]
+                numeric_feature = f2 if category_feature == f1 else f1
+                if numeric_feature in user_term_intervals and category_feature in user_term_intervals:
+                    factual_category = float(test_instance[category_feature].iloc[0])
+                    category_values = self._categorical_alternatives(user_term_intervals[category_feature], factual_category)
+                    numeric_values = self._numeric_interval_values(user_term_intervals[numeric_feature])
+                    third_features = [name for name in features_2change if name != numeric_feature and name != category_feature and name in user_term_intervals and name in numf]
+                    for category_value in category_values:
+                        for numeric_value in numeric_values:
+                            for third_feature in (third_features[:5] or [None]):
+                                candidate = test_instance.copy()
+                                candidate.loc[:, category_feature] = float(category_value)
+                                candidate.loc[:, numeric_feature] = float(numeric_value)
+                                if third_feature is not None:
+                                    third_values = self._numeric_interval_values(user_term_intervals[third_feature], limit=1)
+                                    if third_values:
+                                        candidate.loc[:, third_feature] = float(third_values[0])
+                                candidate = candidate[order]
+                                three_feature_explore = pd.concat([three_feature_explore, candidate], ignore_index=True, axis=0)
+                                pred = np.asarray(model.predict(candidate)).reshape(-1)
+                                if pred.size and int(pred[0]) == int(desired_outcome):
+                                    cfdf = pd.concat([cfdf, candidate], ignore_index=True, axis=0)
+                                    if len(cfdf) >= k:
+                                        break
+                            if len(cfdf) >= k:
+                                break
+                        if len(cfdf) >= k:
+                            break
+                if len(cfdf) >= k:
+                    break
+                continue
+            if (f1 in numf and f2 in numf) and (f1 not in protected_features and f2 not in protected_features):
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     interval_term_range1 = user_term_intervals[f1]
                     interval_term_range2 = user_term_intervals[f2]
                     start1 = int(interval_term_range1[0])
@@ -799,7 +1008,7 @@ class UFCE():
                             pass
             elif f1 and f2 in u_cat_f_list:  # both categorical
                 # for feature in [f1, f2]:
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     tempdfcat = test_instance.copy()
                     tempdfcat.loc[:, f1] = user_term_intervals[f1][1] #0.0 if tempdfcat.loc[:, f1].values else 1.0
                     tempdfcat.loc[:, f2] = user_term_intervals[f2][1] #0.0 if tempdfcat.loc[:, f2].values else 1.0
@@ -854,7 +1063,7 @@ class UFCE():
                                     break
 
             elif f1 in numf and f2 in u_cat_f_list:  # num -> cat (binary classification)
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     interval_term_range1 = user_term_intervals[f1]
                     start1 = interval_term_range1[0]
                     end1 = interval_term_range1[1]
@@ -923,7 +1132,7 @@ class UFCE():
                         except:
                             pass
             elif f1 in u_cat_f_list and f2 in numf and (f1 and f2 not in protected_features): # cat and num
-                if f1 and f2 in user_term_intervals.keys():
+                if f1 in user_term_intervals and f2 in user_term_intervals:
                     temptempdf = tempdf1.copy()
                     tempdf1.loc[:, f1] = user_term_intervals[f1][1]
                     reg_model, mse, rmse = self.regressionModel(df, f1, f2)

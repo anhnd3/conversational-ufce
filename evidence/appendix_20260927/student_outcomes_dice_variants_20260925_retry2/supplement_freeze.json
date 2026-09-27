@@ -1,0 +1,66 @@
+{
+  "configuration": {
+    "baseline_dir": "/mnt/d/workspace/masterai/thesis/ufce_agent/outputs/native_multiclass_eval/student_outcomes_20260924_resume1",
+    "baseline_final_results_sha256": "d3bd51e0700031aedb132d2c75d186082a616a7e47e44ca6263667a69b6ad42f",
+    "bootstrap_resamples": 2000,
+    "bootstrap_seed": 42,
+    "configuration_sha256": "dfbdeb9e75bf696a955e43a59b5d8c3dd31ec7acd8ceaee0092eb8957fb85986",
+    "dataset_sha256": "e90e55fd65ec462ae283ebeb2cca409319e3460ed898d8754f62fb35cc83a65d",
+    "default_stopping_threshold": 0.5,
+    "dice_ml_version": "0.7.2",
+    "final_query_target_pairs": 1328,
+    "freeze_configuration_sha256": "3db7032eae82606a7970638f045ce7c7825a5bc7a75bcdba36dd71132a28137d",
+    "genetic_options": {
+      "initialization": "kdtree",
+      "maxiterations": 500
+    },
+    "kind": "posthoc_dice_multiclass_backend_supplement",
+    "max_exposed_cfs": 5,
+    "methods": [
+      "DiCE-genetic",
+      "DiCE-kdtree"
+    ],
+    "model_sha256": "2c904fbd9115393aeee1799d1a26e28c62b4fb0a349553e0e8cf3cbd36431256",
+    "pilot_counts": {
+      "dropout_to_enrolled": 4,
+      "dropout_to_graduate": 4,
+      "enrolled_to_dropout": 3,
+      "enrolled_to_graduate": 3,
+      "graduate_to_dropout": 3,
+      "graduate_to_enrolled": 3
+    },
+    "posthoc": true,
+    "posthoc_sparsity_param": 0.1,
+    "seed": 42,
+    "source_sha256": {
+      "scripts/native_multiclass_eval/adapters.py": "711b619a5405b093bb3d1c20b4939dbd0623427bd0748bb102cce9d87e66f918",
+      "scripts/native_multiclass_eval/config.py": "a8c81cc995de69235ffbc8b32914c2cb94726e2c2d3049a52224cf731b77b250",
+      "scripts/native_multiclass_eval/dice_variants.py": "14b5b72d24062ca5f4a809f25769de5ce37a1fc5f63a7f2cab3f31fc5ed9a41c",
+      "scripts/native_multiclass_eval/policy.py": "3da1ea39a41c9b09ac48d3c20a4d6577e39d22aed55314430a56b7903092590a",
+      "scripts/native_multiclass_eval/space.py": "9b27a0e7349b51e45b5abb094592e6d0f692a74d42fd18abe7a2782dff861414",
+      "scripts/native_multiclass_eval/verification.py": "bde146f3e17722aa096002813e64f442a03bb90b77c5e8010774c964fe7c8f07"
+    },
+    "timeout_seconds": 60.0
+  },
+  "frozen": true,
+  "frozen_at_unix": 1790348804.0345879,
+  "pilot_gate": {
+    "candidate_rows": 40,
+    "checks": {
+      "40_method_query_rows": true,
+      "all_six_transitions_and_expected_denominators": true,
+      "availability_denominators_present": true,
+      "no_runtime_or_schema_errors": true,
+      "no_silent_schema_errors": true,
+      "proposal_and_model_call_ledgers_present": true,
+      "timeouts_are_recorded_results": true,
+      "verifier_ran": true
+    },
+    "exposed_rows": 19,
+    "passed": true,
+    "query_rows": 40,
+    "runtime_error_count": 0,
+    "schema_error_count": 0
+  },
+  "pilot_query_results_sha256": "054b9519b35c4269e6394c24caa488118a25fb08667dc9c818df998666f3187c"
+}

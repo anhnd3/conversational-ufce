@@ -1,0 +1,56 @@
+{
+  "completed_at_unix": 1790496663.9860651,
+  "mismatch_counts_by_field": {
+    "candidate_count": 0,
+    "constraint_feasible_availability": 0,
+    "exposed_cf_count": 0,
+    "feasible_candidate_count": 0,
+    "off_target_candidate_count": 0,
+    "returned_any_cf": 0,
+    "schema_error_count": 0,
+    "status": 0,
+    "target_candidate_count": 0,
+    "target_valid_availability": 0
+  },
+  "query_method_rows": 1092,
+  "source_changes_since_baseline": {
+    "scripts/native_multiclass_eval/config.py": {
+      "current_sha256": "a8c81cc995de69235ffbc8b32914c2cb94726e2c2d3049a52224cf731b77b250",
+      "frozen_sha256": "80faa104c1825be3d7ff3941b6758027f48e617b57e27e915654844e5aa99644"
+    },
+    "scripts/native_multiclass_eval/runner.py": {
+      "current_sha256": "bfd93fa1b5fd6a8dcbac84f4fee004395b7b3dd5e2e5c7e1ada39331ac629729",
+      "frozen_sha256": "523037f6df74042f2b3e6935b4f75ae1195684ead8a93c863279c84acb2cb385"
+    },
+    "ufce/ufce_ff/ufce.py": {
+      "current_sha256": "a7c775ccd7393e2688fc7795406f62d83f8aa0d6dd36451e3e4b8bdb22df6f26",
+      "frozen_sha256": "f8aab5328ceb4fe9a7f2f387828c7d123bbc6009ea6ee9d9fd5554e05747772e"
+    }
+  },
+  "summary": {
+    "UFCE-FF2": {
+      "median_paired_delta_seconds": -0.7857997290018376,
+      "original_feasible_queries": 77,
+      "original_median_seconds": 1.3641145120003557,
+      "original_p95_seconds": 2.760087638749952,
+      "original_total_seconds": 860.166470690009,
+      "query_count": 546,
+      "rerun_feasible_queries": 77,
+      "rerun_median_seconds": 0.5538051914991229,
+      "rerun_p95_seconds": 0.8349578267516335,
+      "rerun_total_seconds": 319.5187414009997
+    },
+    "UFCE-FF3": {
+      "median_paired_delta_seconds": -0.9446289435046537,
+      "original_feasible_queries": 68,
+      "original_median_seconds": 1.438119778999976,
+      "original_p95_seconds": 2.9500875447500907,
+      "original_total_seconds": 865.1503878040085,
+      "query_count": 546,
+      "rerun_feasible_queries": 68,
+      "rerun_median_seconds": 0.4555954489915166,
+      "rerun_p95_seconds": 0.7085651482520916,
+      "rerun_total_seconds": 251.41390388803848
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "convergence_warnings": [
+    "The max_iter was reached which means the coef_ did not converge"
+  ],
+  "failures": [
+    "CONVERGENCE_WARNING"
+  ],
+  "passed": false,
+  "predicted_minority_fraction": 0.21270773927820502,
+  "review_class_collapse": false,
+  "status": "STOP"
+}
