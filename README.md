@@ -2,16 +2,22 @@
 
 Code and experiment runners for a thesis on UFCE reproduction and a bank-loan natural-language interface to UFCE.
 
-The repository has two thesis-facing experiment tracks:
+The repository has two thesis-facing experiment tracks and two separate
+post-thesis evaluation extensions:
 
 - Route 1: UFCE reproduction, post-hoc audit, and UFCE-FF under the locked final configuration.
 - Route 2: bank-profile natural-language parsing and the NL -> UFCE-FF bridge evaluation on the 250-case Bank Loan set derived from the 5 original test folds.
+- Native multiclass extension: UFCE-FF1/2/3 and DiCE on the three-class UCI Student Outcomes dataset.
+- Larger-dataset external binary extension: UFCE-FF and comparator evaluations on the UPV-2025 student records.
 
 The deterministic UFCE backend remains the authority. The LLM is used only for structured parsing.
 
 Step-by-step commands are in `docs/FINAL_RUNBOOK.md`.
-The two defense-appendix experiments and their committed evidence are mapped in `docs/APPENDIX_QUICK_EXPERIMENTS.md`.
 Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
+The defense-appendix results and their committed evidence are mapped in
+`docs/APPENDIX_QUICK_EXPERIMENTS.md`.
+The extension workflows and their evidence boundaries are in
+`docs/EXPERIMENT_EXTENSIONS.md`.
 
 ## Scope
 
@@ -25,23 +31,30 @@ Claim-level provenance is in `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`.
 
 - `scripts/final/part1/`: Route 1 runners
 - `scripts/final/part2/`: Route 2 runners
+- `scripts/native_multiclass_eval/`: native three-class student-outcome evaluation
+- `scripts/external_binary_eval/`: UPV-2025 external binary evaluation
 - `scripts/final/thesis/`: thesis utility scripts
 - `scripts/final/product/`: optional local demo
 - `llm/`: parser, validation, runtime, and product code
 - `llm_eval/`: parser benchmark support
 - `ufce/`: UFCE cores and datasets
-- `outputs/`: generated local artifacts, ignored except the compact
+- `outputs/`: generated artifacts, ignored and local-only except the compact
   thesis-final summary at `outputs/final/thesis_canonical/summary.json`
-- `evidence/appendix_20260927/`: de-identified paired ledger, aggregate reports, and manifests for the two defense-appendix experiments
+- `evidence/appendix_20260927/`: de-identified paired ledger, aggregate
+  reports, and manifests for the two defense-appendix experiments
 - `docs/`: runbook, evidence map, and thesis-facing notes
+- `data/`: downloaded third-party experiment archives, local-only
 
 ## Publication Boundary
 
 The GitHub-facing repo keeps source, small frozen inputs, tests, and compact
 thesis-facing documentation. Generated outputs, logs, temporary workspaces,
-archived process notes, and exploratory thesis drafts stay local-only through
-`.gitignore`. The committed outputs are the thesis-final canonical summary and the curated
-2026-09-27 appendix evidence. Raw datasets, learned model bundles, and interim checkpoints remain local.
+archived process notes, exploratory thesis drafts, and downloaded third-party
+datasets stay local-only through `.gitignore`. Committed evidence includes the
+Final_v7.6 canonical summary and the curated, de-identified 2026-09-27
+defense appendix under `evidence/appendix_20260927/`. Raw student records,
+learned model bundles, and interim checkpoints remain local. The extensions
+do not revise the frozen Chapter 4 numbers.
 
 ## Setup
 
@@ -231,6 +244,22 @@ python scripts/final/part2/failed_cases_impact_check.py \
   --accepted-out-dir "$ACCEPTED_DIR"
 ```
 
+## Evaluation Extensions
+
+These workflows use separate datasets, models, query sets, and output folders.
+They extend the evaluation after the frozen Final_v7.6 thesis snapshot.
+
+| Workflow | Entry point | Local evidence status |
+| --- | --- | --- |
+| Native three-class student outcomes | `scripts/native_multiclass_eval/runner.py` | Canonical four-method final test complete on 1,328 query-target pairs; the genetic/KD-tree supplement is partial across six transitions, with a complete 546-pair improvement slice in the appendix. |
+| UPV-2025 larger external binary set | `scripts/external_binary_eval/runner.py`, then `run_ten_percent_eval.py` and `author_alignment.py` | The original automatic model gate recorded `STOP` for non-convergence; later CF runs use a recorded acceptance override. Curated scale/MI evidence is committed, while raw paired 207-query and comparator-recovery outputs remain local. |
+
+Use `docs/EXPERIMENT_EXTENSIONS.md` for the methods, measured counts, limits,
+and output provenance. Commands and prerequisites are in the two experiment
+READMEs and `docs/FINAL_RUNBOOK.md`. The appendix map points to the curated
+evidence committed in Git; downloaded archives and raw generated outputs are
+excluded.
+
 ## Reading Results
 
 Route 1:
@@ -348,6 +377,10 @@ python scripts/final/product/03_product_acceptance.py --base-url http://127.0.0.
 - `docs/THESIS_TABLE_TO_SCRIPT_MAP.md`
 - `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`
 - `docs/FINAL_EVIDENCE_POLICY.md`
+- `docs/APPENDIX_QUICK_EXPERIMENTS.md`
+- `docs/EXPERIMENT_EXTENSIONS.md`
+- `scripts/native_multiclass_eval/README.md`
+- `scripts/external_binary_eval/README.md`
 
 ## Usage Note
 

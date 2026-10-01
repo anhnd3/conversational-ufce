@@ -382,6 +382,87 @@ Monitor active output directories with:
 Do not treat a partial parser rerun as the final thesis snapshot until the full
 250-case run writes `parse_acceptance.json`.
 
+## Post-Thesis Evaluation Extensions
+
+These commands produce separate evidence and do not change the Final_v7.6
+thesis counts. See `docs/EXPERIMENT_EXTENSIONS.md` for the local run status and
+interpretation limits. The curated 2026-09-27 defense evidence is already
+committed under `evidence/appendix_20260927/` and mapped in
+`docs/APPENDIX_QUICK_EXPERIMENTS.md`.
+
+### Native multiclass student outcomes
+
+From a clean clone, the runner downloads UCI dataset 697 if it is missing,
+validates the schema, runs train-only fitting and a dev pilot, then evaluates
+all eligible final-test factual-target pairs:
+
+```bash
+./.venv/bin/python -m scripts.native_multiclass_eval.runner \
+  --data-path data/native_multiclass_eval/uci_students_697.zip \
+  --out-dir outputs/native_multiclass_eval/student_outcomes
+```
+
+Read `pilot_gate.json`, `freeze_manifest.json`, `run_status.json`,
+`final_report.json`, and `final_test_transition_summary.csv`. A complete
+baseline has 1,328 final-test query-target pairs per method. To resume from a
+validated checkpoint, use a **new** output directory and `--resume-from` as
+shown in `scripts/native_multiclass_eval/README.md`. The genetic/KD-tree DiCE
+supplement and method-order ablation are post-hoc and belong in separate
+directories; a partial checkpoint is not a completed result. Current source
+hashes differ from the saved local baseline, so compare a new run's freeze
+manifest before using its numbers. The committed appendix uses the complete
+546-pair improvement slice for both DiCE backends, while their six-transition
+supplement remains incomplete.
+
+### UPV-2025 larger external binary dataset
+
+Run the source/model audit first; it downloads and checksum-checks the three
+Zenodo archives. The saved local model reached `max_iter`, so the automatic
+quality gate records `STOP/CONVERGENCE_WARNING`. The audit intentionally exits
+before CF generation but retains the checkpoint and audit files:
+
+```bash
+./.venv/bin/python -m scripts.external_binary_eval.runner \
+  --data-dir data/upv_2025 \
+  --out-dir outputs/external_binary_eval/upv_2025 \
+  --stage audit
+```
+
+Inspect `model_quality_gate.json`, `model_metrics.json`, the split/schema
+manifests, and `model_bundle_checkpoint.joblib`. The downstream scripts below
+require that regenerated checkpoint at this path and record the acceptance
+override used for the exploratory CF run. Their results must retain the
+original failed-gate status in any report.
+The saved author-alignment adapter hash also differs from the current tree;
+use new output directories for fresh evidence.
+
+```bash
+./.venv/bin/python -m scripts.external_binary_eval.run_ten_percent_eval \
+  --stage pilot --data-dir data/upv_2025 \
+  --out-dir outputs/external_binary_eval/upv_2025_10pct_5fold
+
+./.venv/bin/python -m scripts.external_binary_eval.run_ten_percent_eval \
+  --stage primary --data-dir data/upv_2025 \
+  --out-dir outputs/external_binary_eval/upv_2025_10pct_5fold
+
+./.venv/bin/python -m scripts.external_binary_eval.author_alignment \
+  --stage pilot --data-dir data/upv_2025 \
+  --baseline-dir outputs/external_binary_eval/upv_2025_10pct_5fold/primary \
+  --out-dir outputs/external_binary_eval/upv_2025_author_alignment_v1
+
+./.venv/bin/python -m scripts.external_binary_eval.author_alignment \
+  --stage primary --data-dir data/upv_2025 \
+  --baseline-dir outputs/external_binary_eval/upv_2025_10pct_5fold/primary \
+  --out-dir outputs/external_binary_eval/upv_2025_author_alignment_v1
+```
+
+The baseline fixes 207 held-out query IDs. Read its `primary/report.md` and
+`query_ids.csv`; then read author alignment's `report.md`,
+`method_summary.csv`, MI pair sets, and reference manifests. The later
+`comparator_recovery.py` and `postprocess_comparator_recovery.py` commands are
+documented in `scripts/external_binary_eval/README.md`; they use separate
+cohorts and query timeouts from the original compatibility matrix.
+
 ## Optional Local Demo
 
 Optional local demo:
@@ -397,3 +478,5 @@ python scripts/final/product/03_product_acceptance.py --base-url http://127.0.0.
 - `docs/THESIS_TABLE_TO_SCRIPT_MAP.md`
 - `docs/FINAL_CLAIM_TO_EVIDENCE_MAP.md`
 - `docs/FINAL_EVIDENCE_POLICY.md`
+- `docs/APPENDIX_QUICK_EXPERIMENTS.md`
+- `docs/EXPERIMENT_EXTENSIONS.md`

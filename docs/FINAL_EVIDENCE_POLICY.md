@@ -1,8 +1,10 @@
 # Final Evidence Policy
 
-The repository keeps only thesis-facing source, small frozen inputs, lightweight
-reports, and tests needed to support the methodology and experiments in the
-thesis. Large/generated artifacts remain local-only.
+The repository keeps thesis-facing source, extension runners, small frozen
+inputs, lightweight reports, and focused tests. Large or identifying raw
+artifacts remain local-only. The curated,
+de-identified defense appendix in `evidence/appendix_20260927/` is a deliberate
+exception for aggregate results and provenance manifests.
 
 ## Tracked In Git
 
@@ -13,6 +15,13 @@ Tracked evidence must satisfy at least one of these conditions:
 - It is a small frozen input corpus, benchmark, schema, prompt, or model manifest required by those scripts.
 - It is a lightweight report that records a final model/config selection.
 - It is a focused test for a retained thesis workflow.
+- It is a runner or focused test for the separately labelled native-multiclass
+  or UPV-2025 evaluation extension.
+- It is a compact evidence note that states an extension run's status,
+  denominators, and limits without publishing raw records.
+- It is a curated defense-appendix ledger, aggregate report, or manifest that
+  has passed the appendix publication boundary documented in
+  `docs/APPENDIX_QUICK_EXPERIMENTS.md`.
 
 ## Local-Only
 
@@ -26,6 +35,10 @@ These files stay on the machine but are removed from Git tracking:
 - numbered audit/closeout/checkpoint scripts in `scripts/final/part1` and `scripts/final/part2` that are not part of the thesis-facing workflow list
 - forensic/development notes not cited by the final thesis evidence map
 - thesis draft folders such as `docs/thesis/**` and generated report folders such as `docs/reports/**`
+- downloaded UCI and UPV source archives under `data/**`
+- generated native-multiclass and UPV output trees under `outputs/**`, including
+  model checkpoints, query-level rows, and partial-run checkpoints
+- patch backup/reject files in the external evaluation source directory
 
 ## Reproducibility Rule
 
@@ -43,3 +56,10 @@ tuned profiles and final core variants used by the experiments.
 Scripts should write new artifacts under `outputs/final/...` or another ignored
 output directory. If a result must be cited in the thesis, keep a compact report
 or table map in `docs/`, not a full raw output dump.
+
+The later evaluation extensions write to `outputs/native_multiclass_eval/` and
+`outputs/external_binary_eval/`. Their code, tests, and compact provenance note
+are retained. The curated appendix is also retained, while raw third-party
+archives, identifying query/candidate tables, learned model bundles, and
+interim checkpoints remain local. A model gate that failed, a partial
+supplement, or a post-hoc comparison must keep that status in any summary.

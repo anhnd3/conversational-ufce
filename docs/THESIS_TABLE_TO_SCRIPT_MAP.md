@@ -68,3 +68,7 @@ The claim-by-claim map, quality-gate status, partial-run boundary, and
 recomputation command are in `docs/APPENDIX_QUICK_EXPERIMENTS.md`. These
 curated artifacts are an explicit exception to the earlier local-only output
 policy above; the canonical thesis tables are unaffected.
+
+For rerun order, source-hash drift, the incomplete six-transition supplement,
+and UPV model-gate limitations, see `docs/EXPERIMENT_EXTENSIONS.md` and
+`docs/FINAL_RUNBOOK.md`.

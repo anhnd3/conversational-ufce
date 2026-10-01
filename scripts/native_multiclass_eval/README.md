@@ -2,7 +2,10 @@
 
 This isolated pipeline evaluates UFCE-FF1/2/3 and DiCE on UCI dataset 697 with
 one native multinomial logistic classifier. It keeps the binary reproduction
-and the external binary evaluation in separate files and output directories.
+and the UPV external binary evaluation in separate files and output
+directories. The source archive is downloaded automatically when absent; the
+loader checks its 4,424 rows, 36 feature columns, and three target labels.
+Downloaded data and generated outputs are local-only.
 
 Run the gated experiment with:
 
@@ -75,6 +78,16 @@ separately; third-class proposals contribute to `OFF_TARGET`. Exposed rows are
 rechecked in raw feature space and fail closed if target or constraints do not
 hold.
 
+The local canonical run at
+`outputs/native_multiclass_eval/student_outcomes_20260924_resume1` is complete:
+664 final-test rows, 1,328 ordered query-target pairs per method, zero
+runtime/schema errors, and zero exposed target/constraint failures. Queries
+with a feasible CF were FF1 `113/1328`, FF2 `110/1328`, FF3 `217/1328`, and
+DiCE `382/1328`. These are availability numerators, not exposed-CF counts.
+The frozen run's source hashes differ from the current tree for `config.py`,
+`runner.py`, and shared `ufce/ufce_ff/ufce.py`; a new run may produce different
+counts. See `docs/EXPERIMENT_EXTENSIONS.md` for the evidence boundary.
+
 During a full run, the runner atomically refreshes partial result tables every
 10 completed queries and records the last transition/method/query in
 `final_test_progress.json`. A stopped run can continue in a new output
@@ -112,23 +125,36 @@ The report labels this as a post-hoc analysis because the canonical final test
 has already been inspected. All backends return at most five CFs and share a
 60-second per-query timeout; their internal search budgets differ. The genetic
 backend uses DiCE's 500-iteration default and KD-tree initialization, while
-KD-tree searches the frozen training reference.
+KD-tree searches the frozen training reference. The local retry2 supplement
+currently has only a partial six-transition final-test checkpoint (1,440 of
+2,656 method-query rows). Both backends completed all 546 pairs in the three
+improvement directions used in the curated appendix ledger; that complete
+slice may be reported with its narrower denominator.
 
-## Defense appendix: completed improvement slice
+## Defense appendix evidence
 
-`docs/APPENDIX_QUICK_EXPERIMENTS.md` maps slide 26–27 to a de-identified paired
-ledger in `evidence/appendix_20260927/`. The baseline completed all 1,328
-final-test pairs; the post-hoc DiCE variant run was interrupted after both
-backends completed the 546 improvement-direction pairs. The local file name `final_test_query_results.partial.csv` describes the
-*whole* variant run; the 546-pair slice in the public ledger is complete
-for each backend. `scripts/appendix_evidence/sanitize.py` records the
-transformation from local per-query logs to the released ledger.
+`docs/APPENDIX_QUICK_EXPERIMENTS.md` maps the results to the de-identified
+paired ledger in `evidence/appendix_20260927/`. The appendix separates
+candidate feasibility (F) from CFs that passed the exposure gate (X), and
+records timeouts and method-order checks. Recompute the published aggregates
+from the committed ledger with:
 
 ```bash
 python3 scripts/appendix_evidence/summarize.py
 ```
 
-The script derives F, X, runtime, and timeout counts from the committed
-de-identified paired ledger. For exact historical timing, preserve the source SHA-256
-values in the baseline freeze manifest; three baseline source files have
-subsequently changed, as documented in the appendix guide.
+The raw per-query logs and model bundles remain local. The baseline freeze
+manifest records the historical source hashes; the current tree differs in
+three baseline files, so rerun timings are not interchangeable with the
+historical appendix values.
+
+`order_ablation.py` is a separate post-hoc FF2/FF3 timing-order check on a
+frozen baseline. It requires a new output directory and records source-hash
+drift rather than changing the canonical result:
+
+```bash
+./.venv/bin/python -m scripts.native_multiclass_eval.order_ablation \
+  --baseline-dir outputs/native_multiclass_eval/student_outcomes_20260924_resume1 \
+  --out-dir outputs/native_multiclass_eval/<new-order-check-folder> \
+  --order ff3-first
+```
