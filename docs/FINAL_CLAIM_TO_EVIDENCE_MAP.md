@@ -36,3 +36,18 @@ Committed headline summary: `outputs/final/thesis_canonical/summary.json`.
 Generated raw outputs, historical closeouts, archived scripts, and forensic
 audit notes are kept on disk but removed from Git tracking. They are not required
 for a fresh GitHub clone to understand or rerun the thesis-facing workflows.
+
+## Later Evaluation Extensions (Outside Final_v7.6)
+
+These claims come from separate post-thesis experiments. They do not amend the
+Chapter 4 table or Bank Loan bridge claims above. Measured denominators and
+limits are recorded in `docs/EXPERIMENT_EXTENSIONS.md`; the de-identified
+defense evidence is mapped in `docs/APPENDIX_QUICK_EXPERIMENTS.md`.
+
+| Extension claim | Evidence source | Boundary |
+|---|---|---|
+| UFCE-FF can be evaluated against requested targets on a native three-class student-outcome model. | `scripts/native_multiclass_eval/runner.py`, `verification.py`, and the completed local `final_report.json` | UCI dataset 697; 1,328 ordered final-test pairs per method; exposed CFs are checked for target and raw constraints. |
+| Train-only MI ranking can be reused for FF2/FF3 under a matching frozen reference. | `scripts/native_multiclass_eval/mi_cache.py` and its focused tests | Cache fingerprint validation rejects a changed reference. |
+| Genetic/KD-tree DiCE and FF2/FF3 order checks are supplementary. | `scripts/native_multiclass_eval/dice_variants.py`, `order_ablation.py`, and the committed appendix ledger | Post-hoc; the six-transition DiCE supplement is incomplete, while the 546-pair improvement slice is complete for both backends. |
+| UFCE-FF can be tested on a larger external binary student dataset and on a constrained TC/TP category switch. | `scripts/external_binary_eval/run_ten_percent_eval.py`, `author_alignment.py`, and the local paired report | UPV-2025, fixed 207-query cohort; the saved model's automatic convergence gate remains STOP. |
+| Raw-space AR and DiCE behavior can be diagnosed separately from the initial compatibility pilot. | `scripts/external_binary_eval/comparator_recovery.py` and `postprocess_comparator_recovery.py` | Paired 30-query primary cohort and separate 207-query extension; differing timeout budgets and shared-host timing limits apply. |
